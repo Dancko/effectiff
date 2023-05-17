@@ -19,12 +19,20 @@ services:
       - DB_USER=${DB_USER}
       - DB_PORT=${DB_PORT}
     depends_on:
+      db:
+        condition: service_healthy
+    links:
       - db
 
   db:
     image: postgres:13
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-q", "-d", "{YOUR_DATABASE_NAME}", "-U", "{YOUR_DATABASE_USERNAME}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     restart: always
     environment:
       - POSTGRES_DB=${DB_NAME}
