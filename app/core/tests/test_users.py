@@ -1,13 +1,13 @@
 import pytest
 
-from core.models import User
+from django.contrib.auth import get_user_model
 
 
 pytestmark = pytest.mark.django_db
 
 def test_creating_new_user():
     """Test creating new users."""
-    user = User.objects.create_user(email='test@example.com', password='test123', name='Test')
+    user = get_user_model().objects.create_user(email='test@example.com', password='test123', name='Test')
 
     assert user.email == 'test@example.com'
     assert user.name == 'Test'
@@ -18,7 +18,7 @@ def test_creating_new_user():
 
 def test_create_superuser():
     """Test creating superuser."""
-    user = User.objects.create_superuser(email='test_super@example.com', password='test123', name='super')
+    user = get_user_model().objects.create_superuser(email='test_super@example.com', password='test123', name='super')
 
     assert user.email == 'test_super@example.com'
     assert user.name == 'super'

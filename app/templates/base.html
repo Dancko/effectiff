@@ -12,34 +12,8 @@
       {% include 'navbar.html' %}
     </header>
 
-      <div class="container">
-        <div class="left-section">
-          <!-- Content for the left section -->
-          {% block left-section %}
-          <ul>
-            <li>some random item</li>
-          </ul>
-          {% endblock left-section %}
-        </div>
-
-        <div class="right-section">
-          <!-- Content for the right section -->
-          {% block right-section %}
-<!--          <section>-->
-<!--            <h1>My Tasks</h1>-->
-<!--            <ul class="bullet-list">-->
-<!--              <li><label><input type="checkbox"> Task 1</label></li>-->
-<!--              <li><label><input type="checkbox"> Task 2</label></li>-->
-<!--              <li><label><input type="checkbox"> Task 3</label></li>-->
-<!--            </ul>-->
-<!--            <form>-->
-<!--              <input type="text" placeholder="New task">-->
-<!--              <button class="add-task btn" type="submit">Add task</button>-->
-<!--            </form>-->
-<!--          </section>-->
-          {% endblock right-section %}
-        </div>
-      </div>
+    {% block content %}
+    {% endblock content %}
       
   
   <script src="{% static 'js/main.js' %}"></script>

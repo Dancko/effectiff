@@ -1,9 +1,10 @@
+{% load static %}
 <nav>
         <ul class="navbar-nav">
           <div class="logo">
             <li class="logo">
-              <a class="nav-link" href="#">
-                <img class="logo-img" src="static/images/logo.png" alt="Effektiff Logo">
+              <a class="nav-link" href="{% url 'home' %}">
+                <img class="logo-img" src="{% static 'images/logo.png' %}" alt="Effektiff Logo">
               </a>
             </li>
           </div>
@@ -25,18 +26,23 @@
               <span class="slider"></span>
             </label>
           </li>
+          {% if request.user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <img class="profile-img" src="{% static 'images/profiles/django_new.png' %}" alt="Profile Picture">
+            <a class="nav-link" href="#" id="dropdownMenuLink"><span class="arrow">&#9662;</span></a>
 
-          <li class="nav-itema profile">
-            <a class="nav-linka" href="#">
-              <img class="profile-img" src="static/images/profiles/django_new.png" alt="Profile Picture">
-              <span class="profile-arrow"></span>
-              <div class="profile-menu">
-                <ul>
-                  <li>Settings</li>
-                </ul>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="#">Edit Profile</a>
+                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
               </div>
             </a>
           </li>
+          {% else %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Log In / Sign Up</a></li>
+          {% endif %}
+
+
+    </li>
 
         </ul>
       </nav>

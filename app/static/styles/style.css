@@ -1,7 +1,7 @@
 .navbar-nav {
     background: linear-gradient(to right, #3164fa, #663399);
     opacity: 0.7;
-    height: 50px;
+    height: 70px;
     width: 100%;
     list-style: none;
     display: flex;
@@ -142,11 +142,12 @@
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
+    margin-left: 5px;
   }
 
   .logo-img {
     width: 180px;
-    height: 40px;
+    height: 60px;
     border-radius: 40%;
   }
   
@@ -171,6 +172,11 @@
   nav .search {
     flex-grow: 1;
     margin: 0 20px;
+  }
+
+  nav .search button {
+    display: flex;
+    align-items: center;
   }
 
   nav .logo {
@@ -221,37 +227,29 @@
     color: #fff;
   }
 
-  .profile-arrow {
-    display: inline-block;
-    width: 1.2em;
-    height: 1.2em;
-    margin-left: 1px;
-    margin-bottom: 10px;
-    background-image: url("../images/icons8-down-button-16.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .profile-arrow.rotate {
-    transform: rotate(180deg);
-    transition: transform 0.3s ease-in-out;
-  }
+ .dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: #663399;
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 1;
+}
 
-  .profile-menu {
-    display: none;
-    position: absolute;
-    top: 3.2em;
-    right: 0;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 1em;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
-  .show-menu .profile-menu {
-    display: block;
-  }
+.nav-item:hover .dropdown-menu {
+  display: block;
+}
+
+.arrow {
+  display: inline-block;
+  margin-left: 5px;
+  transition: transform 0.3s;
+}
+
+.nav-item.dropdown:hover .arrow {
+  transform: rotate(180deg);
+  background: none !important;
+}
   
 
   label {
@@ -320,11 +318,11 @@ body.light-mode {
   label.light-mode {
     color: #333;
   }
-  
+
   form.light-mode input[type="text"] {
     border: 1px solid #ccc;
   }
-  
+
   form.light-mode button[type="submit"] {
     background-color: #ff6b6b;
     color: #fff;
@@ -361,6 +359,7 @@ body.light-mode {
   
   form.dark-mode input[type="text"] {
     border: 1px solid #fff;
+    color: #333;
   }
   
   form.dark-mode button[type="submit"] {
@@ -408,5 +407,74 @@ body.light-mode {
   .btn:hover {
     background-color: #663399;
   }
+
+
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: #f2f2f2;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.form-header h2 {
+  text-align: center;
+}
+
+login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background-color: #4d79ff;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.form-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.form-footer a {
+  color: #4d79ff;
+  text-decoration: none;
+}
+
+.form-footer a:hover {
+  text-decoration: underline;
+}
+
+.logout-container {
+  width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+}
+
+h1 {
+  color: #333;
+}
+
+a {
+  color: #0066cc;
+}
+
+
   
   

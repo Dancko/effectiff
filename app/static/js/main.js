@@ -11,6 +11,8 @@ darkModeToggle.addEventListener('change', () => {
   }
 });
 
+
+
 const profileArrow = document.querySelector('.profile-arrow');
 
 profileArrow.addEventListener('click', () => {
@@ -19,3 +21,27 @@ profileArrow.addEventListener('click', () => {
   const profileMenu = document.querySelector('.profile-menu');
   profileMenu.classList.toggle('show-menu');
 });
+
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  const loginForm = document.getElementById("loginForm");
+  const registrationFormContainer = document.getElementById("registrationFormContainer");
+
+  const toggleRegistration = document.getElementById("toggleRegistration");
+  const toggleLogin = document.getElementById("toggleLogin");
+
+  toggleRegistration.addEventListener("click", function(event) {
+    event.preventDefault();
+    loginForm.style.display = "none";
+    registrationFormContainer.style.display = "block";
+  });
+
+  toggleLogin.addEventListener("click", function(event) {
+    event.preventDefault();
+    loginForm.style.display = "block";
+    registrationFormContainer.style.display = "none";
+  });
+});
+
