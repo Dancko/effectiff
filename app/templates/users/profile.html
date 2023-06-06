@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<header class="profile-header">
+    <div class="container">
+      <div class="profile-picture">
+        <img src="{% static 'images/profiles/django_new.png' %}" alt="Profile Picture">
+      </div>
+      <div class="profile-info">
+        <h1>{{ user.name }}</h1>
+        <p>Email: {{ user.email }}</p>
+        <p>Location: New York, USA</p>
+        <p>{{ user.bio }}</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="profile-main">
+    <div class="container">
+      <!-- Add your profile content here -->
+    </div>
+  </main>
+{% endblock content %}
+
+
+
+

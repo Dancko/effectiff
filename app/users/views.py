@@ -11,9 +11,9 @@ def loginPage(request):
         email = request.POST['email'].lower()
         password = request.POST['password']
         try:
-            user = get_user_model().objects.get(email=email)
-        except:
-            messages.error('User does not exist.')
+            get_user_model().objects.get(email=email)
+        except ValueError:
+            messages.error(request, message='User does not exist.')
 
         user = authenticate(request, email=email, password=password)
 
@@ -25,7 +25,7 @@ def loginPage(request):
             messages.error(request, 'Email or password is incorrect.')
             return render(request, 'users/login.html')
 
-    return render(request, 'users/login.html')
+    return render(request, 'registration/login.html')
 
 
 @login_required
@@ -34,7 +34,7 @@ def logoutPage(request):
         logout(request)
         messages.success(request, 'You have been logged out.')
         return redirect('home')
-    return render(request, 'users/logout.html')
+    return render(request, 'registration/logout.html')
 
 
 def registerPage(request):
@@ -49,4 +49,10 @@ def registerPage(request):
             messages.error(request, 'This email is already used.')
             return redirect('register')
 
-    return render(request, 'users/register.html', {'form': form})
+    return render(request, 'registration/signup.html', {'form': form})
+
+
+def profilePage(request, pk):
+    """Profile page view."""
+    user = get_user_model().objects.get(id=pk)
+    return render(request, 'users/profile.html', {'user': user})
