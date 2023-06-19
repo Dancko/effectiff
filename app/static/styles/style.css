@@ -372,7 +372,9 @@ body.light-mode {
     justify-content: space-between;
     align-items: top;
     height: 100vh;
+    width: 100%;
     padding: 0 0px;
+    border: 1px solid #ccc;
   }
   
   .left-section {
@@ -383,7 +385,7 @@ body.light-mode {
   }
   
   .right-section {
-    flex: 4;
+    flex: 3;
     padding-left: 20px;
     border-left: 2px solid #ccc;
   }
@@ -475,12 +477,6 @@ a {
   color: #0066cc;
 }
 
-
-.container {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 20px;
-}
 
 .profile-header {
 
