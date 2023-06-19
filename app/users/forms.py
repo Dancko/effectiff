@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.forms import ModelForm
 
 from django.contrib.auth import get_user_model
 
@@ -15,3 +16,10 @@ class RegisterForm(UserCreationForm):
 
         for fieldname in ['name', 'password1', 'password2']:
             self.fields[fieldname].help_text = None
+
+
+class ChangeForm(ModelForm):
+    """Edit user info form."""
+    class Meta:
+        model = get_user_model()
+        fields = ['name']

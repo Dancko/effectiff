@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .forms import RegisterForm
+from .forms import RegisterForm, ChangeForm
 
 
 def loginPage(request):
@@ -56,3 +56,14 @@ def profilePage(request, pk):
     """Profile page view."""
     user = get_user_model().objects.get(id=pk)
     return render(request, 'users/profile.html', {'user': user})
+
+
+def editProfilePage(request, pk):
+    """Edit profile view."""
+    form = ChangeForm(instance=request.user)
+    if request.method == 'POST':
+        form = ChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    return render(request, 'users/edit_profile.html', {'form': form})
