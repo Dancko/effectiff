@@ -1,12 +1,9 @@
-import sys
-
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .forms import RegisterForm, ChangeForm
-from core.models import Skill
 
 
 def loginPage(request):
