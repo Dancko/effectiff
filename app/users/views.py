@@ -1,3 +1,5 @@
+import sys
+
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -7,6 +9,10 @@ from .forms import RegisterForm, ChangeForm
 
 
 def loginPage(request):
+    """Login page view."""
+    next = ''
+    if request.GET.get('next'):
+        next = request.GET.get('next')
     if request.method == 'POST':
         email = request.POST['email'].lower()
         password = request.POST['password']
@@ -20,7 +26,7 @@ def loginPage(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'User was logged in successfully.')
-            return redirect('home')
+            return redirect(next if next else 'home')
         else:
             messages.error(request, 'Email or password is incorrect.')
             return render(request, 'users/login.html')
@@ -30,6 +36,7 @@ def loginPage(request):
 
 @login_required
 def logoutPage(request):
+    """Logout page view."""
     if request.method == 'POST':
         logout(request)
         messages.success(request, 'You have been logged out.')
@@ -38,6 +45,7 @@ def logoutPage(request):
 
 
 def registerPage(request):
+    """Register page view."""
     form = RegisterForm()
     if request.method == 'POST':
         form = RegisterForm(request.POST)
