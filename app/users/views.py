@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .forms import RegisterForm, ChangeForm
+from core.models import Skill
 
 
 def loginPage(request):
@@ -63,16 +64,19 @@ def registerPage(request):
 def profilePage(request, pk):
     """Profile page view."""
     user = get_user_model().objects.get(id=pk)
-    return render(request, 'users/profile.html', {'user': user})
+    skills = user.skills.all()
+    return render(request, 'users/profile.html', {'user': user, 'skills': skills})
 
 
 @login_required(login_url='login')
 def editProfilePage(request, pk):
     """Edit profile view."""
-    form = ChangeForm(instance=request.user)
-    if request.method == 'POST':
-        form = ChangeForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-    return render(request, 'users/edit_profile.html', {'form': form})
+    if request.user.id == pk:
+        form = ChangeForm(instance=request.user)
+        if request.method == 'POST':
+            form = ChangeForm(request.POST, instance=request.user)
+            if form.is_valid():
+                form.save()
+                return redirect('profile', pk=pk)
+        return render(request, 'users/edit_profile.html', {'form': form})
+    return redirect('home')

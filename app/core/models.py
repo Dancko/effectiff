@@ -37,9 +37,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     bio = models.TextField(blank=True)
+    location = models.CharField(max_length=150, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    skills = models.ManyToManyField('Skill', blank=True)
 
     objects = UserManager()
 
@@ -103,3 +105,10 @@ class Task(models.Model):
 
     class Meta:
         ordering = ['-updated', '-created']
+
+
+class Skill(models.Model):
+    name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return self.name

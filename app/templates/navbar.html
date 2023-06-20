@@ -28,7 +28,7 @@
           </li>
           {% if request.user.is_authenticated %}
           <li class="nav-item dropdown">
-            <img class="profile-img" src="{% static 'images/profiles/django_new.png' %}" alt="Profile Picture">
+            <a href="{% url 'profile' request.user.id %}"><img class="profile-img" src="{% static 'images/profiles/django_new.png' %}" alt="Profile Picture"></a>
             <a class="nav-link" href="#" id="dropdownMenuLink"><span class="arrow">&#9662;</span></a>
 
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">

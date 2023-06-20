@@ -22,4 +22,4 @@ class ChangeForm(ModelForm):
     """Edit user info form."""
     class Meta:
         model = get_user_model()
-        fields = ['name']
+        fields = ['name', 'bio', 'location', 'skills']
