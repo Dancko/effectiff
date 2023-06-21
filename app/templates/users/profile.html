@@ -9,7 +9,9 @@
       </div>
       <div class="profile-info">
         <h1>{{ user.name }}</h1>
+        {% if request.user.id == user.id %}
         <p><a href="{% url 'edit_profile' user.id %}">Edit</a></p>
+        {% endif %}
         <p>Email: {{ user.email }}</p>
         <p>Location: {{ user.location }}</p>
         <p>{{ user.bio }}</p>
