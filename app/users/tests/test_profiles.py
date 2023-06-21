@@ -1,5 +1,5 @@
 import pytest
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from core.models import Skill
@@ -27,7 +27,7 @@ def test_get_profile_page_success(client):
     assert user.skills.all()[0].name in str(res.content)
 
 
-def test_get_edit_profile_page_authed_success(request, client):
+def test_get_edit_profile_page_authed_success(client):
     """Test edit profile get request for an authorized user is success."""
     user = get_user_model().objects.create_user(email='testuser@example.com', password='testpass123', name='john')
     url = reverse('edit_profile', args=[str(user.id)])
@@ -36,6 +36,7 @@ def test_get_edit_profile_page_authed_success(request, client):
     res = client.get(url)
 
     assert res.status_code == 200
+
 
 def test_get_edit_profile_page_unauthed_fails(client):
     """Test edit profile get request for an unauthed user fails."""
