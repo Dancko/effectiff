@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <main>
+    <section>
+      <h2>{{ project.name }}</h2><small>Owned by <a href="{% url 'profile' project.owner.id %}">{{ project.owner.name }}</a></small>
+      <p>This section provides an overview of the project.</p>
+    </section>
+
+    <section>
+      <h2>Tasks</h2>
+      <ul>
+        {% for task in tasks %}
+        <li>{{ task }}</li>
+        {% endfor %}
+      </ul>
+
+    </section>
+
+    <section>
+      <h2>Files</h2>
+      <ul>
+        <li>File 1</li>
+        <li>File 2</li>
+        <li>File 3</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Settings</h2>
+      <p>This section contains project settings.</p>
+    </section>
+  </main>
+
+{% endblock content %}
