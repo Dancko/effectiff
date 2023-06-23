@@ -25,3 +25,18 @@ def test_myprojects_get_success(request, client):
     assert res.status_code == 200
     assert project.name in str(res.content)
     assert project.owner == user
+    assert user in project.participants.all()
+
+
+def test_my_project_unauth_redirect(client):
+    """Test unauthed user is redirected to login page."""
+    user = get_user_model().objects.create_user(email='test@example.com', password='testpass123')
+    project = Project.objects.create(
+        name='TestProj',
+        owner=user
+    )
+    url = reverse('my_projects', args=[str(user.id)])
+
+    res = client.get(url)
+
+    assert res.status_code == 302
