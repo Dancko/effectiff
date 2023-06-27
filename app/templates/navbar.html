@@ -16,6 +16,7 @@
               </form>
             </li>
           </div>
+          <li class="nav-item"><a class="nav-link" href="{% url 'create_project' %}">New Project</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Tasks</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
@@ -32,6 +33,7 @@
             <a class="nav-link" href="#" id="dropdownMenuLink"><span class="arrow">&#9662;</span></a>
 
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'my_projects' request.user.id %}">My Projects</a>
                 <a class="dropdown-item" href="{% url 'edit_profile' request.user.id %}">Edit Profile</a>
                 <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
               </div>
