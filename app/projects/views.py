@@ -31,4 +31,22 @@ def createProjectPage(request):
             project.save()
             form.save_m2m()
             return redirect('my_projects', pk=request.user.id)
-    return render(request, 'projects/create_update_project.html', {'form': form})
+    return render(request, 'projects/create_update_project.html', {'form': form, 'page': page})
+
+
+@login_required(login_url='login')
+def editProjectPage(request, pk):
+    page = 'edit'
+    project = Project.objects.get(id=pk)
+    if project.owner.id == request.user.id:
+        form = ProjectCreationForm(instance=project)
+        if request.method == 'POST':
+            form = ProjectCreationForm(request.POST, instance=project)
+            if form.is_valid():
+                form.save(commit=True)
+                # form.save_m2m()
+                return redirect('my_projects', pk=request.user.id)
+    else:
+        return redirect('home')
+    return render(request, 'projects/create_update_project.html', {'page': page, 'form': form})
+

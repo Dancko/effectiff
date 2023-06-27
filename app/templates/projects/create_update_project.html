@@ -1,15 +1,29 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% if page == 'create' %}
 <div class="form-container">
   <div class="form-header">
-    <h2>Login</h2>
+    <h2>Create Project</h2>
   </div>
   <form class="login-form" id="loginForm" method="POST">
     {% csrf_token %}
     <!-- Login form fields -->
     {{ form.as_p }}
-    <button type="submit">Login</button>
+    <button type="submit">Submit</button>
   </form>
 </div>
+{% else %}
+<div class="form-container">
+  <div class="form-header">
+    <h2>Edit Project</h2>
+  </div>
+  <form class="login-form" id="loginForm" method="POST">
+    {% csrf_token %}
+    <!-- Login form fields -->
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+</div>
+{% endif %}
 {% endblock content %}
