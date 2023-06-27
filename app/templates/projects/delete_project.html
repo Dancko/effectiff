@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="logout-container">
+    <h1>Logout Page</h1>
+    <p>Are you sure you want to delete "{{ project.name }}"?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+    </form>
+  </div>
+{% endblock content %}

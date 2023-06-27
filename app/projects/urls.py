@@ -8,4 +8,5 @@ urlpatterns = [
     path('<int:pk>/', views.projectPage, name='project'),
     path('new_project/', views.createProjectPage, name='create_project'),
     path('edit_project/<int:pk>/', views.editProjectPage, name='edit_project'),
+    path('delete/<int:pk>/', views.deleteProjectPage, name='delete_project'),
 ]

@@ -3,7 +3,14 @@
 {% block content %}
   <main>
     <section>
-      <h2>{{ project.name }}</h2><small>Owned by <a href="{% url 'profile' project.owner.id %}">{{ project.owner.name }}</a></small>
+      <h2>{{ project.name }}
+      {% if request.user.id == project.owner.id %}
+      <a href="{% url 'edit_project' project.id %}">Edit</a>
+        <a href="{% url 'delete_project' project.id %}">Delete</a>
+      {% endif %}
+        </h2>
+      <small>Owned by <a href="{% url 'profile' project.owner.id %}">{{ project.owner.name }}</a></small>
+
       <p>This section provides an overview of the project.</p>
     </section>
 

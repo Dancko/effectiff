@@ -50,3 +50,15 @@ def editProjectPage(request, pk):
         return redirect('home')
     return render(request, 'projects/create_update_project.html', {'page': page, 'form': form})
 
+
+@login_required(login_url='login')
+def deleteProjectPage(request, pk):
+    project = Project.objects.get(id=pk)
+    if request.user.id == project.owner.id:
+        if request.method == 'POST':
+            project.delete()
+            return redirect('my_projects', pk=request.user.id)
+    else:
+        return redirect('home')
+    return render(request, 'projects/delete_project.html', {'project': project})
+
