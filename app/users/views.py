@@ -48,7 +48,8 @@ def registerPage(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save(commit=True)
+            user = form.save(commit=True)
+            login(request, user)
             messages.success(request, 'User has been created successfully.')
             return redirect('home')
         else:
