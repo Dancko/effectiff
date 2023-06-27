@@ -77,3 +77,13 @@ def editProfilePage(request, pk):
                 return redirect('profile', pk=pk)
         return render(request, 'users/edit_profile.html', {'form': form})
     return redirect('home')
+
+
+@login_required(login_url='login')
+def deleteProfile(request, pk):
+    if request.user.id == pk:
+        user = get_user_model().objects.get(id=pk)
+        if request.method == 'POST':
+            user.delete()
+            return redirect('home')
+    return render(request, 'users/delete_profile.html')
