@@ -14,16 +14,17 @@
         <div class="right-section">
           <!-- Content for the right section -->
           <section>
-            <h1>You've got to login, maaaan.</h1>
-            <!--<ul class="bullet-list">
-              <li><label><input type="checkbox"> Task 1</label></li>
-              <li><label><input type="checkbox"> Task 2</label></li>
-              <li><label><input type="checkbox"> Task 3</label></li>
+            <h1>My Tasks</h1>
+            <ul class="bullet-list">
+              {% for task in tasks %}
+              <li><label><input type="checkbox">{{ task.title }}</label></li>
+
+              {% endfor %}
             </ul>
             <form>
               <input type="text" placeholder="New task">
               <button class="add-task btn" type="submit">Add task</button>
-            </form>-->
+            </form>
           </section>
         </div>
       </div>
