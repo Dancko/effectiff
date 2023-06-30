@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <header>
+    <h1>Task Detail</h1>
+  </header>
+
+  <main>
+    <div class="task-container">
+      <h2>{{ task.title }} from {{ task.project }}</h2>
+      <p>{{ task.body }}</p>
+      {% for user in assigned_to %}
+      <p>{{ user.name }}</p>
+      {% endfor %}
+      <p>Due to: {{ task.deadline }}</p>
+      <p>Status: {{ task.status }}</p>
+      <p>Priority: {{ task.priority }}</p>
+    </div>
+  </main>
+{% endblock content %}

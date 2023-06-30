@@ -17,7 +17,7 @@
             <h1>My Tasks</h1>
             <ul class="bullet-list">
               {% for task in tasks %}
-              <li><label><input type="checkbox">{{ task.title }}</label></li>
+              <a href="{% url 'task_detail' task.id %}"><li><label>{{ task.title }}</label></li></a>
 
               {% endfor %}
             </ul>

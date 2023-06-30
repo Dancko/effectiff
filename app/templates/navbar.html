@@ -18,7 +18,7 @@
           </div>
           <li class="nav-item"><a class="nav-link" href="{% url 'create_project' %}">New Project</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Tasks</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'my_tasks' request.user.id %}">Tasks</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
 
           <li class="nav-item">
