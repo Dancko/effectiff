@@ -7,10 +7,10 @@
 
   <main>
     <div class="task-container">
-      <h2>{{ task.title }} from {{ task.project }}</h2>
+      <h2>{{ task.title }} from <a href="{% url 'project' task.project.id %}">{{ task.project }}</a></h2>
       <p>{{ task.body }}</p>
       {% for user in assigned_to %}
-      <p>{{ user.name }}</p>
+      <a href="{% url 'profile' user.id %}">@{{ user.name }}</a>
       {% endfor %}
       <p>Due to: {{ task.deadline }}</p>
       <p>Status: {{ task.status }}</p>

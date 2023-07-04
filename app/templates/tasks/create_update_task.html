@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-container">
+
+  <div class="form-header">
+      {% if page == 'create' %}
+    <h2>Create Task</h2>
+  </div>
+  <form class="login-form" id="loginForm" method="POST">
+    {% csrf_token %}
+    <!-- Login form fields -->
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+</div>
+{% else %}
+    <h2>Edit Task</h2>
+  </div>
+  <form class="login-form" method="POST">
+    {% csrf_token %}
+    <!-- Login form fields -->
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+</div>
+{% endif %}
+{% endblock content %}

@@ -18,7 +18,7 @@
       <h2>Tasks</h2>
       <ul>
         {% for task in tasks %}
-        <li>{{ task }} <small>assigned to
+        <li><a href="{% url 'task_detail' task.id %}">{{ task }}</a> <small>assigned to
           {% for participant in task.assigned_to.all %}
           <a href="{% url 'profile' participant.id %}">@{{ participant.name }}</a>
           {% endfor %}</small></li>
