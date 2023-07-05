@@ -28,10 +28,9 @@ def taskCreatePage(request):
     page = 'create'
     form = TaskCreateForm()
     if request.method == 'POST':
-        task = TaskCreateForm(request.POST)
+        form = TaskCreateForm(request.POST)
         if form.is_valid():
-            task.save_m2m()
-            task.save(commit=True)
+            form.save(commit=True)
             return redirect('my_tasks', pk=request.user.id)
     return render(request, 'tasks/create_update_task.html', {'form': form, 'page': page})
 
