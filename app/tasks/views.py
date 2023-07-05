@@ -34,3 +34,18 @@ def taskCreatePage(request):
             return redirect('my_tasks', pk=request.user.id)
     return render(request, 'tasks/create_update_task.html', {'form': form, 'page': page})
 
+
+@login_required(login_url='login')
+def taskEditPage(request, pk):
+    """View for editting the tasks."""
+    page = 'edit'
+    task = Task.objects.get(id=pk)
+    if request.user.id == task.project.owner.id:
+        form = TaskCreateForm(instance=task)
+        if request.method == 'POST':
+            form = TaskCreateForm(request.POST, instance=task)
+            if form.is_valid():
+                form.save()
+                return redirect('my_tasks', pk=request.user.id)
+    return render(request, 'tasks/create_update_task.html', {'page': page, 'form': form})
+

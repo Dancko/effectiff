@@ -16,6 +16,9 @@
       <p>Due to: {{ task.deadline }}</p>
       <p>Status: {{ task.status }}</p>
       <p>Priority: {{ task.priority }}</p>
+      {% if request.user.id == task.project.owner.id %}
+      <a href="{% url 'edit_task' task.id %}">Edit</a>
+      {% endif %}
     </div>
   </main>
 {% endblock content %}
