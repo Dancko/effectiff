@@ -47,5 +47,7 @@ def taskEditPage(request, pk):
             if form.is_valid():
                 form.save()
                 return redirect('my_tasks', pk=request.user.id)
+    else:
+        return redirect('my_tasks', pk=request.user.id)
     return render(request, 'tasks/create_update_task.html', {'page': page, 'form': form})
 
