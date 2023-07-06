@@ -51,3 +51,13 @@ def taskEditPage(request, pk):
         return redirect('my_tasks', pk=request.user.id)
     return render(request, 'tasks/create_update_task.html', {'page': page, 'form': form})
 
+
+@login_required(login_url='login')
+def deleteTaskPage(request, pk):
+    """View for deleting a task."""
+    task = Task.objects.get(id=pk)
+    if task.project.owner == request.user:
+        if request.method == 'POST':
+            task.delete()
+            return redirect('my_tasks', pk=request.user.id)
+    return render(request, 'tasks/delete_task.html', {'task': task})
