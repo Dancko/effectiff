@@ -6,4 +6,4 @@ from core.models import Project
 class ProjectCreationForm(ModelForm):
     class Meta:
         model = Project
-        fields = ['name', 'category', 'participants']
+        fields = ['name', 'category', 'description', 'participants']

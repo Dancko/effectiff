@@ -2,7 +2,12 @@
 
 {% block content %}
 <ul>
-    {% for project in projects %}
+    <p>Projects you manage:</p>
+    {% for project in projects_owned %}
+        <li><a href="{% url 'project' project.id %}">{{ project.name }}</a></li>
+    {% endfor %}
+    <p>Projects you participate in:</p>
+    {% for project in projects_participated %}
         <li><a href="{% url 'project' project.id %}">{{ project.name }}</a></li>
     {% endfor %}
 </ul>

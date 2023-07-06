@@ -1,7 +1,29 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <main>
+
+    <div class="container">
+      <div class="left-section">
+        {% if request.user.is_authenticated %}
+
+          <ul>
+            <b>The projects you manage:</b>
+            {% for project in projects_owned %}
+            <li><a href="{% url 'project' project.id %}">{{ project.name }}</a></li>
+            {% empty %}
+            <li>You don't own projects yet. <a href="{% url 'create_project' %}">Create new project</a></li>
+            {% endfor %}
+            <b>The projects you are participating in: </b>
+            {% for project in projects_participated %}
+            <li><a href="{% url 'project' project.id %}">{{ project.name }}</a></li>
+            {% empty %}
+            <li>You don't participate in projects yet.</li>
+            {% endfor %}
+            <a href="{% url 'my_projects' request.user.id %}">View all my projects.</a>
+          </ul>
+          {% endif %}
+      </div>
+      <div class="right-section">
     <section>
       <h2>{{ project.name }}
       {% if request.user.id == project.owner.id %}
@@ -11,7 +33,11 @@
         </h2>
       <small>Owned by <a href="{% url 'profile' project.owner.id %}">{{ project.owner.name }}</a></small>
 
-      <p>This section provides an overview of the project.</p>
+      {% if project.description %}
+      <p>{{ project.description }}</p>
+      {% else %}
+      <p>No project description was provided.</p>
+      {% endif %}
     </section>
 
     <section>
@@ -23,6 +49,9 @@
           <a href="{% url 'profile' participant.id %}">@{{ participant.name }}</a>
           {% endfor %}</small></li>
         {% endfor %}
+        {% if project.owner == request.user %}
+              <a href="{% url 'create_task' %}"><button class="add-task btn" type="submit">Add task</button></a>
+            {% endif %}
       </ul>
 
     </section>
@@ -34,12 +63,15 @@
         <li><a href="{% url 'profile' participant.id %}">@{{ participant.name }}</a></li>
         {% endfor %}
       </ul>
+
     </section>
 
     <section>
       <h2>Settings</h2>
       <p>This section contains project settings.</p>
     </section>
-  </main>
+        </div>
+      </div>
+
 
 {% endblock content %}

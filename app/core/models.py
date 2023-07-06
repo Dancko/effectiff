@@ -64,6 +64,7 @@ class Category(models.Model):
 class Project(models.Model):
     name = models.CharField(max_length=255)
     category = models.ManyToManyField('Category', blank=True)
+    description = models.TextField(blank=True)
     owner = models.ForeignKey('User', on_delete=models.CASCADE, related_name='owner')
     participants = models.ManyToManyField('User', blank=True)
     updated = models.DateTimeField(auto_now=True)
