@@ -4,10 +4,23 @@
       <div class="container">
         <div class="left-section">
           <!-- Content for the left section -->
+          {% if request.user.is_authenticated %}
 
           <ul>
-            <li>some random item</li>
+            The projects you manage:
+            {% for project in projects_owned %}
+            <li><a href="{% url 'project' project.id %}">{{ project.name }}</a></li>
+            {% empty %}
+            <li>You don't own projects yet. <a href="{% url 'create_project' %}">Create new project</a></li>
+            {% endfor %}
+            The projects you are participating in
+            {% for project in projects_participated %}
+            <li><a href="{% url 'project' project.id %}">{{ project.name }}</a></li>
+            {% empty %}
+            <li>You don't participate in projects yet.</li>
+            {% endfor %}
           </ul>
+          {% endif %}
 
         </div>
 
@@ -21,10 +34,7 @@
 
               {% endfor %}
             </ul>
-            <form>
-              <input type="text" placeholder="New task">
-              <button class="add-task btn" type="submit">Add task</button>
-            </form>
+              <a href="{% url 'create_task' %}"><button class="add-task btn" type="submit">Add task</button></a>
           </section>
         </div>
       </div>

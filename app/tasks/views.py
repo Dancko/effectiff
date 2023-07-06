@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 
-from core.models import Task
+from core.models import Task, Project
 from .forms import TaskCreateForm
 
 
@@ -11,8 +11,12 @@ def myTasksPage(request, pk):
     if not request.user:
         return redirect('home')
     user = get_user_model().objects.get(id=pk)
+    projects_owned = Project.objects.filter(owner=user)
+    projects_participated = Project.objects.filter(participants=user)
     tasks = Task.objects.filter(assigned_to=user)
-    return render(request, 'tasks/my_tasks.html', {'tasks': tasks})
+    context = {'projects_owned': projects_owned, 'projects_participated': projects_participated,
+               'tasks': tasks}
+    return render(request, 'tasks/my_tasks.html', context)
 
 
 @login_required(login_url='login')
