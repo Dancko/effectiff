@@ -17,8 +17,16 @@ def myProjectsPage(request, pk):
 
 def projectPage(request, pk):
     project = Project.objects.get(id=pk)
+    projects_owned = Project.objects.filter(owner=request.user.id)
+    projects_participated = Project.objects.filter(participants=request.user.id)
     tasks = Task.objects.filter(project__id=project.id)
-    return render(request, 'projects/project.html', {'project': project, 'tasks': tasks})
+    context = {
+        'project': project,
+        'projects_owned': projects_owned,
+        'projects_participated': projects_participated,
+        'tasks': tasks
+    }
+    return render(request, 'projects/project.html', context)
 
 
 @login_required(login_url='login')
