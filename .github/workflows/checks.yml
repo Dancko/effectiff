@@ -3,16 +3,18 @@ name: checks
 
 on: [push]
 
+environment:
+  - DB_NAME=postgres
+  - DB_USER=postgres
+  - DB_PASS=postgres
+
 
 jobs:
   test-lint:
     name: Test and Lint
     runs-on: ubuntu-20.04
 
-    environment:
-      - DB_NAME=postgres
-      - DB_USER=postgres
-      - DB_PASS=postgres
+
 
     steps:
       - name: Login to DockerHub
