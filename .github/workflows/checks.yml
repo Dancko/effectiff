@@ -17,6 +17,7 @@ jobs:
       postgres:
         image: postgres:11
         env:
+          DB_NAME: postgres
           DB_USER: postgres
           DB_PASS: postgres
         ports:
