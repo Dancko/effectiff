@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-20.04
 
     environment:
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASS=postgres
 
     steps:
       - name: Login to DockerHub
