@@ -13,6 +13,14 @@ jobs:
   test-lint:
     name: Test and Lint
     runs-on: ubuntu-20.04
+    services:
+      postgres:
+        image: postgres:11
+        env:
+          DB_USER: postgres
+          DB_PASS: postgres
+        ports:
+          - 5432:5432
     steps:
       - name: Login to DockerHub
         uses: docker/login-action@v1
