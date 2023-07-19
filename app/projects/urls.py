@@ -9,4 +9,5 @@ urlpatterns = [
     path('new_project/', views.createProjectPage, name='create_project'),
     path('edit_project/<int:pk>/', views.editProjectPage, name='edit_project'),
     path('delete/<int:pk>/', views.deleteProjectPage, name='delete_project'),
+    path('add/<int:pk>/', views.addMembers, name='add_members'),
 ]

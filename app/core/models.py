@@ -1,5 +1,3 @@
-import datetime
-
 from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, PermissionsMixin)
 from django.utils import timezone
@@ -44,6 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     bio = models.TextField(blank=True)
     location = models.CharField(max_length=150, blank=True)
+    teammates = models.ManyToManyField('User', related_name='teammate', blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -114,7 +113,6 @@ class Task(models.Model):
 
     class Meta:
         ordering = ['-updated', '-created']
-
 
     def is_outdated(self):
         if self.deadline < now:

@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 
 from core.models import Project, Task
-from .forms import ProjectCreationForm
+from .forms import ProjectCreationForm, ProjectAddParticipantsForm
 
 
 @login_required(login_url='login')
@@ -72,3 +72,17 @@ def deleteProjectPage(request, pk):
         return redirect('home')
     return render(request, 'projects/delete_project.html', {'project': project})
 
+
+@login_required(login_url='login')
+def addMembers(request, pk):
+    page = 'edit'
+    project = Project.objects.get(id=pk)
+    if project.owner == request.user:
+        form = ProjectAddParticipantsForm(instance=project)
+
+        if request.method == 'POST':
+            form = ProjectAddParticipantsForm(request.POST, instance=project)
+            if form.is_valid():
+                form.save()
+                return redirect('project', pk=pk)
+        return render(request, 'projects/create_update_project.html', {'form': form, 'page': page})

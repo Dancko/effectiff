@@ -66,6 +66,9 @@
         {% for participant in project.participants.all %}
         <li><a href="{% url 'profile' participant.id %}">@{{ participant.name }}</a></li>
         {% endfor %}
+        {% if project.owner == request.user %}
+        <a href="{% url 'add_members' project.id %}"><button class="add-task btn" type="submit">Add participants</button></a>
+        {% endif %}
       </ul>
 
     </section>
