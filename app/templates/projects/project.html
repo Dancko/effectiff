@@ -48,7 +48,11 @@
           {% for participant in task.assigned_to.all %}
           <a href="{% url 'profile' participant.id %}">@{{ participant.name }}</a>
           {% endfor %}</small></li>
+        {% if task.is_outdated == True %}
+          <b>Outdated!</b>
+          {% endif %}
         {% endfor %}
+
         {% if project.owner == request.user %}
               <a href="{% url 'create_task' %}"><button class="add-task btn" type="submit">Add task</button></a>
             {% endif %}

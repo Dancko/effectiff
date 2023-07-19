@@ -22,6 +22,7 @@ def myTasksPage(request, pk):
 @login_required(login_url='login')
 def taskDetailPage(request, pk):
     task = Task.objects.get(id=pk)
+    task.is_outdated()
     assigned_to = task.assigned_to.all()
     return render(request, 'tasks/task_detail.html', {'task': task, 'assigned_to': assigned_to})
 

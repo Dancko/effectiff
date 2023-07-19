@@ -8,6 +8,9 @@
   <main>
     <div class="task-container">
       <h2>{{ task.title }} from <a href="{% url 'project' task.project.id %}">{{ task.project }}</a></h2>
+      {% if task.outdated %}
+      <p>Outdated!</p>
+      {% endif %}
       <p>{{ task.body }}</p>
       Assigned to:
       {% for user in assigned_to %}
