@@ -11,7 +11,17 @@ class DateTimeInput(forms.DateTimeInput):
 class TaskCreateForm(ModelForm):
     class Meta:
         model = Task
-        fields = ['title', 'body', 'deadline', 'priority', 'category', 'project', 'assigned_to']
+        fields = ['title', 'body', 'deadline', 'priority', 'category', 'project']
         widgets = {'deadline': DateTimeInput()}
 
 
+class TaskAddPartiicipantsForm(ModelForm):
+    class Meta:
+        model = Task
+        fields = ['assigned_to']
+
+    def __init__(self, *args, **kwargs):
+        super(TaskAddPartiicipantsForm, self).__init__(*args, **kwargs)
+
+        assignee = self.instance.project.owner.teammates.all()
+        self.fields['assigned_to'].queryset = assignee

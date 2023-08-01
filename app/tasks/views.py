@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 
 from core.models import Task, Project
-from .forms import TaskCreateForm
+from .forms import TaskCreateForm, TaskAddPartiicipantsForm
 
 
 @login_required(login_url='login')
@@ -66,3 +66,18 @@ def deleteTaskPage(request, pk):
             task.delete()
             return redirect('my_tasks', pk=request.user.id)
     return render(request, 'tasks/delete_task.html', {'task': task})
+
+
+@login_required(login_url='login')
+def addMembers(request, pk):
+    page = 'edit'
+    task = Task.objects.get(id=pk)
+    if task.project.owner == request.user:
+        form = TaskAddPartiicipantsForm(instance=task)
+
+        if request.method == 'POST':
+            form = TaskAddPartiicipantsForm(request.POST, instance=task)
+            if form.is_valid():
+                form.save()
+                return redirect('task_detail', pk=pk)
+        return render(request, 'tasks/create_update_task.html', {'form': form, 'page': page})

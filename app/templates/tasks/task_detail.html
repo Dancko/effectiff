@@ -22,6 +22,7 @@
       {% if request.user.id == task.project.owner.id %}
       <a href="{% url 'edit_task' task.id %}">Edit</a>
       <a href="{% url 'delete_task' task.id %}">Delete</a>
+      <a href="{% url 'add_assignee' task.id %}"><button class="add-task btn" type="submit">Add assignees</button></a>
       {% endif %}
     </div>
   </main>
