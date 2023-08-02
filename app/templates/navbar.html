@@ -10,8 +10,8 @@
           </div>
           <div class="search">
             <li>
-              <form action="#" method="get">
-                <input type="text" name="search" placeholder="Search...">
+              <form action="{% url 'home' %}" method="get">
+                <input type="text" name="q" placeholder="Search...">
                 <button type="submit">Search</button>
               </form>
             </li>
