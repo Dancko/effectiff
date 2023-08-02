@@ -11,7 +11,7 @@
       {% if task.outdated %}
       <p>Outdated!</p>
       {% endif %}
-      <p>{{ task.body }}</p>
+      <p>{{ task.body|safe }}</p>
       Assigned to:
       {% for user in assigned_to %}
       <a href="{% url 'profile' user.id %}">@{{ user.name }}</a>

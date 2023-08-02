@@ -10,6 +10,7 @@
   <form class="login-form" id="loginForm" method="POST">
     {% csrf_token %}
     <!-- Login form fields -->
+    {{ form.media }}
     {{ form.as_p }}
     <button type="submit">Submit</button>
   </form>
@@ -20,6 +21,7 @@
   <form class="login-form" method="POST">
     {% csrf_token %}
     <!-- Login form fields -->
+    {{ form.media }}
     {{ form.as_p }}
     <button type="submit">Submit</button>
   </form>

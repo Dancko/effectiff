@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, PermissionsMixin)
 from django.utils import timezone
 
+from ckeditor.fields import RichTextField
+
 
 now = timezone.now()
 
@@ -97,7 +99,7 @@ class Task(models.Model):
     ]
 
     title = models.CharField(max_length=250)
-    body = models.TextField()
+    body = RichTextField(blank=True, null=True)
     deadline = models.DateTimeField()
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='Non-Urgent')
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='Awaits')
