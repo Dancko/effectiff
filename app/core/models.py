@@ -3,6 +3,7 @@ from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, Permi
 from django.utils import timezone
 
 from ckeditor.fields import RichTextField
+from django_cryptography.fields import encrypt
 
 
 now = timezone.now()
@@ -131,3 +132,17 @@ class Skill(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Comment(models.Model):
+    author = models.ForeignKey('User', on_delete=models.CASCADE)
+    task = models.ForeignKey('Task', on_delete=models.CASCADE, default=None)
+    body = encrypt(models.TextField())
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.body
+
+    class Meta:
+        ordering = ['-created']

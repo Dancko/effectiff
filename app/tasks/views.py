@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 
-from core.models import Task, Project
-from .forms import TaskCreateForm, TaskAddPartiicipantsForm
+from core.models import Task, Project, Comment
+from .forms import TaskCreateForm, TaskAddPartiicipantsForm, CommentForm
 
 
 @login_required(login_url='login')
@@ -24,7 +24,20 @@ def taskDetailPage(request, pk):
     task = Task.objects.get(id=pk)
     task.is_outdated()
     assigned_to = task.assigned_to.all()
-    return render(request, 'tasks/task_detail.html', {'task': task, 'assigned_to': assigned_to})
+    comments = Comment.objects.filter(task=task)
+    form = CommentForm()
+    if request.user == task.project.owner or request.user in assigned_to:
+
+        if request.method == 'POST':
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.author = request.user
+                comment.task = task
+                comment.save()
+                return redirect('task_detail', pk=pk)
+    context = {'task': task, 'assigned_to': assigned_to, 'comments': comments, 'form': form}
+    return render(request, 'tasks/task_detail.html', context)
 
 
 @login_required(login_url='login')

@@ -24,6 +24,17 @@
       <a href="{% url 'delete_task' task.id %}">Delete</a>
       <a href="{% url 'add_assignee' task.id %}"><button class="add-task btn" type="submit">Add assignees</button></a>
       {% endif %}
+      <hr>
+      {% for comment in comments %}
+      <li>{{ comment.body }}</li>
+      {% endfor %}
+      {% if request.user == task.project.owner or request.user in assigned_to %}
+      <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <button class="add-task btn" type="submit">Comment</button>
+      </form>
+      {% endif %}
     </div>
   </main>
 {% endblock content %}

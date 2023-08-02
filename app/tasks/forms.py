@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from django import forms
 
-from core.models import Task
+from core.models import Task, Comment
 
 
 class DateTimeInput(forms.DateTimeInput):
@@ -25,3 +25,9 @@ class TaskAddPartiicipantsForm(ModelForm):
 
         assignee = self.instance.project.owner.teammates.all()
         self.fields['assigned_to'].queryset = assignee
+
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['body']
