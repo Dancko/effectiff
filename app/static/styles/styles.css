@@ -1,0 +1,137 @@
+.xl-text {
+  font-size: 65px;
+}
+
+.navbar-sticky {
+  opacity: 0.9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.navbar {
+  transition: all 200ms ease-in-out;
+}
+
+.navbar .btn-group .btn {
+  width: 100px;
+}
+
+.header {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url("../images/adrien-olichon-RCAhiGJsUUE-unsplash.jpg") center center no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  height: 700px;
+}
+
+.list-group-item {
+  background-color: var(--bs-body-bg);
+  color: white;
+}
+
+.signup {
+  background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)), url(../images/signup-bg.jpg) center center no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.full-row {
+  height: 100%;
+}
+
+.img-nav {
+  height: 50px;
+  width: 50px;
+}
+
+.img-profile-left {
+  height: 40px;
+  width: 40px;
+}
+
+.left-section a {
+  text-decoration: none;
+}
+
+.left-section li:hover {
+  color: var(--bs-primary) !important;
+}
+
+.main-section a {
+  color: var(--bs-light) !important;
+}
+
+.main-section a:hover {
+  color: var(--bs-primary) !important;
+}
+
+.img-profile-page {
+  max-width: 250px;
+  height: auto;
+}
+
+.profile-hr {
+  display: block;
+  width: 3.5rem;
+  height: 0.125rem;
+  margin-top: 0.625rem;
+  border: none;
+  background-color: var(--bs-secondary);
+  opacity: 1;
+}
+
+.img-comment {
+  width: 60px;
+  height: 60px;
+}
+
+.btn-comment {
+  width: 200px;
+}
+
+.form-comment {
+  width: 70%;
+}
+
+.comment-container {
+  overflow-y: scroll;
+}
+
+.comment {
+  width: auto;
+  max-width: 70%;
+}
+
+.comment-attach {
+  max-height: 200px;
+}
+
+.sorting-table:hover {
+  cursor: pointer;
+}
+
+@media (max-width: 992px) {
+  .xl-text {
+    font-size: 50px !important;
+  }
+  .header {
+    height: 900px;
+  }
+  .navbar {
+    border-bottom: 1px var(--bs-secondary) solid;
+  }
+  .navbar .btn-group .btn {
+    width: 80px;
+  }
+  .welcome {
+    text-align: center;
+  }
+  .profile {
+    align-items: center;
+  }
+  .accessibility {
+    text-align: center;
+  }
+  .form-comment {
+    width: 90%;
+    height: 150px;
+  }
+}

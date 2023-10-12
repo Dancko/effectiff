@@ -1,42 +1,33 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends '_base.html' %} {% block content %}
 
-      <div class="container">
-        <div class="left-section">
-          <!-- Content for the left section -->
+<div class="container">
+  <div class="left-section">
+    <!-- Content for the left section -->
 
-          <ul>
-            <li>some random item</li>
-          </ul>
+    <ul>
+      <li>some random item</li>
+    </ul>
+  </div>
 
-        </div>
-
-        <div class="right-section">
-          <!-- Content for the right section -->
-          <section>
-            {% if q %}
-              {% if users %}
-                <h2>Users: </h2>
-                {% for user in users %}
-                  <p><a href="{% url 'profile' user.id %}">{{ user.name }}</a></p>
-                {% endfor %}
-              {% endif %}
-              {% if projects_filtered %}
-                <h2>Projects: </h2>
-                {% for project in projects_filtered %}
-            <p><a href="{% url 'project' project.id %}">{{ project.name }}</a></p>
-                {% endfor %}
-              {% endif %}
-            {% if tasks %}
-                <h2>Tasks: </h2>
-                {% for task in tasks %}
-            <p><a href="{% url 'task_detail' task.id %}">{{ task.title }}</a></p>
-                {% endfor %}
-              {% endif %}
-            {% else %}
-            <h1>You've got to login, maaaan.</h1>
-            {% endif %}
-            <!--<ul class="bullet-list">
+  <div class="right-section">
+    <!-- Content for the right section -->
+    <section>
+      {% if q %} {% if users %}
+      <h2>Users:</h2>
+      {% for user in users %}
+      <p><a href="{% url 'profile' user.id %}">{{ user.name }}</a></p>
+      {% endfor %} {% endif %} {% if projects_filtered %}
+      <h2>Projects:</h2>
+      {% for project in projects_filtered %}
+      <p><a href="{% url 'project' project.id %}">{{ project.name }}</a></p>
+      {% endfor %} {% endif %} {% if tasks %}
+      <h2>Tasks:</h2>
+      {% for task in tasks %}
+      <p><a href="{% url 'task_detail' task.id %}">{{ task.title }}</a></p>
+      {% endfor %} {% endif %} {% else %}
+      <h1>You've got to login, maaaan.</h1>
+      {% endif %}
+      <!--<ul class="bullet-list">
               <li><label><input type="checkbox"> Task 1</label></li>
               <li><label><input type="checkbox"> Task 2</label></li>
               <li><label><input type="checkbox"> Task 3</label></li>
@@ -45,7 +36,7 @@
               <input type="text" placeholder="New task">
               <button class="add-task btn" type="submit">Add task</button>
             </form>-->
-          </section>
-        </div>
-      </div>
+    </section>
+  </div>
+</div>
 {% endblock content %}

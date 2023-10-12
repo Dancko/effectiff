@@ -1,53 +1,80 @@
 {% load static %}
-<nav>
-        <ul class="navbar-nav">
-          <div class="logo">
-            <li class="logo">
-              <a class="nav-link" href="{% url 'home' %}">
-                <img class="logo-img" src="{% static 'images/logo.png' %}" alt="Effektiff Logo">
-              </a>
-            </li>
-          </div>
-          <div class="search">
-            <li>
-              <form action="{% url 'home' %}" method="get">
-                <input type="text" name="q" placeholder="Search...">
-                <button type="submit">Search</button>
-              </form>
-            </li>
-          </div>
-          <li class="nav-item"><a class="nav-link" href="{% url 'create_project' %}">New Project</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-          {% if request.user.is_authenticated %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'my_tasks' request.user.id %}">Tasks</a></li>
-          {% endif %}
-          <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+<nav
+  class="navbar navbar-expand-lg bg-dark navbar-dark border-bottom border-primary border-1"
+>
+  <div class="container">
+    <a href="#" class="navbar-brand">
+      <img
+        src="{% static 'images/logo-no-background.png' %}"
+        alt=""
+        width="180"
+      />
+    </a>
 
-          <li class="nav-item">
-            <label class="switch">
-              <input type="checkbox" id="dark-mode-toggle">
-              <span class="slider"></span>
-            </label>
-          </li>
-          {% if request.user.is_authenticated %}
-          <li class="nav-item dropdown">
-            <a href="{% url 'profile' request.user.id %}"><img class="profile-img" src="{% static 'images/profiles/django_new.png' %}" alt="Profile Picture"></a>
-            <a class="nav-link" href="#" id="dropdownMenuLink"><span class="arrow">&#9662;</span></a>
+    <form action="" class="d-none d-xl-block">
+      <input
+        type="search"
+        class="form-control rounded-5 ms-5"
+        style="height: 50px"
+        placeholder="Search..."
+      />
+    </form>
 
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="{% url 'my_projects' request.user.id %}">My Projects</a>
-                <a class="dropdown-item" href="{% url 'edit_profile' request.user.id %}">Edit Profile</a>
-                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-              </div>
-            </a>
-          </li>
-          {% else %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Log In </a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Sign Up</a></li>
-          {% endif %}
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a href="#" class="nav-link">Tasks</a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">Projects</a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">My Team</a>
+        </li>
+        <li class="nav-item d-md-block d-lg-none">
+          <a href="#" class="nav-link">Settings</a>
+        </li>
+        <li class="nav-item d-md-block d-lg-none">
+          <a href="#" class="nav-link">Log Out</a>
+        </li>
+      </ul>
+    </div>
 
-    </li>
+    <div class="image-container ms-4 d-none d-lg-block">
+      <a href="#">
+        <img
+          src="https://randomuser.me/api/portraits/men/44.jpg"
+          alt=""
+          class="img-nav img-thumbnail rounded-circle border border-2 border-success"
+        />
+      </a>
+    </div>
 
-        </ul>
-      </nav>
+    <div class="dropdown">
+      <a
+        class="ms-2 d-none d-lg-block"
+        data-bs-toggle="dropdown"
+        data-bs-target="#img-menu"
+        type="button"
+        role="button"
+        aria-expanded="true"
+        aria-haspopup="false"
+      >
+        <i class="fas fa-caret-down text-light"></i>
+      </a>
+      <div class="dropdown-menu bg-light text-white" id="img-menu">
+        <a href="#" class="dropdown-item">Settings</a>
+        <a href="#" class="dropdown-item">Log Out</a>
+      </div>
+    </div>
+  </div>
+</nav>
