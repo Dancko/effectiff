@@ -106,7 +106,7 @@ class Task(models.Model):
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='Awaits')
     category = models.ManyToManyField('Category', blank=True)
     project = models.ForeignKey('Project', on_delete=models.CASCADE)
-    assigned_to = models.ManyToManyField('User', blank=True)
+    assigned_to = models.ForeignKey('User', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     outdated = models.BooleanField(default=False)

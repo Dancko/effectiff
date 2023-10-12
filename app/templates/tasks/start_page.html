@@ -1,0 +1,316 @@
+{% extends '_base.html' %} {% block content %}
+
+<!-- Central Part -->
+<div class="container-fluid">
+  <div class="row">
+    <!-- Left section -->
+    <div class="left-section d-none d-lg-block col-lg-2 h-100 overflow-auto">
+      <div class="container mt-3">
+        <h3 class="fw-bold border-bottom border-secondary py-4">My Team</h3>
+        <form>
+          <input
+            type="search"
+            class="form-control rounded-pill"
+            id="search-teammates"
+            style="height: 50px"
+            placeholder="Search in teammates"
+          />
+        </form>
+        <ul class="list-group profiles-left mt-3 list-unstyled vstack gap-3">
+          {% for teammate in teammates %}
+          <div
+            class="group-item d-flex gap-2 border-bottom border-primary py-2 online"
+          >
+            <a href="#"
+              ><img
+                src="https://randomuser.me/api/portraits/men/23.jpg"
+                alt=""
+                class="img-fluid img-profile-left img-thumbnail rounded-circle border border-2 border-success"
+            /></a>
+
+            <a href="#"><li class="text-white fs-5">{{ teammate.name }}</li></a>
+          </div>
+          {% endfor %}
+          <div
+            class="group-item d-flex gap-2 border-bottom border-primary py-2"
+          >
+            <a href="#"
+              ><img
+                src="https://randomuser.me/api/portraits/men/46.jpg"
+                alt=""
+                class="img-fluid img-profile-left img-thumbnail rounded-circle"
+            /></a>
+
+            <a href="#"><li class="text-white fs-5">Brian Adams</li></a>
+          </div>
+          <div
+            class="group-item d-flex gap-2 border-bottom border-primary py-2"
+          >
+            <a href="#"
+              ><img
+                src="https://randomuser.me/api/portraits/women/23.jpg"
+                alt=""
+                class="img-fluid img-profile-left img-thumbnail rounded-circle"
+            /></a>
+
+            <a href="#"><li class="text-white fs-5">Vanessa May</li></a>
+          </div>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Section -->
+    <div class="col-lg-10 col-md-12 bg-dark h-100 main-section overflow-auto">
+      <div class="container mt-3 mb-6">
+        <h2 class="fw-bold py-4">Tasks Assigned</h2>
+        <table class="table table-hover" id="tasksAssigned">
+          <thead>
+            <th
+              onclick="sortTable( 0,'tasksAssigned',)"
+              class="sorting-table fs-5 fw-normal"
+            >
+              Title <i class="fas fa-caret-down ms-2"></i>
+            </th>
+            <th
+              onclick="sortTable( 1, 'tasksAssigned')"
+              class="sorting-table fs-5 fw-normal"
+            >
+              Project
+              <i class="fas fa-caret-down ms-2"></i>
+            </th>
+            <th
+              onclick="sortTable( 2, 'tasksAssigned',)"
+              class="sorting-table fs-5 fw-normal"
+            >
+              Status
+              <i class="fas fa-caret-down ms-2"></i>
+            </th>
+            <th
+              onclick="sortTable( 3, 'tasksAssigned',)"
+              class="sorting-table fs-5 fw-normal"
+            >
+              Urgency
+              <i class="fas fa-caret-down ms-2"></i>
+            </th>
+            <th
+              onclick="sortTable( 4, 'tasksAssigned')"
+              class="sorting-table fs-5 fw-normal"
+            >
+              Deadline
+              <i class="fas fa-caret-down ms-2"></i>
+            </th>
+            <th
+              onclick="sortTable( 5, 'tasksAssigned')"
+              class="sorting-table fs-5 fw-normal"
+            >
+              Assigned To
+              <i class="fas fa-caret-down ms-2"></i>
+            </th>
+          </thead>
+          <tbody>
+            {% for task in tasks_assigned %}
+            <tr>
+              <td><a href="#">{{ task.title }}</a></td>
+              <td>
+                <a href="#">{{ task.project }}</a>
+              </td>
+              <td class="ps-4">
+                {% if task.status == 'Awaits' %}
+                <a
+                  href="#"
+                  class="table-tooltip"
+                  data-bs-toggle="tooltip"
+                  data-bs-title="Awaits"
+                  ><i class="fas fa-circle-pause text-secondary"></i
+                ></a>
+                {% elif task.status == 'In Progress' %}
+                <a
+                  href="#"
+                  class="table-tooltip"
+                  data-bs-toggle="tooltip"
+                  data-bs-title="In Progress"
+                  ><i class="fas fa-screwdriver-wrench text-warning"></i
+                ></a>
+                {% elif task.status == 'Completed' %}
+                <a
+                  href="#"
+                  class="table-tooltip"
+                  data-bs-toggle="tooltip"
+                  data-bs-title="Completed"
+                  ><i class="fas fa-circle-check text-success"></i
+                ></a>
+                {% endif %}
+              </td>
+              <td class="ps-4">
+                {% if task.priority == 'Urgent' %}
+                <a
+                  href="#"
+                  class="table-tooltip"
+                  data-bs-toggle="tooltip"
+                  data-bs-title="Urgent"
+                  ><i class="fas fa-fire text-secondary"></i
+                ></a>
+                {% elif task.priority == 'Moderate' %}
+                <a
+                  href="#"
+                  class="table-tooltip"
+                  data-bs-toggle="tooltip"
+                  data-bs-title="Moderate"
+                  ><i class="fas fa-flag text-warning"></i
+                ></a>
+                {% elif task.priority == 'Non-Urgent' %}
+                <a
+                  href="#"
+                  class="table-tooltip"
+                  data-bs-toggle="tooltip"
+                  data-bs-title="Not Urgent"
+                  ><i class="fas fa-flag text-success"></i
+                ></a>
+                {% endif %}
+              </td>
+              <td>{{ task.deadline }}</td>
+              <td><a href="#">{{ task.assigned_to.name }}</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6">
+                <p class="text-center py-3">
+                  You haven't assigned any tasks yet.
+                </p>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <a href="new_task.html"
+          ><button class="btn btn-secondary text-light fw-bold mt-3">
+            Assign New Task
+          </button></a
+        >
+      </div>
+      <div class="container mt-3 mb-7">
+        <h2 class="fw-bold py-4">My Tasks</h2>
+        <table class="table table-hover" , id="tasksToDo">
+          <thead>
+            <th
+              onclick="sortTable(0, 'tasksToDo')"
+              class="sorting-table fs-5 fw-normal"
+            >
+              Title <i class="fas fa-caret-down ms-2"></i>
+            </th>
+            <th
+              onclick="sortTable(1, 'tasksToDo')"
+              class="sorting-table fs-5 fw-normal"
+            >
+              Project
+              <i class="fas fa-caret-down ms-2"></i>
+            </th>
+            <th
+              onclick="sortTable(2, 'tasksToDo')"
+              class="sorting-table fs-5 fw-normal"
+            >
+              Status
+              <i class="fas fa-caret-down ms-2"></i>
+            </th>
+            <th
+              onclick="sortTable(3, 'tasksToDo')"
+              class="sorting-table fs-5 fw-normal"
+            >
+              Urgency
+              <i class="fas fa-caret-down ms-2"></i>
+            </th>
+            <th
+              onclick="sortTable(4, 'tasksToDo')"
+              class="sorting-table fs-5 fw-normal"
+            >
+              Deadline
+              <i class="fas fa-caret-down ms-2"></i>
+            </th>
+            <th
+              onclick="sortTable(5, 'tasksToDo')"
+              class="sorting-table fs-5 fw-normal"
+            >
+              Assigned By
+              <i class="fas fa-caret-down ms-2"></i>
+            </th>
+          </thead>
+          <tbody>
+            {% for task in tasks %}
+            <tr>
+              <td><a href="#">{{ task.title }}</a></td>
+              <td>
+                <a href="#">{{ task.project }}</a>
+              </td>
+              <td class="ps-4">
+                {% if task.status == 'Awaits' %}
+                <a
+                  href="#"
+                  class="table-tooltip"
+                  data-bs-toggle="tooltip"
+                  data-bs-title="Awaits"
+                  ><i class="fas fa-circle-pause text-secondary"></i
+                ></a>
+                {% elif task.status == 'In Progress' %}
+                <a
+                  href="#"
+                  class="table-tooltip"
+                  data-bs-toggle="tooltip"
+                  data-bs-title="In Progress"
+                  ><i class="fas fa-screwdriver-wrench text-warning"></i
+                ></a>
+                {% elif task.status == 'Completed' %}
+                <a
+                  href="#"
+                  class="table-tooltip"
+                  data-bs-toggle="tooltip"
+                  data-bs-title="Completed"
+                  ><i class="fas fa-circle-check text-success"></i
+                ></a>
+                {% endif %}
+              </td>
+              <td class="ps-4">
+                {% if task.priority == 'Urgent' %}
+                <a
+                  href="#"
+                  class="table-tooltip"
+                  data-bs-toggle="tooltip"
+                  data-bs-title="Urgent"
+                  ><i class="fas fa-fire text-secondary"></i
+                ></a>
+                {% elif task.priority == 'Moderate' %}
+                <a
+                  href="#"
+                  class="table-tooltip"
+                  data-bs-toggle="tooltip"
+                  data-bs-title="Moderate"
+                  ><i class="fas fa-flag text-warning"></i
+                ></a>
+                {% elif task.priority == 'Non-Urgent' %}
+                <a
+                  href="#"
+                  class="table-tooltip"
+                  data-bs-toggle="tooltip"
+                  data-bs-title="Not Urgent"
+                  ><i class="fas fa-flag text-success"></i
+                ></a>
+                {% endif %}
+              </td>
+              <td>{{ task.deadline }}</td>
+              <td><a href="#">{{ task.project.owner.name }}</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6">
+                <p class="text-center py-3">
+                  You Have No Tasks. Take a Good Nap :)
+                </p>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

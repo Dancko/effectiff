@@ -11,12 +11,13 @@ def myTasksPage(request, pk):
     if not request.user:
         return redirect('home')
     user = get_user_model().objects.get(id=pk)
-    projects_owned = Project.objects.filter(owner=user)
-    projects_participated = Project.objects.filter(participants=user)
+    
+    tasks_assigned = Task.objects.filter(project__owner=user)
     tasks = Task.objects.filter(assigned_to=user)
-    context = {'projects_owned': projects_owned, 'projects_participated': projects_participated,
-               'tasks': tasks}
-    return render(request, 'tasks/my_tasks.html', context)
+    teammates = user.teammates.all()
+    context = {
+               'tasks': tasks, 'tasks_assigned': tasks_assigned, 'teammates': teammates}
+    return render(request, 'tasks/start_page.html', context)
 
 
 @login_required(login_url='login')
