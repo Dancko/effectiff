@@ -21,4 +21,4 @@ def home(request):
     if request.user.is_authenticated:
         return redirect('my_tasks', pk=request.user.id)
     else:
-        return render(request, 'core/home.html')
+        return render(request, 'core/index.html')

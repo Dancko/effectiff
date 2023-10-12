@@ -1,0 +1,457 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'styles/font-awesome.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/bootstrap.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}" />
+    <link rel="icon" href="{% static 'images/logo-color.png' %}" />
+    <title>Welcome To Effektiff</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md fixed-top">
+      <div class="container">
+        <a href="start_page.html" class="navbar-brand">
+          <img
+            src="{% static 'images/logo-no-background.png' %}"
+            alt=""
+            width="180"
+          />
+        </a>
+
+        <ul class="navbar-nav ms-auto">
+          <div class="btn-group">
+            <li class="nav-item">
+              <a
+                href="#"
+                class="nav-link btn btn-secondary text-white mx-0 rounded-5 rounded-end border-dark"
+                >Sign Up</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                data-bs-toggle="modal"
+                data-bs-target="#modal-login"
+                class="nav-link btn btn-light text-dark rounded-5 rounded-start border-dark"
+                >Log In</a
+              >
+            </li>
+          </div>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="modal-login modal fade" id="modal-login">
+      <div class="modal-dialog modal-lg mt-7">
+        <div class="modal-content bg-dark p-5">
+          <h3 class="fw-bold text-center">Already have an account?</h3>
+          <form id="login" method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="mb-4">
+              <input
+                type="email"
+                name="email"
+                class="form-control"
+                placeholder="Enter Email"
+              />
+            </div>
+            <div class="mb-4">
+              <input
+                type="password"
+                name="password"
+                class="form-control"
+                placeholder="Enter Password"
+              />
+            </div>
+            <a href="#">Forgot password?</a>
+            <div class="d-grid mt-5 gap-3">
+              <button type="submit" class="btn btn-secondary text-light">
+                Log In
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Welcome -->
+    <header class="header">
+      <div class="hero">
+        <div class="container">
+          <div class="row pt-6">
+            <div class="col-lg-6 pt-7">
+              <h2 class="xl-text mt-5">
+                Welcome To
+                <span class="fw-bold text-secondary">Effektiff</span>
+              </h2>
+              <p class="lead">
+                Your Trusted Partner for Effortless Project Management
+              </p>
+            </div>
+            <div class="col-lg-4 offset-md-1 pt-6">
+              <form id="signup" method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
+                <div class="mb-4">
+                  <input
+                    type="email"
+                    name="email"
+                    class="form-control"
+                    placeholder="Enter Email"
+                  />
+                </div>
+                <div class="mb-4">
+                  <input
+                    type="text"
+                    name="username"
+                    class="form-control"
+                    placeholder="Enter Name"
+                  />
+                </div>
+                <div class="mb-4">
+                  <input
+                    type="password"
+                    name="password1"
+                    class="form-control"
+                    placeholder="Enter Password"
+                  />
+                </div>
+                <div class="mb-4">
+                  <input
+                    type="password"
+                    name="password2"
+                    class="form-control"
+                    placeholder="Repeat Your Password"
+                  />
+                </div>
+                <div class="mb-4 form-check">
+                  <input type="checkbox" id="agreecheck" />
+                  <label for="agreecheck" class="form-check-label">
+                    I agree to the
+                    <a href="#" class="text-secondary">Privacy Policy</a>
+                  </label>
+                </div>
+                <div class="d-grid gap-2">
+                  <input
+                    type="submit"
+                    class="btn btn-secondary"
+                    value="Create Account"
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Intro -->
+    <section class="intro py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 mb-5">
+            <div class="d-flex flex-column gap-2 align-items-center pt-5 me-5">
+              <h1 class="fw-bold">Welcome to Effektiff</h1>
+              <p class="lead">
+                At Effektiff, we're here to make your project management journey
+                seamless and successful.
+              </p>
+
+              <p class="lead">
+                Are you tired of the chaos of juggling multiple tasks,
+                deadlines, and teams? Look no further. Our mission is to empower
+                you with the tools you need to take control of your projects, so
+                you can focus on what you do best - achieving your goals.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-6 ps-3">
+            <img
+              src="{% static 'images/welcome.jpg' %}"
+              alt=""
+              class="img-fluid rounded-5"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- We Offer -->
+    <section class="offer bg-dark">
+      <div class="container">
+        <div class="row py-6">
+          <div class="col-md-4 d-flex gap-3 pb-5">
+            <i class="fas fa-chart-line fa-3x text-secondary"></i>
+            <div class="text-container">
+              <h4 class="fw-bold">Streamlined Project Management</h4>
+              <p>
+                Our intuitive platform simplifies project planning, tracking,
+                and collaboration. Say goodbye to spreadsheets and endless
+                emails.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4 d-flex gap-3 pb-5">
+            <i class="fas fa-handshake fa-3x text-secondary"></i>
+            <div class="text-container">
+              <h4 class="fw-bold">Effortless Collaboration</h4>
+              <p>
+                Connect with your team, clients, and partners in one central
+                hub. Share files, updates, and ideas effortlessly.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4 d-flex gap-3">
+            <i class="fas fa-clock fa-3x text-secondary"></i>
+            <div class="text-container">
+              <h4 class="fw-bold">Time and Task Management</h4>
+              <p>
+                Stay on top of your to-do list with our robust task management
+                features. Never miss a deadline again.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Accessible Anywhere -->
+    <section class="accessibility text-white" id="accessibility">
+      <div class="container">
+        <div class="row py-5 mb-5">
+          <div class="col-lg-6">
+            <div class="image-container">
+              <img
+                src="{% static 'images/accessability.jpg' %}"
+                alt=""
+                class="img-fluid rounded-5"
+                style="height: 500px"
+              />
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div
+              class="text-container text-white d-flex flex-column gap-4 justify-content-center h-100 py-5"
+            >
+              <h3 class="fw-bold">
+                Accessible Anywhere: Your Project Management Anytime, Anywhere
+              </h3>
+              <ul class="list-group list-group-flush lh-lg">
+                <li class="list-group-item border-0">
+                  <i class="fas fa-square text-secondary bg-body-bg"></i>
+
+                  <strong>Cross-Device Compatibility:</strong> Effektiff is
+                  designed to work seamlessly on various devices, including
+                  desktop computers, laptops, tablets, and smartphones. Access
+                  your projects and manage tasks on the go.
+                </li>
+                <li class="list-group-item border-0">
+                  <i class="fas fa-square text-secondary"></i>
+
+                  <strong>Web-Based Access:</strong> There's no need to install
+                  any software or apps. Simply open your web browser, log in to
+                  Effektiff, and you're ready to collaborate with your team from
+                  anywhere with an internet connection.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- potential -->
+    <section class="potential" id="potential">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 offset-md-2 mb-5">
+            <div
+              class="d-flex flex-column gap-4 text-center align-items-center"
+            >
+              <h2 class="fw-bold">Unlock Your Project Management Potential!</h2>
+              <p class="lead">
+                Ready to take your projects to the next level? Sign up now for
+                <strong>Effektiff</strong> and experience a world of
+                possibilities
+              </p>
+              <div class="image-container">
+                <img
+                  src="{% static 'images/video-preview.jpg' %}"
+                  alt=""
+                  class="img-fluid rounded-3"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pb-5">
+          <div
+            class="col-lg-3 d-flex flex-column gap-2 text-center align-items-center"
+          >
+            <h3 class="fw-bold">No Geographical Limitations</h3>
+            <p>
+              Whether you're at the office, working from home, or traveling,
+              Effektiff is accessible worldwide. Maintain productivity and stay
+              connected to your projects from anywhere in the world.
+            </p>
+          </div>
+          <div
+            class="col-lg-3 d-flex flex-column gap-2 text-center align-items-center"
+          >
+            <h3 class="fw-bold">Real-Time Updates</h3>
+            <p>
+              Stay up-to-date with real-time notifications and project updates.
+              No matter where you are, you'll be informed of task assignments,
+              comments, and progress changes instantly.
+            </p>
+          </div>
+          <div
+            class="col-lg-3 d-flex flex-column gap-2 text-center align-items-center"
+          >
+            <h3 class="fw-bold">Offline Access</h3>
+            <p>
+              Even when you're in areas with limited or no internet
+              connectivity, Effektiff allows you to work offline, sync your
+              changes when you're back online, and keep your projects moving
+              forward.
+            </p>
+          </div>
+          <div
+            class="col-lg-3 d-flex flex-column gap-2 text-center align-items-center"
+          >
+            <h3 class="fw-bold">Global Collaboration</h3>
+            <p>
+              Effektiff promotes collaboration among team members, clients, and
+              partners across different time zones and locations. Coordinate and
+              work together efficiently without constraints.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sign Up -->
+    <section class="signup">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-10 offset-md-1 py-6">
+            <h2 class="fw-bold text-center">
+              Don't miss out on the opportunity to supercharge your productivity
+              and achieve your project goals faster. Join us today and start
+              your journey towards project management excellence!
+            </h2>
+          </div>
+        </div>
+        <div class="row" id="signup">
+          <div class="col-md-6 offset-md-3">
+            <form>
+              <div class="mb-3">
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="Enter Email"
+                />
+              </div>
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Name"
+                />
+              </div>
+              <div class="mb-3">
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="Enter Password"
+                />
+              </div>
+              <div class="mb-3 form-check">
+                <input type="checkbox" id="agreecheck" />
+                <label for="agreecheck" class="form-check-label">
+                  I agree with the
+                  <a href="#" class="text-secondary">Privacy Policy</a>
+                </label>
+              </div>
+              <div class="d-grid mb-5">
+                <button class="btn btn-secondary text-light">
+                  Create Account
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Social -->
+    <section class="social bg-dark">
+      <div class="container">
+        <div class="row">
+          <div
+            class="col-md-8 offset-md-2 py-6 text-center d-flex flex-column gap-3"
+          >
+            <h3 class="fw-bold">
+              Stay connected and join our vibrant community. For any inquiries
+              or assistance, feel free to reach out to us
+            </h3>
+            <div>
+              <i class="fab fa-facebook fa-3x px-2"></i>
+              <i class="fab fa-twitter fa-3x px-2"></i>
+              <i class="fab fa-instagram fa-3x px-2"></i>
+              <i class="fab fa-telegram fa-3x px-2"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="border-top border-secondary text-primary bg-dark">
+      <div class="container">
+        <div class="row py-3">
+          <div class="col-md-8">
+            <ul class="nav">
+              <li class="nav-item">
+                <a href="#" class="nav-link text-light">Home</a>
+              </li>
+              <li class="nav-item">
+                <a href="#accessibility" class="nav-link text-light"
+                  >Accessibility</a
+                >
+              </li>
+              <li class="nav-item">
+                <a href="#potential" class="nav-link text-light"
+                  >Unlock Your Potential</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <p class="text-light">
+              Copyright &copy;
+              <a href="#" class="text-light"> Effektiff</a> 2023
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+  </body>
+</html>

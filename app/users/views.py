@@ -44,19 +44,30 @@ def logoutPage(request):
 
 def registerPage(request):
     """Register page view."""
-    form = RegisterForm()
+    
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=True)
-            login(request, user)
-            messages.success(request, 'User has been created successfully.')
-            return redirect('home')
-        else:
+        email = request.POST['email']
+        username = request.POST['username']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
+        
+        try:
+            get_user_model().objects.get(email=email)
             messages.error(request, 'This email is already used.')
-            return redirect('register')
+        except:
+            if password1 == password2:
+                user = get_user_model().objects.create_user(email=email, password=password1, name=username)
+        
+                login(request, user)
+                messages.success(request, 'User has been created successfully.')
+                return redirect('home')
 
-    return render(request, 'registration/signup.html', {'form': form})
+            else:
+                messages.error(request, 'Passwords do not match.')
+                return redirect('home')
+    
+
+    return render(request, 'registration/signup.html')
 
 
 def profilePage(request, pk):
