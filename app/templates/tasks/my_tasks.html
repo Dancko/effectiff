@@ -4,60 +4,7 @@
 <div class="container-fluid">
   <div class="row">
     <!-- Left section -->
-    <div class="left-section d-none d-lg-block col-lg-2 h-100 overflow-auto">
-      <div class="container mt-3">
-        <h3 class="fw-bold border-bottom border-secondary py-4">My Team</h3>
-        <form>
-          <input
-            type="search"
-            class="form-control rounded-pill"
-            id="search-teammates"
-            style="height: 50px"
-            placeholder="Search in teammates"
-          />
-        </form>
-        <ul class="list-group profiles-left mt-3 list-unstyled vstack gap-3">
-          {% for teammate in teammates %}
-          <div
-            class="group-item d-flex gap-2 border-bottom border-primary py-2 online"
-          >
-            <a href="#"
-              ><img
-                src="https://randomuser.me/api/portraits/men/23.jpg"
-                alt=""
-                class="img-fluid img-profile-left img-thumbnail rounded-circle border border-2 border-success"
-            /></a>
-
-            <a href="#"><li class="text-white fs-5">{{ teammate.name }}</li></a>
-          </div>
-          {% endfor %}
-          <div
-            class="group-item d-flex gap-2 border-bottom border-primary py-2"
-          >
-            <a href="#"
-              ><img
-                src="https://randomuser.me/api/portraits/men/46.jpg"
-                alt=""
-                class="img-fluid img-profile-left img-thumbnail rounded-circle"
-            /></a>
-
-            <a href="#"><li class="text-white fs-5">Brian Adams</li></a>
-          </div>
-          <div
-            class="group-item d-flex gap-2 border-bottom border-primary py-2"
-          >
-            <a href="#"
-              ><img
-                src="https://randomuser.me/api/portraits/women/23.jpg"
-                alt=""
-                class="img-fluid img-profile-left img-thumbnail rounded-circle"
-            /></a>
-
-            <a href="#"><li class="text-white fs-5">Vanessa May</li></a>
-          </div>
-        </ul>
-      </div>
-    </div>
+    {% include 'left_section.html' %}
 
     <!-- Main Section -->
     <div class="col-lg-10 col-md-12 bg-dark h-100 main-section overflow-auto">
@@ -110,7 +57,9 @@
           <tbody>
             {% for task in tasks_assigned %}
             <tr>
-              <td><a href="#">{{ task.title }}</a></td>
+              <td>
+                <a href="{% url 'task_detail' task.id %}">{{ task.title }}</a>
+              </td>
               <td>
                 <a href="#">{{ task.project }}</a>
               </td>
@@ -182,7 +131,7 @@
             {% endfor %}
           </tbody>
         </table>
-        <a href="new_task.html"
+        <a href="{% url 'create_task' %}"
           ><button class="btn btn-secondary text-light fw-bold mt-3">
             Assign New Task
           </button></a

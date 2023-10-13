@@ -1,0 +1,318 @@
+{% extends '_base.html' %} {% block content %}
+
+<!-- Central Part -->
+<div class="container-fluid">
+  <div class="row">
+    <!-- Left section -->
+    <div class="left-section d-none d-lg-block col-lg-2 overflow-auto">
+      <div class="container mt-3">
+        <h3 class="fw-bold border-bottom border-secondary py-4">My Team</h3>
+        <ul class="list-group profiles-left mt-3 list-unstyled vstack gap-3">
+          <div
+            class="group-item d-flex gap-2 border-bottom border-primary py-2 online"
+          >
+            <a href="#"
+              ><img
+                src="https://randomuser.me/api/portraits/men/23.jpg"
+                alt=""
+                class="img-fluid img-profile-left img-thumbnail rounded-circle border border-2 border-success"
+            /></a>
+
+            <a href="#"><li class="text-white fs-5">Adam Johnson</li></a>
+          </div>
+          <div
+            class="group-item d-flex gap-2 border-bottom border-primary py-2"
+          >
+            <a href="#"
+              ><img
+                src="https://randomuser.me/api/portraits/men/46.jpg"
+                alt=""
+                class="img-fluid img-profile-left img-thumbnail rounded-circle"
+            /></a>
+
+            <a href="#"><li class="text-white fs-5">Brian Adams</li></a>
+          </div>
+          <div
+            class="group-item d-flex gap-2 border-bottom border-primary py-2"
+          >
+            <a href="#"
+              ><img
+                src="https://randomuser.me/api/portraits/women/23.jpg"
+                alt=""
+                class="img-fluid img-profile-left img-thumbnail rounded-circle"
+            /></a>
+
+            <a href="#"><li class="text-white fs-5">Vanessa May</li></a>
+          </div>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Section -->
+    <div class="col-lg-10 col-md-12 bg-dark main-section">
+      <div class="container mt-3">
+        <h2 class="py-4">{{ task.title }}</h2>
+        <h4 class="fw-bold text-primary">Description</h4>
+        {{ task.body|safe }}
+        <h4 class="fw-bold text-primary mt-5">Attachments</h4>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="thumbnail mt-4">
+              <a
+                href="images/adrien-olichon-RCAhiGJsUUE-unsplash.jpg"
+                data-lightbox="images"
+              >
+                <img
+                  src="images/adrien-olichon-RCAhiGJsUUE-unsplash.jpg"
+                  alt="Lights"
+                  style="width: 100%"
+                />
+              </a>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="thumbnail mt-4">
+              <a href="/images/header-bg.jpg" data-lightbox="images">
+                <img
+                  src="/images/header-bg.jpg"
+                  alt="Nature"
+                  style="width: 100%"
+                />
+                <div class="caption"></div>
+              </a>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="thumbnail mt-4">
+              <a href="/images/cooperation.jpg" data-lightbox="images">
+                <img
+                  src="/images/cooperation.jpg"
+                  alt="Fjords"
+                  style="width: 100%"
+                />
+                <div class="caption"></div>
+              </a>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="thumbnail mt-4">
+              <a href="/images/cooperation.jpg" data-lightbox="images">
+                <img
+                  src="/images/cooperation.jpg"
+                  alt="Fjords"
+                  style="width: 100%"
+                />
+                <div class="caption"></div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-6">
+          <div class="col-lg-4">
+            <h4 class="fw-bold text-primary">Status</h4>
+          </div>
+          <div class="col-lg-8">
+            <ul class="list-unstyled">
+              <li class="list-item">
+                {% if task.status == 'Completed' %}
+                <i class="fas fa-circle-check text-success me-2"></i>
+                Completed {% elif task.status == 'In Progress' %}
+                <i class="fas fa-screwdriver-wrench text-warning me-2"></i>
+                In Progress {% elif task.status == 'Awaits' %}
+                <i class="fas fa-circle-pause text-secondary me-2"></i>
+                Awaits {% endif %}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-lg-4">
+            <h4 class="fw-bold text-primary">Urgency</h4>
+          </div>
+          <div class="col-lg-8">
+            <ul class="list-unstyled">
+              <li class="list-item">
+                {% if task.priority == 'Urgent' %}
+                <i class="fas fa-fire text-secondary me-2"></i>
+                Urgent {% elif task.priority == 'Moderate' %}
+                <i class="fas fa-flag text-warning me-2"></i>
+                Moderate {% elif task.priority == 'Non-Urgent' %}
+                <i class="fas fa-flag text-success me-2"></i>
+                Not Urgent {% endif %}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-lg-4">
+            <h4 class="fw-bold text-primary">Assigned To</h4>
+          </div>
+          <div class="col-lg-8">
+            <ul class="list-unstyled">
+              <li class="list-item">{{ task.assigned_to.name }}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-lg-4">
+            <h4 class="fw-bold text-primary">Assigned By</h4>
+          </div>
+          <div class="col-lg-8">
+            <ul class="list-unstyled">
+              <li class="list-item">{{ task.project.owner.name }}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row my-5">
+          <div class="col-lg-4">
+            <h4 class="fw-bold text-primary">Deadline</h4>
+          </div>
+          <div class="col-lg-8">
+            <ul class="list-unstyled">
+              <li class="list-item">{{ task.deadline }}</li>
+            </ul>
+          </div>
+        </div>
+        <h2 class="mb-5 mt-7">Discussion</h2>
+      </div>
+
+      <!-- Comments section -->
+      <div
+        class="container mb-5 overflow-auto p-3 rounded-3 comment-container"
+        style="max-height: 500px"
+      >
+        <div class="row">
+          <div
+            class="col-sm-10 col-lg-8 d-flex gap-2 border border-primary rounded-5 p-3 m-3"
+          >
+            <img
+              src="https://randomuser.me/api/portraits/men/23.jpg"
+              alt=""
+              class="img-fluid img-comment rounded-circle img-thumbnail border border-2 border-success"
+            />
+            <div>
+              <h4 class="fw-bold mb-1">Adam Johnson</h4>
+
+              <small>30 mins ago</small>
+
+              <p class="mt-3">
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit
+                voluptatibus, debitis consequatur ratione aut suscipit tempora
+                enim quia reiciendis optio.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col-sm-10 col-lg-8 ms-auto bg-primary d-flex gap-2 border border-primary rounded-5 p-3 m-3"
+          >
+            <img
+              src="https://randomuser.me/api/portraits/men/44.jpg"
+              alt=""
+              class="img-fluid img-comment rounded-circle img-thumbnail border border-2 border-success"
+            />
+            <div>
+              <h4 class="fw-bold">John Doe</h4>
+              <small>20 mins ago</small>
+              <p class="mt-3">
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit
+                voluptatibus, debitis consequatur ratione aut suscipit tempora
+                enim quia reiciendis optio.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col-sm-10 col-lg-8 d-flex gap-2 border border-primary rounded-5 p-3 m-3"
+          >
+            <img
+              src="https://randomuser.me/api/portraits/men/23.jpg"
+              alt=""
+              class="img-fluid img-comment rounded-circle img-thumbnail border border-2 border-success"
+            />
+            <div>
+              <h4 class="fw-bold">Adam Johnson</h4>
+              <small>15 mins ago</small>
+              <p class="mt-3">
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit
+                voluptatibus, debitis consequatur ratione aut suscipit tempora
+                enim quia reiciendis optio.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col-sm-10 col-lg-8 d-flex gap-2 border border-primary rounded-5 p-3 m-3"
+          >
+            <img
+              src="https://randomuser.me/api/portraits/men/23.jpg"
+              alt=""
+              class="img-fluid img-comment rounded-circle img-thumbnail border border-2 border-success"
+            />
+            <div>
+              <h4 class="fw-bold">Adam Johnson</h4>
+              <small>5 mins ago</small>
+              <p class="mt-3">
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit
+                voluptatibus, debitis consequatur ratione aut suscipit tempora
+                enim quia reiciendis optio.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col-sm-10 col-lg-8 comment ms-auto bg-primary d-flex gap-2 border border-primary rounded-5 p-3 m-3"
+          >
+            <img
+              src="https://randomuser.me/api/portraits/men/44.jpg"
+              alt=""
+              class="img-fluid img-comment rounded-circle img-thumbnail border border-2 border-success"
+            />
+            <div>
+              <h4 class="fw-bold">John Doe</h4>
+              <small>20 mins ago</small>
+              <p class="mt-3">
+                <a href="images/accessability.jpg" data-lightbox="task-img">
+                  <img
+                    src="images/accessability.jpg"
+                    alt=""
+                    class="img-fluid comment-attach"
+                  />
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container mb-5">
+        <form>
+          <textarea
+            name="comment"
+            id=""
+            cols="60"
+            rows="7"
+            class="form-control rounded-3 form-comment"
+            placeholder="Enter Your Message Here"
+          ></textarea>
+          <button
+            type="submit"
+            class="btn btn-secondary mt-3 rounded-1 btn-comment text-light fw-bold"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

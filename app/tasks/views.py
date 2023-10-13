@@ -17,14 +17,14 @@ def myTasksPage(request, pk):
     teammates = user.teammates.all()
     context = {
                'tasks': tasks, 'tasks_assigned': tasks_assigned, 'teammates': teammates}
-    return render(request, 'tasks/start_page.html', context)
+    return render(request, 'tasks/my_tasks.html', context)
 
 
 @login_required(login_url='login')
 def taskDetailPage(request, pk):
     task = Task.objects.get(id=pk)
     task.is_outdated()
-    assigned_to = task.assigned_to.all()
+    assigned_to = task.assigned_to
     comments = Comment.objects.filter(task=task)
     form = CommentForm()
     if request.user == task.project.owner or request.user in assigned_to:
@@ -38,20 +38,22 @@ def taskDetailPage(request, pk):
                 comment.save()
                 return redirect('task_detail', pk=pk)
     context = {'task': task, 'assigned_to': assigned_to, 'comments': comments, 'form': form}
-    return render(request, 'tasks/task_detail.html', context)
+    return render(request, 'tasks/task.html', context)
 
 
 @login_required(login_url='login')
 def taskCreatePage(request):
     """View for creating a task."""
     page = 'create'
-    form = TaskCreateForm()
+    user = request.user
+    form = TaskCreateForm(user=user)
+    
     if request.method == 'POST':
-        form = TaskCreateForm(request.POST)
+        form = TaskCreateForm(request.POST, user=user)
         if form.is_valid():
             form.save(commit=True)
             return redirect('my_tasks', pk=request.user.id)
-    return render(request, 'tasks/create_update_task.html', {'form': form, 'page': page})
+    return render(request, 'tasks/new_task.html', {'form': form, 'page': page, 'user': user})
 
 
 @login_required(login_url='login')

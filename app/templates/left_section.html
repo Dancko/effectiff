@@ -1,0 +1,30 @@
+<div class="left-section d-none d-lg-block col-lg-2 h-100 overflow-auto">
+  <div class="container mt-3">
+    <h3 class="fw-bold border-bottom border-secondary py-4">My Team</h3>
+    <form>
+      <input
+        type="search"
+        class="form-control rounded-pill"
+        id="search-teammates"
+        style="height: 50px"
+        placeholder="Search in teammates"
+      />
+    </form>
+    <ul class="list-group profiles-left mt-3 list-unstyled vstack gap-3">
+      {% for teammate in user.teammates.all %}
+      <div
+        class="group-item d-flex gap-2 border-bottom border-primary py-2 online"
+      >
+        <a href="#"
+          ><img
+            src="https://randomuser.me/api/portraits/men/23.jpg"
+            alt=""
+            class="img-fluid img-profile-left img-thumbnail rounded-circle border border-2 border-success"
+        /></a>
+
+        <a href="#"><li class="text-white fs-5">{{ teammate.name }}</li></a>
+      </div>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

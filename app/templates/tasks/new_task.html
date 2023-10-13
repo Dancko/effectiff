@@ -1,0 +1,40 @@
+{% extends '_base.html' %} {% block content %}
+
+<!-- Central Part -->
+<div class="container-fluid">
+  <div class="row">
+    <!-- Left section -->
+    {% include 'left_section.html' %}
+
+    <!-- Main Section -->
+    <div class="col-lg-10 col-md-12 bg-dark h-100 main-section">
+      <div class="container mt-3">
+        <h2 class="fw-bold py-4">Assign New Task</h2>
+
+        <form style="max-width: 800px" method="POST" action="#">
+          {% csrf_token %} {% for field in form.visible_fields %}
+          <div class="row mt-4">
+            <div class="col-lg-4">
+              <h4 class="text-primary fw-bold pt-3">{{ field.label }}</h4>
+            </div>
+            <div class="col-lg-8">{{ field }}</div>
+          </div>
+          {% endfor %}
+
+          <div class="row mt-5 mb-6">
+            <div class="col-lg-12 text-center">
+              <button
+                class="btn btn-secondary text-white fw-bold"
+                style="width: 150px"
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
