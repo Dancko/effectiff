@@ -11,13 +11,16 @@
       <div class="container mt-3">
         <h2 class="fw-bold py-4">Assign New Task</h2>
 
-        <form style="max-width: 800px" method="POST" action="#">
-          {% csrf_token %} {% for field in form.visible_fields %}
+        <form method="POST" action="#">
+          {% csrf_token %}
+           
+          {% for field in form.visible_fields%}
+          {{ form.media }}
           <div class="row mt-4">
-            <div class="col-lg-4">
+            <div class="col-lg-2">
               <h4 class="text-primary fw-bold pt-3">{{ field.label }}</h4>
             </div>
-            <div class="col-lg-8">{{ field }}</div>
+            <div class="col-lg-10">{{ field }}</div>
           </div>
           {% endfor %}
 
@@ -36,5 +39,15 @@
     </div>
   </div>
 </div>
-
+<script type="text/javascript">
+  tinymce.init({
+        selector: 'textarea',
+        plugins: 'powerpaste casechange searchreplace autolink directionality advcode visualblocks visualchars image link media mediaembed codesample table charmap pagebreak nonbreaking anchor tableofcontents insertdatetime advlist lists checklist wordcount tinymcespellchecker editimage help formatpainter permanentpen charmap linkchecker emoticons advtable export autosave',
+        toolbar: 'undo redo print spellcheckdialog formatpainter | blocks fontfamily fontsize | bold italic underline forecolor backcolor | link image | alignleft aligncenter alignright alignjustify lineheight | checklist bullist numlist indent outdent | removeformat aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | ',
+        height: '700px',
+        skin: 'CUSTOMNEW',
+        content_style:
+    "body { background: #0c0c0c; color: white; font-size: 14pt; font-family: Arial; }",
+    });
+</script>   
 {% endblock content %}

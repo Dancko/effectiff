@@ -9,7 +9,7 @@ class DateTimeInput(forms.DateTimeInput):
 
 
 class TaskCreateForm(ModelForm):
-    body = forms.CharField(widget=forms.Textarea(attrs={"rows":"5"}))
+    # body = forms.CharField(widget=forms.Textarea(attrs={"rows":"5"}))
     
 
     class Meta:

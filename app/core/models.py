@@ -3,6 +3,7 @@ from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, Permi
 from django.utils import timezone
 
 from ckeditor.fields import RichTextField
+from tinymce.models import HTMLField
 from django_cryptography.fields import encrypt
 
 
@@ -56,7 +57,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
 
     def __str__(self):
-        return self.email
+        return self.name
 
 
 class Category(models.Model):
@@ -100,7 +101,7 @@ class Task(models.Model):
     ]
 
     title = models.CharField(max_length=250)
-    body = RichTextField(blank=True, null=True)
+    body = HTMLField(blank=True, null=True)
     deadline = models.DateTimeField()
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='Non-Urgent')
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='Awaits')
