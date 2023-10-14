@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, PermissionsMixin)
 from django.utils import timezone
 
-from ckeditor.fields import RichTextField
 from tinymce.models import HTMLField
 from django_cryptography.fields import encrypt
 
@@ -73,7 +72,7 @@ class Category(models.Model):
 class Project(models.Model):
     name = models.CharField(max_length=255)
     category = models.ManyToManyField('Category', blank=True)
-    description = models.TextField(blank=True)
+    description = HTMLField(blank=True, null=True)
     owner = models.ForeignKey('User', on_delete=models.CASCADE, related_name='owner')
     participants = models.ManyToManyField('User', blank=True)
     updated = models.DateTimeField(auto_now=True)

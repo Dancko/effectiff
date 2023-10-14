@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 
 from core.models import Task, Project, Comment
 from .forms import TaskCreateForm, TaskAddPartiicipantsForm, CommentForm
@@ -22,12 +23,13 @@ def myTasksPage(request, pk):
 
 @login_required(login_url='login')
 def taskDetailPage(request, pk):
+    statuses = ['Awaits', 'In Progress', 'Completed']
     task = Task.objects.get(id=pk)
     task.is_outdated()
     assigned_to = task.assigned_to
     comments = Comment.objects.filter(task=task)
     form = CommentForm()
-    if request.user == task.project.owner or request.user in assigned_to:
+    if request.user == task.project.owner or assigned_to == request.user:
 
         if request.method == 'POST':
             form = CommentForm(request.POST)
@@ -37,8 +39,19 @@ def taskDetailPage(request, pk):
                 comment.task = task
                 comment.save()
                 return redirect('task_detail', pk=pk)
-    context = {'task': task, 'assigned_to': assigned_to, 'comments': comments, 'form': form}
+    context = {'task': task, 'assigned_to': assigned_to, 'comments': comments, 'form': form, 'statuses': statuses}
     return render(request, 'tasks/task.html', context)
+
+
+@login_required(login_url='login')
+def taskChangeStatus(request, pk):
+    task = Task.objects.get(id=pk)
+    if request.method == 'POST':
+        new_status = request.POST['status']
+        task.status = new_status
+        task.save()
+        return redirect('task_detail', pk=pk)
+    return HttpResponse("{'status': 200}")
 
 
 @login_required(login_url='login')
@@ -63,15 +76,15 @@ def taskEditPage(request, pk):
     page = 'edit'
     task = Task.objects.get(id=pk)
     if request.user.id == task.project.owner.id:
-        form = TaskCreateForm(instance=task)
+        form = TaskCreateForm(instance=task, user=request.user)
         if request.method == 'POST':
-            form = TaskCreateForm(request.POST, instance=task)
+            form = TaskCreateForm(request.POST, instance=task, user=request.user)
             if form.is_valid():
                 form.save()
                 return redirect('my_tasks', pk=request.user.id)
     else:
         return redirect('my_tasks', pk=request.user.id)
-    return render(request, 'tasks/create_update_task.html', {'page': page, 'form': form})
+    return render(request, 'tasks/new_task.html', {'page': page, 'form': form})
 
 
 @login_required(login_url='login')

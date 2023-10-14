@@ -26,7 +26,7 @@ def projectPage(request, pk):
         'projects_participated': projects_participated,
         'tasks': tasks
     }
-    return render(request, 'projects/project.html', context)
+    return render(request, 'projects/project1.html', context)
 
 
 @login_required(login_url='login')

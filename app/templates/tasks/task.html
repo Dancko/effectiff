@@ -4,54 +4,58 @@
 <div class="container-fluid">
   <div class="row">
     <!-- Left section -->
-    <div class="left-section d-none d-lg-block col-lg-2 overflow-auto">
-      <div class="container mt-3">
-        <h3 class="fw-bold border-bottom border-secondary py-4">My Team</h3>
-        <ul class="list-group profiles-left mt-3 list-unstyled vstack gap-3">
-          <div
-            class="group-item d-flex gap-2 border-bottom border-primary py-2 online"
-          >
-            <a href="#"
-              ><img
-                src="https://randomuser.me/api/portraits/men/23.jpg"
-                alt=""
-                class="img-fluid img-profile-left img-thumbnail rounded-circle border border-2 border-success"
-            /></a>
-
-            <a href="#"><li class="text-white fs-5">Adam Johnson</li></a>
-          </div>
-          <div
-            class="group-item d-flex gap-2 border-bottom border-primary py-2"
-          >
-            <a href="#"
-              ><img
-                src="https://randomuser.me/api/portraits/men/46.jpg"
-                alt=""
-                class="img-fluid img-profile-left img-thumbnail rounded-circle"
-            /></a>
-
-            <a href="#"><li class="text-white fs-5">Brian Adams</li></a>
-          </div>
-          <div
-            class="group-item d-flex gap-2 border-bottom border-primary py-2"
-          >
-            <a href="#"
-              ><img
-                src="https://randomuser.me/api/portraits/women/23.jpg"
-                alt=""
-                class="img-fluid img-profile-left img-thumbnail rounded-circle"
-            /></a>
-
-            <a href="#"><li class="text-white fs-5">Vanessa May</li></a>
-          </div>
-        </ul>
-      </div>
-    </div>
+    {% include 'left_section.html' %}
 
     <!-- Main Section -->
     <div class="col-lg-10 col-md-12 bg-dark main-section">
       <div class="container mt-3">
-        <h2 class="py-4">{{ task.title }}</h2>
+        <div class="d-flex">
+          <h2 class="py-4">{{ task.title }}</h2>
+          {% if task.project.owner == request.user %}
+          <div class="ms-auto pt-3">
+            <a
+              href="{% url 'edit_task' task.id %}"
+              class="table-tooltip"
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
+              data-bs-title="Edit"
+            >
+              <i class="fas fa-gear fa-lg text-primary px-2 py-4"></i>
+            </a>
+            <a
+              href="#"
+              class="table-tooltip"
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
+              data-bs-title="Delete"
+            >
+              <i class="fas fa-trash fa-lg text-secondary px-2 py-4"></i>
+            </a>
+          </div>
+          {% else %}
+          <div class="ms-auto pt-3">
+            <form action="{% url 'change_st' task.id %}" method="POST" >
+              {% csrf_token %}
+              <div class="input-group input-group-sm">
+                <select class="form-select" name="status">
+                  <!-- <option selected>Update Status</option>
+                  <option value="Awaits">Awaits</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Completed">Completed</option> -->
+                  {% for status in statuses %}
+                  {% if task.status == status %}
+                  <option selected value="{{ status }}">{{ status }}</option>
+                  {% else %}
+                  <option value="{{ status }}">{{ status }}</option>
+                  {% endif %}
+                  {% endfor %}
+                </select>
+                <button class="btn btn-secondary" type="submit"><i class="fas fa-check text-light"></i></button>
+              </div>
+            </form>
+          </div>
+          {% endif %}
+        </div>
         <h4 class="fw-bold text-primary">Description</h4>
         {{ task.body|safe }}
         <h4 class="fw-bold text-primary mt-5">Attachments</h4>
@@ -152,7 +156,11 @@
           </div>
           <div class="col-lg-8">
             <ul class="list-unstyled">
-              <li class="list-item">{{ task.assigned_to.name }}</li>
+              <li class="list-item">
+                <a href="{% url 'profile' task.assigned_to.id %}"
+                  >{{ task.assigned_to.name }}</a
+                >
+              </li>
             </ul>
           </div>
         </div>
@@ -163,7 +171,11 @@
           </div>
           <div class="col-lg-8">
             <ul class="list-unstyled">
-              <li class="list-item">{{ task.project.owner.name }}</li>
+              <li class="list-item">
+                <a href="{% url 'profile' task.project.owner.id %}"
+                  >{{ task.project.owner.name }}</a
+                >
+              </li>
             </ul>
           </div>
         </div>
@@ -186,10 +198,7 @@
         class="container mb-5 overflow-auto p-3 rounded-3 comment-container"
         style="max-height: 500px"
       >
-      {% for comment in comments %}
-
-
-        {% if comment.author == request.user %}
+        {% for comment in comments %} {% if comment.author == request.user %}
         <div class="row">
           <div
             class="col-sm-10 col-lg-8 ms-auto bg-primary d-flex gap-2 border border-primary rounded-5 p-3 m-3"
@@ -202,9 +211,7 @@
             <div>
               <h4 class="fw-bold">{{ comment.author }}</h4>
               <small>{{ comment.created|timesince }} ago</small>
-              <p class="mt-3">
-                {{ comment.body }}
-              </p>
+              <p class="mt-3">{{ comment.body }}</p>
             </div>
           </div>
         </div>
@@ -221,22 +228,15 @@
             <div>
               <h4 class="fw-bold">{{ comment.author }}</h4>
               <small>{{ comment.created|timesince }} ago</small>
-              <p class="mt-3">
-                {{ comment.body }}
-              </p>
+              <p class="mt-3">{{ comment.body }}</p>
             </div>
           </div>
         </div>
-        {% endif %}
-        {% endfor %}
-        
-        
+        {% endif %} {% endfor %}
       </div>
       <div class="container mb-5">
         <form method="POST" action="#">
-          {% csrf_token %}
-          
-          {{ form }}
+          {% csrf_token %} {{ form }}
           <button
             type="submit"
             class="btn btn-secondary mt-3 rounded-1 btn-comment text-light fw-bold"

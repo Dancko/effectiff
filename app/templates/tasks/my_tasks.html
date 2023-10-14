@@ -58,10 +58,16 @@
             {% for task in tasks_assigned %}
             <tr>
               <td>
-                <a href="{% url 'task_detail' task.id %}">{{ task.title }}</a>
+                <a href="{% url 'task_detail' task.id %}" class="table-tooltip"
+                  >{{ task.title }}</a
+                >
               </td>
               <td>
-                <a href="#">{{ task.project }}</a>
+                <a
+                  href="{% url 'project' task.project.id %}"
+                  class="table-tooltip"
+                  >{{ task.project }}</a
+                >
               </td>
               <td class="ps-4">
                 {% if task.status == 'Awaits' %}
@@ -186,9 +192,9 @@
           <tbody>
             {% for task in tasks %}
             <tr>
-              <td><a href="#">{{ task.title }}</a></td>
+              <td><a href="{% url 'task_detail' task.id %}" class="table-tooltip">{{ task.title }}</a></td>
               <td>
-                <a href="#">{{ task.project }}</a>
+                <a href="{% url 'project' task.project.id %}" class="table-tooltip">{{ task.project }}</a>
               </td>
               <td class="ps-4">
                 {% if task.status == 'Awaits' %}
