@@ -146,4 +146,4 @@ class Comment(models.Model):
         return self.body
 
     class Meta:
-        ordering = ['-created']
+        ordering = ['created']

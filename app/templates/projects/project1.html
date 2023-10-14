@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/font-awesome.css" />
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="icon" href="images/logo-color.png" />
+    <title>Welcome To Effektiff</title>
+  </head>
+  <body>
+    <nav
+      class="navbar navbar-expand-lg bg-dark navbar-dark border-bottom border-primary border-1"
+    >
+      <div class="container">
+        <a href="start_page.html" class="navbar-brand">
+          <img src="images/logo-no-background.png" alt="" width="180" />
+        </a>
+
+        <form action="" class="d-none d-xl-block">
+          <input
+            type="search"
+            class="form-control rounded-5 ms-5"
+            style="height: 50px"
+            placeholder="Search..."
+          />
+        </form>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a href="#" class="nav-link">Tasks</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">Projects</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">My Team</a>
+            </li>
+            <li class="nav-item d-md-block d-lg-none">
+              <a href="#" class="nav-link">Settings</a>
+            </li>
+            <li class="nav-item d-md-block d-lg-none">
+              <a href="#" class="nav-link">Log Out</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="image-container ms-4 d-none d-lg-block">
+          <a href="profile.html">
+            <img
+              src="https://randomuser.me/api/portraits/men/44.jpg"
+              alt=""
+              class="img-nav img-thumbnail rounded-circle border border-2 border-success"
+            />
+          </a>
+        </div>
+
+        <div class="dropdown">
+          <a
+            class="ms-2 d-none d-lg-block"
+            data-bs-toggle="dropdown"
+            data-bs-target="#img-menu"
+            type="button"
+            role="button"
+            aria-expanded="true"
+            aria-haspopup="false"
+          >
+            <i class="fas fa-caret-down text-light"></i>
+          </a>
+          <div class="dropdown-menu bg-light text-white" id="img-menu">
+            <a href="#" class="dropdown-item">Settings</a>
+            <a href="#" class="dropdown-item">Log Out</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Central Part -->
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Left section -->
+        <div
+          class="left-section d-none d-lg-block col-lg-2 h-100 overflow-auto"
+        >
+          <div class="container mt-3">
+            <h3 class="fw-bold border-bottom border-secondary py-4">My Team</h3>
+            <ul
+              class="list-group profiles-left mt-3 list-unstyled vstack gap-3"
+            >
+              <div
+                class="group-item d-flex gap-2 border-bottom border-primary py-2 online"
+              >
+                <a href="#"
+                  ><img
+                    src="https://randomuser.me/api/portraits/men/23.jpg"
+                    alt=""
+                    class="img-fluid img-profile-left img-thumbnail rounded-circle border border-2 border-success"
+                /></a>
+
+                <a href="#"><li class="text-white fs-5">Adam Johnson</li></a>
+              </div>
+              <div
+                class="group-item d-flex gap-2 border-bottom border-primary py-2"
+              >
+                <a href="#"
+                  ><img
+                    src="https://randomuser.me/api/portraits/men/46.jpg"
+                    alt=""
+                    class="img-fluid img-profile-left img-thumbnail rounded-circle"
+                /></a>
+
+                <a href="#"><li class="text-white fs-5">Brian Adams</li></a>
+              </div>
+              <div
+                class="group-item d-flex gap-2 border-bottom border-primary py-2"
+              >
+                <a href="#"
+                  ><img
+                    src="https://randomuser.me/api/portraits/women/23.jpg"
+                    alt=""
+                    class="img-fluid img-profile-left img-thumbnail rounded-circle"
+                /></a>
+
+                <a href="#"><li class="text-white fs-5">Vanessa May</li></a>
+              </div>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Main Section -->
+        <div class="col-lg-10 col-md-12 bg-dark h-100 main-section">
+          <div class="container mt-3">
+            <h3 class="fw-bold pt-4 mb-2">E-Commerce Website Frontend</h3>
+            <p class="text-primary fw-bold">
+              Managed by <a href="profile.html">John Doe</a>
+            </p>
+            <h4 class="text-primary fw-bold mt-5">Description</h4>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem,
+              adipisci vel quam harum, temporibus eum voluptatem et a placeat
+              quasi corporis aut porro dignissimos sint cupiditate maiores
+              aperiam fugit molestias dolore numquam animi ipsam quidem. Nihil
+              pariatur cum veniam perferendis laborum quos nesciunt. Sequi
+              dolor, quaerat tenetur quas, earum labore omnis numquam aspernatur
+              aperiam, nisi asperiores repellat et nam sit!
+            </p>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem,
+              adipisci vel quam harum, temporibus eum voluptatem et a placeat
+              quasi corporis aut porro dignissimos sint cupiditate maiores
+              aperiam fugit molestias dolore numquam animi ipsam quidem. Nihil
+              pariatur cum veniam perferendis laborum quos nesciunt. Sequi
+              dolor, quaerat tenetur quas, earum labore omnis numquam aspernatur
+              aperiam, nisi asperiores repellat et nam sit!
+            </p>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem,
+              adipisci vel quam harum, temporibus eum voluptatem et a placeat
+              quasi corporis aut porro dignissimos sint cupiditate maiores
+              aperiam fugit molestias dolore numquam animi ipsam quidem. Nihil
+              pariatur cum veniam perferendis laborum quos nesciunt. Sequi
+              dolor, quaerat tenetur quas, earum labore omnis numquam aspernatur
+              aperiam, nisi asperiores repellat et nam sit!
+            </p>
+            <h4 class="text-primary fw-bold mt-5 mb-3">Participants</h4>
+            <ul class="list-unstyled">
+              <li class="d-flex gap-2 my-2">
+                <a href="#"
+                  ><img
+                    src="https://randomuser.me/api/portraits/men/23.jpg"
+                    alt=""
+                    class="img-fluid img-profile-left rounded-circle mb-2 border border-2 border-success"
+                /></a>
+                <a href="#" class="fs-4">Adam Johnson</a>
+              </li>
+              <li class="d-flex gap-2 my-2">
+                <a href="#"
+                  ><img
+                    src="https://randomuser.me/api/portraits/men/46.jpg"
+                    alt=""
+                    class="img-fluid img-profile-left rounded-circle mb-2"
+                /></a>
+                <a href="#" class="fs-4">Brian Adams</a>
+              </li>
+              <li class="d-flex gap-2 my-2">
+                <a href="#"
+                  ><img
+                    src="https://randomuser.me/api/portraits/women/23.jpg"
+                    alt=""
+                    class="img-fluid img-profile-left rounded-circle mb-2"
+                /></a>
+                <a href="#" class="fs-4">Vanessa May</a>
+              </li>
+            </ul>
+
+            <h4 class="fw-bold mt-5 text-primary">Tasks Assigned</h4>
+            <table class="table table-hover mb-7">
+              <thead>
+                <th>Title</th>
+
+                <th>Status</th>
+                <th>Urgency</th>
+                <th>Deadline</th>
+                <th>Assigned To</th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <a href="task.html">Create the Website's Logo</a>
+                  </td>
+
+                  <td class="ps-4">
+                    <a
+                      href="#"
+                      class="table-tooltip"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Completed"
+                      ><i class="fas fa-circle-check text-success"></i
+                    ></a>
+                  </td>
+                  <td class="ps-4">
+                    <a
+                      href="#"
+                      class="table-tooltip"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Very Urgent"
+                      ><i class="fas fa-fire text-secondary"></i
+                    ></a>
+                  </td>
+                  <td>2023-15-09 15:00</td>
+                  <td>
+                    <a href="#">Adam Johnson</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#">Make a Web Design</a>
+                  </td>
+
+                  <td class="ps-4">
+                    <a
+                      href="#"
+                      class="table-tooltip"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="In Progress"
+                      ><i class="fas fa-screwdriver-wrench text-warning"></i
+                    ></a>
+                  </td>
+                  <td class="ps-4">
+                    <a
+                      href="#"
+                      class="table-tooltip"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Not Urgent"
+                      ><i class="fas fa-flag text-success"></i
+                    ></a>
+                  </td>
+                  <td>2023-17-09 19:00</td>
+                  <td><a href="#">Brian Adams</a></td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#">SEO</a>
+                  </td>
+
+                  <td class="ps-4">
+                    <a
+                      href="#"
+                      class="table-tooltip"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Awaits"
+                      ><i class="fas fa-circle-pause text-secondary"></i
+                    ></a>
+                  </td>
+                  <td class="ps-4">
+                    <a
+                      href="#"
+                      class="table-tooltip"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Urgent"
+                      ><i class="fas fa-flag text-warning"></i
+                    ></a>
+                    <a data-bs-toggle="modal"></a>
+                  </td>
+                  <td>2023-25-09 20:00</td>
+                  <td><a href="#">Vanessa May</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="border-top border-secondary text-primary bg-dark">
+      <div class="container">
+        <div class="row py-3">
+          <div class="col-12 text-center">
+            <p>Copyright &copy; <a href="#"> Effektiff</a> 2023</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>

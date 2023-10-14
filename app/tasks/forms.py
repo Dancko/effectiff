@@ -43,6 +43,16 @@ class TaskAddPartiicipantsForm(ModelForm):
 
 
 class CommentForm(ModelForm):
+    body = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control rounded-3 form-comment",
+                                                         
+                                                        "placeholder": "Enter Your Message Here", 
+                                                        "rows": "7"}))
+
     class Meta:
         model = Comment
         fields = ['body']
+
+    def __init__(self, *args, **kwargs):
+        super(CommentForm, self).__init__(*args, **kwargs)
+
+        self.fields["body"].label = ""

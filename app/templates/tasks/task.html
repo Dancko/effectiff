@@ -186,28 +186,10 @@
         class="container mb-5 overflow-auto p-3 rounded-3 comment-container"
         style="max-height: 500px"
       >
-        <div class="row">
-          <div
-            class="col-sm-10 col-lg-8 d-flex gap-2 border border-primary rounded-5 p-3 m-3"
-          >
-            <img
-              src="https://randomuser.me/api/portraits/men/23.jpg"
-              alt=""
-              class="img-fluid img-comment rounded-circle img-thumbnail border border-2 border-success"
-            />
-            <div>
-              <h4 class="fw-bold mb-1">Adam Johnson</h4>
+      {% for comment in comments %}
 
-              <small>30 mins ago</small>
 
-              <p class="mt-3">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit
-                voluptatibus, debitis consequatur ratione aut suscipit tempora
-                enim quia reiciendis optio.
-              </p>
-            </div>
-          </div>
-        </div>
+        {% if comment.author == request.user %}
         <div class="row">
           <div
             class="col-sm-10 col-lg-8 ms-auto bg-primary d-flex gap-2 border border-primary rounded-5 p-3 m-3"
@@ -218,16 +200,15 @@
               class="img-fluid img-comment rounded-circle img-thumbnail border border-2 border-success"
             />
             <div>
-              <h4 class="fw-bold">John Doe</h4>
-              <small>20 mins ago</small>
+              <h4 class="fw-bold">{{ comment.author }}</h4>
+              <small>{{ comment.created|timesince }} ago</small>
               <p class="mt-3">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit
-                voluptatibus, debitis consequatur ratione aut suscipit tempora
-                enim quia reiciendis optio.
+                {{ comment.body }}
               </p>
             </div>
           </div>
         </div>
+        {% else %}
         <div class="row">
           <div
             class="col-sm-10 col-lg-8 d-flex gap-2 border border-primary rounded-5 p-3 m-3"
@@ -238,71 +219,24 @@
               class="img-fluid img-comment rounded-circle img-thumbnail border border-2 border-success"
             />
             <div>
-              <h4 class="fw-bold">Adam Johnson</h4>
-              <small>15 mins ago</small>
+              <h4 class="fw-bold">{{ comment.author }}</h4>
+              <small>{{ comment.created|timesince }} ago</small>
               <p class="mt-3">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit
-                voluptatibus, debitis consequatur ratione aut suscipit tempora
-                enim quia reiciendis optio.
+                {{ comment.body }}
               </p>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div
-            class="col-sm-10 col-lg-8 d-flex gap-2 border border-primary rounded-5 p-3 m-3"
-          >
-            <img
-              src="https://randomuser.me/api/portraits/men/23.jpg"
-              alt=""
-              class="img-fluid img-comment rounded-circle img-thumbnail border border-2 border-success"
-            />
-            <div>
-              <h4 class="fw-bold">Adam Johnson</h4>
-              <small>5 mins ago</small>
-              <p class="mt-3">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit
-                voluptatibus, debitis consequatur ratione aut suscipit tempora
-                enim quia reiciendis optio.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div
-            class="col-sm-10 col-lg-8 comment ms-auto bg-primary d-flex gap-2 border border-primary rounded-5 p-3 m-3"
-          >
-            <img
-              src="https://randomuser.me/api/portraits/men/44.jpg"
-              alt=""
-              class="img-fluid img-comment rounded-circle img-thumbnail border border-2 border-success"
-            />
-            <div>
-              <h4 class="fw-bold">John Doe</h4>
-              <small>20 mins ago</small>
-              <p class="mt-3">
-                <a href="images/accessability.jpg" data-lightbox="task-img">
-                  <img
-                    src="images/accessability.jpg"
-                    alt=""
-                    class="img-fluid comment-attach"
-                  />
-                </a>
-              </p>
-            </div>
-          </div>
-        </div>
+        {% endif %}
+        {% endfor %}
+        
+        
       </div>
       <div class="container mb-5">
-        <form>
-          <textarea
-            name="comment"
-            id=""
-            cols="60"
-            rows="7"
-            class="form-control rounded-3 form-comment"
-            placeholder="Enter Your Message Here"
-          ></textarea>
+        <form method="POST" action="#">
+          {% csrf_token %}
+          
+          {{ form }}
           <button
             type="submit"
             class="btn btn-secondary mt-3 rounded-1 btn-comment text-light fw-bold"

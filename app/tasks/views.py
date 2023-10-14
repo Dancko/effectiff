@@ -48,6 +48,7 @@ def taskCreatePage(request):
     user = request.user
     form = TaskCreateForm(user=user)
     
+    
     if request.method == 'POST':
         form = TaskCreateForm(request.POST, user=user)
         if form.is_valid():
