@@ -1,0 +1,82 @@
+{% extends '_base.html' %}{% block content %}
+
+<!-- Central Part -->
+<div class="container-fluid">
+  <div class="row">
+    <!-- Left section -->
+    {% include 'left_section.html' %} 
+    
+
+    <!-- Main Section -->
+    <div class="col-lg-10 col-md-12 bg-dark h-100 main-section">
+      <div class="container mt-3">
+        {% if page == 'create' %}
+        <div>
+          <h3 class="fw-bold pt-4 mb-2">Create New Project</h3>
+        </div>
+        {% elif page == 'add' %}
+        <div>
+          <h3 class="fw-bold pt-4 mb-2">Add Members</h3>
+        </div>
+        {% else %}
+        <div>
+            <h3 class="fw-bold pt-4 mb-2">Update Project</h3>
+        </div>
+        {% endif %}
+
+        {% if page == 'add' %}
+        <form action="#" method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            
+            {{ form }}
+            </select>
+          </div>
+          <button
+                class="btn btn-secondary text-white fw-bold my-5"
+                style="width: 150px"
+              >
+                Confirm
+              </button>
+      </form>
+        {% else %}
+
+        <form action="#" method="POST">
+            {% csrf_token %}
+            {{ form.media }}
+            {% for field in form.visible_fields %}
+            <h4 class="text-primary fw-bold mt-5">{{ field.label }}</h4>
+            {{ field }}
+            {% endfor %}
+            
+            
+            <button
+                class="btn btn-secondary text-white fw-bold my-5"
+                style="width: 150px"
+              >
+              {% if page == 'create' %}
+                Create
+              {% else %}
+                Update
+              {% endif %}
+              </button>
+        </form>
+        {% endif %}
+
+    
+  </div>
+</div>
+<script type="text/javascript">
+    tinymce.init({
+      selector: "textarea",
+      plugins:
+        "powerpaste casechange searchreplace autolink directionality advcode visualblocks visualchars image link media mediaembed codesample table charmap pagebreak nonbreaking anchor tableofcontents insertdatetime advlist lists checklist wordcount tinymcespellchecker editimage help formatpainter permanentpen charmap linkchecker emoticons advtable export autosave",
+      toolbar:
+        "undo redo print spellcheckdialog formatpainter | blocks fontfamily fontsize | bold italic underline forecolor backcolor | link image | alignleft aligncenter alignright alignjustify lineheight | checklist bullist numlist indent outdent | removeformat aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | ",
+      height: "700px",
+      skin: "CUSTOMNEW",
+      content_style:
+        "body { background: #0c0c0c; color: white; font-size: 14pt; font-family: Arial; }",
+    });
+  </script>
+{% endblock content %}

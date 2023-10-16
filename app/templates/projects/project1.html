@@ -18,7 +18,16 @@
           
           <div class="ms-auto">
             <a
-              href="#"
+              href="{% url 'add_members' project.id %}"
+              class="table-tooltip"
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
+              data-bs-title="Add Members"
+            >
+              <i class="fas fa-plus fa-lg text-success px-2 py-4"></i>
+            </a>
+            <a
+              href="{% url 'edit_project' project.id %}"
               class="table-tooltip"
               data-bs-toggle="tooltip"
               data-bs-placement="bottom"
@@ -27,7 +36,7 @@
               <i class="fas fa-gear fa-lg text-primary px-2 py-4"></i>
             </a>
             <a
-              href="#"
+              href="{% url 'delete_project' project.id %}"
               class="table-tooltip"
               data-bs-toggle="tooltip"
               data-bs-placement="bottom"

@@ -1,0 +1,23 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+      <!-- Left section -->
+      {% include 'left_section.html' %}
+  
+      <!-- Main Section -->
+        <div class="col-lg-10 col-md-12 bg-dark main-section">
+            <div class="container mt-3 vh-100">
+                <h2 class="mt-5">Delete "{{ object }}"</h3>
+                <p class="lead mt-4">Are you sure that you want to delete "{{ object }}"?</p>
+                <form action="#" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-secondary  text-light fw-bold mt-4">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
