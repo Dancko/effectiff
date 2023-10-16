@@ -15,20 +15,23 @@ def myTasksPage(request, pk):
 
     tasks_assigned = Task.objects.filter(project__owner=user)
     tasks = Task.objects.filter(assigned_to=user)
-    teammates = user.teammates.all()
-    context = {"tasks": tasks, "tasks_assigned": tasks_assigned, "teammates": teammates}
+    context = {
+        "tasks": tasks,
+        "tasks_assigned": tasks_assigned,
+    }
     return render(request, "tasks/my_tasks.html", context)
 
 
 @login_required(login_url="login")
 def taskDetailPage(request, pk):
     statuses = ["Awaits", "In Progress", "Completed"]
-    task = get_object_or_404(Task, pk=pk)
+    task = (
+        Task.objects.select_related("assigned_to").select_related("project").get(id=pk)
+    )
     task.is_outdated()
-    assigned_to = task.assigned_to
     comments = Comment.objects.filter(task=task)
     form = CommentForm()
-    if request.user == task.project.owner or assigned_to == request.user:
+    if request.user == task.project.owner or task.assigned_to == request.user:
         if request.method == "POST":
             form = CommentForm(request.POST)
             if form.is_valid():
@@ -39,7 +42,6 @@ def taskDetailPage(request, pk):
                 return redirect("task_detail", pk=pk)
     context = {
         "task": task,
-        "assigned_to": assigned_to,
         "comments": comments,
         "form": form,
         "statuses": statuses,
@@ -108,7 +110,7 @@ def deleteTaskPage(request, pk):
 @login_required(login_url="login")
 def addMembers(request, pk):
     page = "edit"
-    task = get_object_or_404(Task, pk=pk)
+    task = Task.objects.select_related("project").get(id=pk)
     if task.project.owner == request.user:
         form = TaskAddPartiicipantsForm(instance=task)
 
