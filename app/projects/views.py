@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from django.db.models import Count, Subquery, OuterRef
 
 from core.models import Project, Task
 from .forms import ProjectCreationForm, ProjectAddParticipantsForm
@@ -9,9 +10,28 @@ from .forms import ProjectCreationForm, ProjectAddParticipantsForm
 @login_required(login_url="login")
 def myProjectsPage(request, pk):
     user = get_object_or_404(get_user_model(), pk=pk)
+    projects_owned = Project.objects.filter(owner=user)
+    # projects_participated = Project.objects.filter(participants=user.id).annotate(
+    #     tasks_count=Task.objects.filter(assigned_to=user)
+    #     .values("project__id")
+    #     .annotate(count=Count("project"))
+    #     .values_list("count")
+    # )
 
-    context = {}
-    return render(request, "projects/my_projects.html", context)
+    projects_participated = (
+        Task.objects.filter(assigned_to=user)
+        .values("project__name", "project__id")
+        .annotate(count=Count("project"))
+    )
+
+    # projects_participated = tasks_assigned.values_list("project", flat=True).annotate(
+    #     count=Count("project")
+    # )
+    context = {
+        "projects_owned": projects_owned,
+        "projects_participated": projects_participated,
+    }
+    return render(request, "projects/project_list.html", context)
 
 
 def projectPage(request, pk):

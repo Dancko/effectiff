@@ -1,0 +1,68 @@
+{% extends '_base.html' %}
+
+{% block content %}
+
+<!-- Central Part -->
+<div class="container-fluid">
+  <div class="row">
+    <!-- Left section -->
+    {% include 'left_section.html' %} 
+    
+
+    <!-- Main Section -->
+    <div class="col-lg-10 col-md-12 bg-dark vh-100 main-section">
+      <div class="container mt-3 mb-4">
+        <h2 class="pt-4">Projects I Own</h3>
+        {% for project in projects_owned %}
+        <div class="container my-4 border-bottom d-flex">
+          <a href="{% url 'project' project.id %}">{{ project.name }}</a>
+          <div class="ms-auto">
+            <a
+              href="{% url 'add_members' project.id %}"
+              class="table-tooltip"
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
+              data-bs-title="Add Members"
+            >
+              <i class="fas fa-plus  text-success px-2 "></i>
+            </a>
+            <a
+              href="{% url 'edit_project' project.id %}"
+              class="table-tooltip"
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
+              data-bs-title="Edit"
+            >
+              <i class="fas fa-gear  text-primary px-2 "></i>
+            </a>
+            <a
+              href="{% url 'delete_project' project.id %}"
+              class="table-tooltip"
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
+              data-bs-title="Delete"
+            >
+              <i class="fas fa-trash  text-secondary px-2 "></i>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+        <h2 class="pt-4">Projects I Participate In</h3>
+
+        {% for project in projects_participated %}
+        <div class="container my-4 border-bottom d-flex">
+          <a href="{% url 'project' project.project__id %}">{{ project.project__name }}</a>
+          {% if project.count > 1 %}
+          <small class="ms-auto text-light">{{ project.count }} Tasks Assigned</small>
+          {% else %}
+          <small class="ms-auto text-light">{{ project.count }} Task Assigned</small>
+          {% endif %}
+        </div>  
+        
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
