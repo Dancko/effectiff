@@ -34,7 +34,5 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
-      - DB_PORT=${POSTGRES_PORT}
-
 volumes:
   postgres_data:
