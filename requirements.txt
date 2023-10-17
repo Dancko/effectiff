@@ -3,6 +3,5 @@ djangorestframework
 psycopg2-binary
 pytest-django
 pytz
-django-ckeditor
 django-cryptography
 django-tinymce
