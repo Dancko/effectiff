@@ -12,12 +12,12 @@ jobs:
     services:
       postgres:
         env:
-          POSTGRES_DB=postgres
-          POSTGRES_USER=postgres
-          POSTGRES_PASSWORD=postgres
-          POSTGRES_HOST=db
-          POSTGRES_PORT=5432
-          SECRET_KEY=django-insecure-+17wd$53lfrp%muy#j$ec-wa^u6&dr%ja6%g-*3llgw1!6q8n2
+          POSTGRES_DB: "postgres"
+          POSTGRES_USER: "postgres"
+          POSTGRES_PASSWORD: "postgres"
+          POSTGRES_HOST: "db"
+          POSTGRES_PORT: "5432"
+          SECRET_KEY: "django-insecure-+17wd$53lfrp%muy#j$ec-wa^u6&dr%ja6%g-*3llgw1!6q8n2"
         image: postgres:11
         
         ports: [ '5432:5432' ]
