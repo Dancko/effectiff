@@ -36,6 +36,12 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Debug Info
+        run: |
+              echo "Environment variables:"
+              env
+              echo "Docker Compose version:"
+              docker-compose --version
       - name: Test
 
         run: docker-compose -f docker-compose-githubactions.yml run --rm app sh -c "python manage.py wait_for_db && pytest"
