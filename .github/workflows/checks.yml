@@ -12,11 +12,8 @@ jobs:
     services:
       postgres:
         image: postgres:11
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_NAME: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
+        env_file:
+         - app/.env
         ports: [ '5432:5432' ]
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
@@ -30,4 +27,4 @@ jobs:
         uses: actions/checkout@v2
       - name: Test
 
-        run: docker-compose run --rm app sh -c "pwd && python manage.py wait_for_db && pytest"
+        run: docker-compose run --rm app sh -c "python manage.py wait_for_db && pytest"
