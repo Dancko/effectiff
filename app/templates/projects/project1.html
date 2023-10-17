@@ -161,6 +161,11 @@
             {% endfor %}
           </tbody>
         </table>
+        <a href="{% url 'create_task_from_project' project.id %}"
+          ><button class="btn btn-secondary text-light fw-bold mt-3 mb-5">
+            Assign New Task
+          </button></a
+        >
       </div>
     </div>
 

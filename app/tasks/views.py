@@ -4,7 +4,12 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
 from core.models import Task, Project, Comment
-from .forms import TaskCreateForm, TaskAddPartiicipantsForm, CommentForm
+from .forms import (
+    TaskCreateForm,
+    TaskAddPartiicipantsForm,
+    CommentForm,
+    TaskCreateFromProjectForm,
+)
 
 
 @login_required(login_url="login")
@@ -75,6 +80,23 @@ def taskCreatePage(request):
     return render(
         request, "tasks/new_task.html", {"form": form, "page": page, "user": user}
     )
+
+
+@login_required(login_url="login")
+def taskCreateFromProject(request, pk):
+    """View for creating a task from project page."""
+    page = "create"
+    project = Project.objects.get(id=pk)
+
+    form = TaskCreateFromProjectForm(project=project)
+    if request.method == "POST":
+        form = TaskCreateFromProjectForm(request.POST, project=project)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.project = project
+            task.save()
+            return redirect("my_projects", pk=request.user.id)
+    return render(request, "tasks/new_task.html", {"form": form, "page": page})
 
 
 @login_required(login_url="login")

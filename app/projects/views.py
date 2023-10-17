@@ -37,7 +37,7 @@ def myProjectsPage(request, pk):
 def projectPage(request, pk):
     project = get_object_or_404(Project, pk=pk)
 
-    tasks = Task.objects.filter(project__id=project.id)
+    tasks = Task.objects.filter(project__id=pk)
     context = {
         "project": project,
         "tasks": tasks,
@@ -56,7 +56,7 @@ def createProjectPage(request):
             project.owner = request.user
             project.save()
             form.save_m2m()
-            return redirect("my_tasks", pk=request.user.id)
+            return redirect("my_projects", pk=request.user.id)
     return render(request, "projects/project_create.html", {"form": form, "page": page})
 
 

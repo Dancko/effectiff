@@ -1,5 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, PermissionsMixin)
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
 from django.utils import timezone
 
 from tinymce.models import HTMLField
@@ -34,26 +38,27 @@ class UserManager(BaseUserManager):
 
 
 USER_ROLES_CHOICES = [
-    ('Admin', 'Admin'),
-    ('Participant', 'Participant'),
+    ("Admin", "Admin"),
+    ("Participant", "Participant"),
 ]
 
 
 class User(AbstractBaseUser, PermissionsMixin):
     """User model."""
+
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     bio = models.TextField(blank=True)
     location = models.CharField(max_length=150, blank=True)
-    teammates = models.ManyToManyField('User', related_name='teammate', blank=True)
+    teammates = models.ManyToManyField("User", related_name="teammate", blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    skills = models.ManyToManyField('Skill', blank=True)
+    skills = models.ManyToManyField("Skill", blank=True)
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
 
     def __str__(self):
         return self.name
@@ -64,17 +69,17 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
-        verbose_name_plural = 'Categories'
+        verbose_name_plural = "Categories"
 
 
 class Project(models.Model):
     name = models.CharField(max_length=255)
-    category = models.ManyToManyField('Category', blank=True)
+    category = models.ManyToManyField("Category", blank=True)
     description = HTMLField(blank=True, null=True)
-    owner = models.ForeignKey('User', on_delete=models.CASCADE, related_name='owner')
-    participants = models.ManyToManyField('User', blank=True)
+    owner = models.ForeignKey("User", on_delete=models.CASCADE, related_name="owner")
+    participants = models.ManyToManyField("User", blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -82,31 +87,33 @@ class Project(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['-updated', '-created']
+        ordering = ["-updated", "-created"]
 
 
 class Task(models.Model):
     PRIORITY_CHOICES = [
-        ('Urgent', 'Urgent'),
-        ('Moderate', 'Moderate'),
-        ('Non-Urgent', 'Non-Urgent'),
+        ("Urgent", "Urgent"),
+        ("Moderate", "Moderate"),
+        ("Non-Urgent", "Non-Urgent"),
     ]
 
     STATUS_CHOICES = [
-        ('Awaits', 'Awaits'),
-        ('In Progress', 'In Progress'),
-        ('Completed', 'Completed'),
-        ('Expired', 'Expired')
+        ("Awaits", "Awaits"),
+        ("In Progress", "In Progress"),
+        ("Completed", "Completed"),
+        ("Expired", "Expired"),
     ]
 
     title = models.CharField(max_length=250)
     body = HTMLField(blank=True, null=True)
     deadline = models.DateTimeField()
-    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='Non-Urgent')
-    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='Awaits')
-    category = models.ManyToManyField('Category', blank=True)
-    project = models.ForeignKey('Project', on_delete=models.CASCADE)
-    assigned_to = models.ForeignKey('User', on_delete=models.CASCADE)
+    priority = models.CharField(
+        max_length=10, choices=PRIORITY_CHOICES, default="Non-Urgent"
+    )
+    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default="Awaits")
+    category = models.ManyToManyField("Category", blank=True)
+    project = models.ForeignKey("Project", on_delete=models.CASCADE)
+    assigned_to = models.ForeignKey("User", on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     outdated = models.BooleanField(default=False)
@@ -115,7 +122,7 @@ class Task(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['-updated', '-created']
+        ordering = ["-updated", "-created"]
 
     def is_outdated(self):
         if self.deadline < now:
@@ -135,9 +142,9 @@ class Skill(models.Model):
 
 
 class Comment(models.Model):
-    author = models.ForeignKey('User', on_delete=models.CASCADE)
-    task = models.ForeignKey('Task', on_delete=models.CASCADE, default=None)
-    body = encrypt(models.TextField())
+    author = models.ForeignKey("User", on_delete=models.CASCADE)
+    task = models.ForeignKey("Task", on_delete=models.CASCADE, default=None)
+    body = models.TextField(null=True, default=None)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -145,4 +152,4 @@ class Comment(models.Model):
         return self.body
 
     class Meta:
-        ordering = ['created']
+        ordering = ["created"]
