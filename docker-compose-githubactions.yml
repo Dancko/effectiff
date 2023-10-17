@@ -9,9 +9,6 @@ services:
     volumes:
       - ./app:/app
     
-    env_file:
-     - ./app/.env
-    
     command: >
       sh -c "python manage.py wait_for_db &&
              python manage.py migrate
