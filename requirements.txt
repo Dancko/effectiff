@@ -1,7 +1,7 @@
 django
-djangorestframework
 psycopg2-binary
 pytest-django
 pytz
 django-cryptography
 django-tinymce
+pillow

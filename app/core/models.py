@@ -49,6 +49,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     bio = models.TextField(blank=True)
+    profile_photo = models.ImageField(
+        blank=True,
+        null=True,
+        upload_to="profiles/",
+        default="profiles/default_photo.jpg",
+    )
     location = models.CharField(max_length=150, blank=True)
     teammates = models.ManyToManyField("User", related_name="teammate", blank=True)
     is_active = models.BooleanField(default=True)
