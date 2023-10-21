@@ -2182,7 +2182,7 @@ progress {
   margin: -1rem -1rem;
   margin-inline-end: 1rem;
   color: #fff;
-  background-color: #e9ecef;
+  background-color: #f1580c;
   pointer-events: none;
   border-color: inherit;
   border-style: solid;
@@ -2198,6 +2198,7 @@ progress {
 }
 .form-control:hover:not(:disabled):not([readonly])::file-selector-button {
   background-color: #dde0e3;
+  color: #000;
 }
 
 .form-control-plaintext {

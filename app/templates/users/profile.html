@@ -45,7 +45,22 @@
                   </div>
                 </div>
                 <div class="col-md-7">
-                  <h3 class="fw-bold mt-4">ABOUT ME</h3>
+                  <div class="d-flex">
+                    <h3 class="fw-bold mt-4">ABOUT ME</h3>
+                    {% if request.user == user %}
+                    <div class="ms-2 pt-3">
+                      <a
+                        href="{% url 'edit_profile' user.id %}"
+                        class="table-tooltip"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        data-bs-title="Edit"
+                      >
+                        <i class="fas fa-gear fa-lg text-primary px-2 py-4"></i>
+                      </a>
+                    </div>
+                    {% endif %}
+                  </div>
                   <hr class="profile-hr" />
                   <p class="lh-lg">
                     {{ user.bio }}

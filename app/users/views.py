@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .forms import RegisterForm, ChangeForm
+from .forms import RegisterForm, ChangeUserForm
 from core.models import Task
 
 
@@ -39,7 +39,7 @@ def logoutPage(request):
         logout(request)
         messages.success(request, "You have been logged out.")
         return redirect("home")
-    return render(request, "users/logout.html")
+    return render(request, "users/logout.html", {"user": user})
 
 
 def registerPage(request):
@@ -62,7 +62,7 @@ def registerPage(request):
 
                 login(request, user)
                 messages.success(request, "User has been created successfully.")
-                return redirect("home")
+                return redirect("edit_profile", pk=user.id)
 
             else:
                 messages.error(request, "Passwords do not match.")
@@ -108,13 +108,13 @@ def profilePage(request, pk):
 def editProfilePage(request, pk):
     """Edit profile view."""
     if request.user.id == pk:
-        form = ChangeForm(instance=request.user)
+        form = ChangeUserForm(instance=request.user)
         if request.method == "POST":
-            form = ChangeForm(request.POST, instance=request.user)
+            form = ChangeUserForm(request.POST, request.FILES, instance=request.user)
             if form.is_valid():
                 form.save()
                 return redirect("profile", pk=pk)
-        return render(request, "users/edit_profile.html", {"form": form})
+        return render(request, "users/edit_profile1.html", {"form": form})
     return redirect("home")
 
 
