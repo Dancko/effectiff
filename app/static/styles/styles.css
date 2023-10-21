@@ -68,7 +68,7 @@
 
 .img-profile-page {
   max-width: 250px;
-  height: auto;
+  max-height: auto;
 }
 
 .profile-hr {

@@ -1,37 +1,129 @@
-{% extends 'base.html' %}
-{% load static %}
-
+{% extends '_base.html' %}
 {% block content %}
-<header class="profile-header">
-    <div class="container">
-      <div class="profile-picture">
-        <img src="{% static 'images/profiles/django_new.png' %}" alt="Profile Picture">
-      </div>
-      <div class="profile-info">
-        <h1>{{ user.name }}</h1>
-        {% if request.user.id == user.id %}
-        <p><a href="{% url 'edit_profile' user.id %}">Edit | </a>
-        <a href="{% url 'delete_profile' user.id %}">Delete</a></p>
-        {% endif %}
-        <p>Email: {{ user.email }}</p>
-        <p>Location: {{ user.location }}</p>
-        <p>{{ user.bio }}</p>
-        <ul>
-        {% for skill in skills %}
-          <li>{{ skill.name }}</li>
-        {% endfor %}
-        </ul>
-      </div>
-    </div>
-  </header>
 
-  <main class="profile-main">
-    <div class="container">
-      <!-- Add your profile content here -->
-    </div>
-  </main>
+    <section class="profile">
+      <!-- Central Part -->
+      <div class="container-fluid">
+        <div class="row">
+          <!-- Left section -->
+          {% include 'left_section.html' %}
+
+          <!-- Main Section -->
+          <div class="col-lg-10 col-md-12 bg-dark main-section">
+            <div class="container mt-3">
+              <div class="row">
+                <div class="col-md-5">
+                  <div
+                    class="card d-flex flex-column gap-2 bg-black border-0 text-center align-items-center mt-4 rounded-3"
+                    style="max-width: 25rem"
+                  >
+                    <div class="img-container mt-5">
+                      <img
+                        src="{{ user.profile_photo.url }}"
+                        alt=""
+                        class="img-fluid rounded-circle img-profile-page border border-3 border-success"
+                      />
+                    </div>
+                    <div class="card-body">
+                      <h3 class="fw-bold">{{ user.name }}</h3>
+                      <p class="lead">
+                        {{ user.intro }}
+                      </p>
+                      <p class="lead mb-5">{{ user.location }}</p>
+                      <p>Local Time: 20:55</p>
+                    </div>
+                    <button
+                      class="btn btn-secondary mb-3 fw-semibold text-light fs-5 rounded-3"
+                    >
+                      Send Message
+                    </button>
+                    <button
+                      class="btn btn-light mb-5 fw-semibold text-dark fs-5 rounded-3"
+                    >
+                      + Add To Project
+                    </button>
+                  </div>
+                </div>
+                <div class="col-md-7">
+                  <h3 class="fw-bold mt-4">ABOUT ME</h3>
+                  <hr class="profile-hr" />
+                  <p class="lh-lg">
+                    {{ user.bio }}
+                    
+                  </p>
+                  
+                  <h3 class="fw-bold mt-5">SKILLS</h3>
+                  <hr class="profile-hr" />
+                  <div class="skills-badges mt-4">
+                    <span
+                      class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
+                      >JavaScript</span
+                    >
+                    <span
+                      class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
+                      >React</span
+                    >
+                    <span
+                      class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
+                      >Express</span
+                    >
+                    <span
+                      class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
+                      >Rest API</span
+                    >
+                    <span
+                      class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
+                      >Sass</span
+                    >
+                    <span
+                      class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
+                      >Bootstrap</span
+                    >
+                    <span
+                      class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
+                      >HTML</span
+                    >
+                    <span
+                      class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
+                      >CSS</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stats -->
+              <div class="row my-5">
+                {% if tasks %}
+                <div
+                  class="col-md-3 border-end border-primary border-3 text-center justify-content-center my-5"
+                >
+                  <h1 class="fw-bold display-1 text-secondary">{{ completed_tasks }}</h1>
+                  <h3 class="fw-bold">Tasks Completed</h3>
+                </div>
+                <div
+                  class="col-md-3 border-end border-primary border-3 text-center justify-content-center my-5"
+                >
+                  <h1 class="fw-bold display-1 text-secondary">{{ completed_ontime }}%</h1>
+                  <h3 class="fw-bold">Completed On Time</h3>
+                </div>
+                <div
+                  class="col-md-3 border-end border-primary border-3 text-center justify-content-center my-5"
+                >
+                  <h1 class="fw-bold display-1 text-secondary">{{ tasks_inprogress }}</h1>
+                  <h3 class="fw-bold">Tasks In Progress Now</h3>
+                </div>
+                <div class="col-md-3 text-center justify-content-center my-5">
+                  <h1 class="fw-bold display-1 text-secondary">{{ tasks_await }}</h1>
+                  <h3 class="fw-bold">Tasks Await</h3>
+                </div>
+                {% else %}
+                <h4 class="text-center">No Stats Available</h4>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
 {% endblock content %}
-
-
-
-

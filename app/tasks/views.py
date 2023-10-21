@@ -33,6 +33,7 @@ def taskDetailPage(request, pk):
     task = (
         Task.objects.select_related("assigned_to").select_related("project").get(id=pk)
     )
+    attachments = task.attachments.all()
     task.is_outdated()
     comments = Comment.objects.filter(task=task)
     form = CommentForm()
@@ -50,6 +51,7 @@ def taskDetailPage(request, pk):
         "comments": comments,
         "form": form,
         "statuses": statuses,
+        "attachments": attachments,
     }
     return render(request, "tasks/task.html", context)
 
@@ -73,9 +75,10 @@ def taskCreatePage(request):
     form = TaskCreateForm(user=user)
 
     if request.method == "POST":
-        form = TaskCreateForm(request.POST, user=user)
+        form = TaskCreateForm(request.POST, request.FILES, user=user)
         if form.is_valid():
             form.save(commit=True)
+
             return redirect("my_tasks", pk=request.user.id)
     return render(
         request, "tasks/new_task.html", {"form": form, "page": page, "user": user}
@@ -90,7 +93,8 @@ def taskCreateFromProject(request, pk):
 
     form = TaskCreateFromProjectForm(project=project)
     if request.method == "POST":
-        form = TaskCreateFromProjectForm(request.POST, project=project)
+        form = TaskCreateFromProjectForm(request.POST, request.FILES, project=project)
+
         if form.is_valid():
             task = form.save(commit=False)
             task.project = project

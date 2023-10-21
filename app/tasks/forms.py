@@ -13,7 +13,14 @@ class TaskCreateForm(ModelForm):
 
     class Meta:
         model = Task
-        fields = ["project", "title", "body", "deadline", "priority", "assigned_to"]
+        fields = [
+            "project",
+            "title",
+            "body",
+            "deadline",
+            "priority",
+            "assigned_to",
+        ]
         widgets = {"deadline": DateTimeInput()}
 
     def __init__(self, *args, **kwargs):

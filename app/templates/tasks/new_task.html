@@ -15,10 +15,9 @@
         <h2 class="fw-bold py-4">Edit Task</h2>
         {% endif %}
 
-        <form method="POST" action="#">
+        <form method="POST" action="#" enctype="multipart/form-data">
           {% csrf_token %} 
           {% for field in form.visible_fields %} 
-          {{ form.media}}
           <div class="row mt-4">
             <div class="col-lg-2">
               <h4 class="text-primary fw-bold pt-3">{{ field.label }}</h4>
@@ -47,6 +46,8 @@
             </div>
           </div>
         </form>
+
+
       </div>
     </div>
   </div>

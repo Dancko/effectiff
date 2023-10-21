@@ -11,18 +11,18 @@
       />
     </form>
     <ul class="list-group profiles-left mt-3 list-unstyled vstack gap-3">
-      {% for teammate in user.teammates.all %}
+      {% for teammate in request.user.teammates.all %}
       <div
         class="group-item d-flex gap-2 border-bottom border-primary py-2 online"
       >
-        <a href="#"
+        <a href="{% url 'profile' teammate.id %}"
           ><img
             src="{{ teammate.profile_photo.url }}"
             alt=""
             class="img-fluid img-profile-left img-thumbnail rounded-circle border border-2 border-success"
         /></a>
 
-        <a href="#"><li class="text-white fs-5">{{ teammate.name }}</li></a>
+        <a href="{% url 'profile' teammate.id %}"><li class="text-white fs-5">{{ teammate.name }}</li></a>
       </div>
       {% endfor %}
     </ul>

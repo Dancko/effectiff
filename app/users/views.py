@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .forms import RegisterForm, ChangeForm
+from core.models import Task
 
 
 def loginPage(request):
@@ -72,9 +73,35 @@ def registerPage(request):
 
 def profilePage(request, pk):
     """Profile page view."""
-    user = get_user_model().objects.get(id=pk)
-    skills = user.skills.all()
-    return render(request, "users/profile.html", {"user": user, "skills": skills})
+    tasks = Task.objects.select_related("assigned_to").filter(assigned_to=pk)
+
+    if len(tasks) == 0:
+        user = get_object_or_404(get_user_model(), pk=pk)
+        skills = user.skills.all()
+        context = {"user": user, "skills": skills}
+    else:
+        user = tasks.first().assigned_to
+        completed_tasks = tasks.filter(status="Completed").count()
+        if completed_tasks > 0:
+            completed_ontime = (
+                100 - tasks.filter(status="Expired").count() // completed_tasks
+            )
+        else:
+            completed_ontime = "N/A"
+        tasks_inprogress = tasks.filter(status="In Progress").count()
+        tasks_await = tasks.filter(status="Awaits").count()
+        skills = user.skills.all()
+
+        context = {
+            "user": user,
+            "skills": skills,
+            "tasks": tasks,
+            "completed_tasks": completed_tasks,
+            "completed_ontime": completed_ontime,
+            "tasks_inprogress": tasks_inprogress,
+            "tasks_await": tasks_await,
+        }
+    return render(request, "users/profile.html", context)
 
 
 @login_required(login_url="login")
