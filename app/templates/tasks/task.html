@@ -58,31 +58,6 @@
         </div>
         <h4 class="fw-bold text-primary">Description</h4>
         {{ task.body|safe }}
-        {% if attachments %}
-        <h4 class="fw-bold text-primary mt-5">Attachments</h4>
-        <div class="row">
-          {% for attachment in attachments %}
-          <div class="col-md-4">
-            <div class="thumbnail mt-4">
-              <a
-                href="{{ attachment.url }}"
-                data-lightbox="images"
-              >
-                <img
-                  src="{{ attachment.url }}"
-                  alt="Lights"
-                  style="width: 100%"
-                />
-              </a>
-            </div>
-          </div>
-          
-          
-          
-          
-        </div>
-        {% endfor %}
-          {% endif %}
 
         <div class="row mt-6">
           <div class="col-lg-4">

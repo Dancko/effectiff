@@ -55,7 +55,7 @@ def createProjectPage(request):
             project = form.save(commit=False)
             project.owner = request.user
             project.save()
-            form.save_m2m()
+
             return redirect("my_projects", pk=request.user.id)
     return render(request, "projects/project_create.html", {"form": form, "page": page})
 

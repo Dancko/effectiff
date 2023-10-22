@@ -1,4 +1,4 @@
-{% extends '_base.html' %} {% block content %}
+{% extends '_base.html' %}{% block content %}
 
 <!-- Central Part -->
 <div class="container-fluid">
@@ -15,8 +15,9 @@
         <h2 class="fw-bold py-4">Edit Task</h2>
         {% endif %}
 
-        <form method="POST" action="#" enctype="multipart/form-data">
-          {% csrf_token %} 
+        <form method="POST" action="#">
+          {% csrf_token %}
+          {{ form.media }} 
           {% for field in form.visible_fields %} 
           <div class="row mt-4">
             <div class="col-lg-2">

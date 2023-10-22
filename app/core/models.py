@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -7,7 +9,6 @@ from django.contrib.auth.models import (
 from django.utils import timezone
 
 from tinymce.models import HTMLField
-from django_cryptography.fields import encrypt
 
 
 now = timezone.now()
@@ -62,13 +63,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     skills = models.ManyToManyField("Skill", blank=True)
+    uuid = models.UUIDField(
+        default=uuid.uuid4, editable=False, max_length=36, unique=True
+    )
 
     objects = UserManager()
 
     USERNAME_FIELD = "email"
 
     def __str__(self):
-        return self.name
+        return self.email
 
 
 class Category(models.Model):
@@ -89,6 +93,7 @@ class Project(models.Model):
     participants = models.ManyToManyField("User", blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+    uuid = models.CharField(default=uuid.uuid4, editable=False, unique=True)
 
     def __str__(self):
         return self.name
@@ -124,6 +129,7 @@ class Task(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     outdated = models.BooleanField(default=False)
+    uuid = models.CharField(default=uuid.uuid4, editable=False, unique=True)
 
     def __str__(self):
         return self.title
@@ -154,6 +160,7 @@ class Comment(models.Model):
     body = models.TextField(null=True, default=None)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    uuid = models.CharField(default=uuid.uuid4, editable=False, unique=True)
 
     def __str__(self):
         return self.body

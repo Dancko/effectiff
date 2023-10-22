@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+from verify_email.email_handler import send_verification_email
+
 from .forms import RegisterForm, ChangeUserForm
 from core.models import Task
 
