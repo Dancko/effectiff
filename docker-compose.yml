@@ -22,6 +22,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - DB_PORT=${POSTGRES_PORT}
+      - EMAIL_ID=${EMAIL_ID}
+      - EMAIL_PW=${EMAIL_PW}
     depends_on:
       - db
 
