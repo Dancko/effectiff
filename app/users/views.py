@@ -21,10 +21,7 @@ def loginPage(request):
     if request.method == "POST":
         email = request.POST["email"].lower()
         password = request.POST["password"]
-        try:
-            User.objects.get(email=email)
-        except ValueError:
-            messages.error(request, message="User does not exist.")
+        user = get_object_or_404(User, email=email)
 
         user = authenticate(request, email=email, password=password)
 
@@ -79,19 +76,12 @@ def profilePage(request, pk):
             completed_ontime = (
                 100 - tasks.filter(status="Expired").count() // completed_tasks
             )
-            print(completed_ontime)
-            if tasks:
-                print(tasks)
-            else:
-                print("no tasks")
+
         else:
             completed_ontime = "N/A"
         tasks_inprogress = tasks.filter(status="In Progress").count()
         tasks_await = tasks.filter(status="Awaits").count()
         skills = user.skills.all()
-        is_friend = False
-        if request.user.teammates_set.filter(uuid=user.uuid).exists():
-            is_friend = True
 
         context = {
             "user": user,
@@ -101,19 +91,18 @@ def profilePage(request, pk):
             "completed_ontime": completed_ontime,
             "tasks_inprogress": tasks_inprogress,
             "tasks_await": tasks_await,
-            "is_friend": is_friend,
         }
     except:
         user = get_object_or_404(User, uuid=pk)
         skills = user.skills.all()
-        is_friend = False
-        if request.user.teammates.filter(uuid=user.uuid).exists():
-            is_friend = True
         context = {
             "user": user,
             "skills": skills,
-            "is_friend": is_friend,
         }
+    is_friend = False
+    if request.user.teammates.filter(uuid=user.uuid).exists():
+        is_friend = True
+    context["is_friend"] = is_friend
 
     return render(request, "users/profile.html", context)
 
@@ -121,7 +110,7 @@ def profilePage(request, pk):
 @login_required(login_url="login")
 def editProfilePage(request, pk):
     """Edit profile view."""
-    if request.user.uuid == uuid.UUID(pk):
+    if request.user.uuid == pk:
         form = ChangeUserForm(instance=request.user)
         if request.method == "POST":
             form = ChangeUserForm(request.POST, request.FILES, instance=request.user)
