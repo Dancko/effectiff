@@ -1,3 +1,5 @@
+import uuid
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -9,6 +11,9 @@ from .forms import RegisterForm, ChangeUserForm
 from core.models import Task
 
 
+User = get_user_model()
+
+
 def loginPage(request):
     """Login page view."""
 
@@ -16,7 +21,7 @@ def loginPage(request):
         email = request.POST["email"].lower()
         password = request.POST["password"]
         try:
-            get_user_model().objects.get(email=email)
+            User.objects.get(email=email)
         except ValueError:
             messages.error(request, message="User does not exist.")
 
@@ -54,17 +59,17 @@ def registerPage(request):
         password2 = request.POST["password2"]
 
         try:
-            get_user_model().objects.get(email=email)
+            User.objects.get(email=email)
             messages.error(request, "This email is already used.")
         except:
             if password1 == password2:
-                user = get_user_model().objects.create_user(
+                user = User.objects.create_user(
                     email=email, password=password1, name=username
                 )
 
                 login(request, user)
                 messages.success(request, "User has been created successfully.")
-                return redirect("edit_profile", pk=user.id)
+                return redirect("edit_profile", pk=user.uuid)
 
             else:
                 messages.error(request, "Passwords do not match.")
@@ -75,13 +80,8 @@ def registerPage(request):
 
 def profilePage(request, pk):
     """Profile page view."""
-    tasks = Task.objects.select_related("assigned_to").filter(assigned_to=pk)
-
-    if len(tasks) == 0:
-        user = get_object_or_404(get_user_model(), pk=pk)
-        skills = user.skills.all()
-        context = {"user": user, "skills": skills}
-    else:
+    try:
+        tasks = Task.objects.select_related("assigned_to").filter(assigned_to__uuid=pk)
         user = tasks.first().assigned_to
         completed_tasks = tasks.filter(status="Completed").count()
         if completed_tasks > 0:
@@ -103,13 +103,18 @@ def profilePage(request, pk):
             "tasks_inprogress": tasks_inprogress,
             "tasks_await": tasks_await,
         }
+    except:
+        user = get_object_or_404(User, uuid=pk)
+        skills = user.skills.all()
+        context = {"user": user, "skills": skills}
+
     return render(request, "users/profile.html", context)
 
 
 @login_required(login_url="login")
 def editProfilePage(request, pk):
     """Edit profile view."""
-    if request.user.id == pk:
+    if request.user.uuid == uuid.UUID(pk):
         form = ChangeUserForm(instance=request.user)
         if request.method == "POST":
             form = ChangeUserForm(request.POST, request.FILES, instance=request.user)
@@ -117,13 +122,14 @@ def editProfilePage(request, pk):
                 form.save()
                 return redirect("profile", pk=pk)
         return render(request, "users/edit_profile1.html", {"form": form})
-    return redirect("home")
+    else:
+        return redirect("home")
 
 
 @login_required(login_url="login")
 def deleteProfile(request, pk):
-    if request.user.id == pk:
-        user = get_user_model().objects.get(id=pk)
+    if request.user.uuid == pk:
+        user = User.objects.get(uuid=pk)
         if request.method == "POST":
             user.delete()
             return redirect("home")

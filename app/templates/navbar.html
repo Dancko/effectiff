@@ -3,7 +3,7 @@
   class="navbar navbar-expand-lg bg-dark navbar-dark border-bottom border-primary border-1"
 >
   <div class="container">
-    <a href="{% url 'my_tasks' request.user.id %}" class="navbar-brand">
+    <a href="{% url 'my_tasks' request.user.uuid %}" class="navbar-brand">
       <img
         src="{% static 'images/logo-no-background.png' %}"
         alt=""
@@ -32,7 +32,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a href="{% url 'my_projects' request.user.id %}" class="nav-link">My Projects</a>
+          <a href="{% url 'my_projects' request.user.uuid %}" class="nav-link">My Projects</a>
         </li>
         <li class="nav-item">
           <a href="{% url 'create_project' %}" class="nav-link">+New Project</a>
@@ -50,7 +50,7 @@
     </div>
 
     <div class="image-container ms-4 d-none d-lg-block">
-      <a href="{% url 'profile' request.user.id %}">
+      <a href="{% url 'profile' request.user.uuid %}">
         <img
           src="{{ request.user.profile_photo.url }}"
           alt=""

@@ -93,7 +93,7 @@ class Project(models.Model):
     participants = models.ManyToManyField("User", blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
-    uuid = models.CharField(default=uuid.uuid4, editable=False, unique=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     def __str__(self):
         return self.name
@@ -129,7 +129,7 @@ class Task(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     outdated = models.BooleanField(default=False)
-    uuid = models.CharField(default=uuid.uuid4, editable=False, unique=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     def __str__(self):
         return self.title
@@ -160,7 +160,7 @@ class Comment(models.Model):
     body = models.TextField(null=True, default=None)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    uuid = models.CharField(default=uuid.uuid4, editable=False, unique=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     def __str__(self):
         return self.body

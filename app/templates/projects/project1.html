@@ -18,7 +18,7 @@
           
           <div class="ms-auto">
             <a
-              href="{% url 'add_members' project.id %}"
+              href="{% url 'add_members' project.uuid %}"
               class="table-tooltip"
               data-bs-toggle="tooltip"
               data-bs-placement="bottom"
@@ -27,7 +27,7 @@
               <i class="fas fa-plus fa-lg text-success px-2 py-4"></i>
             </a>
             <a
-              href="{% url 'edit_project' project.id %}"
+              href="{% url 'edit_project' project.uuid %}"
               class="table-tooltip"
               data-bs-toggle="tooltip"
               data-bs-placement="bottom"
@@ -36,7 +36,7 @@
               <i class="fas fa-gear fa-lg text-primary px-2 py-4"></i>
             </a>
             <a
-              href="{% url 'delete_project' project.id %}"
+              href="{% url 'delete_project' project.uuid %}"
               class="table-tooltip"
               data-bs-toggle="tooltip"
               data-bs-placement="bottom"
@@ -55,7 +55,7 @@
         {% endif %}
 
         <p class="text-primary fw-bold">
-          Managed by <a href="profile.html">{{ project.owner }}</a>
+          Managed by <a href="{% url 'profile' project.owner.uuid %}">{{ project.owner.name }}</a>
         </p>
         <h4 class="text-primary fw-bold mt-5">Description</h4>
         {{ project.description|safe }}
@@ -65,11 +65,11 @@
           <li class="d-flex gap-2 my-2">
             <a href="#"
               ><img
-                src="https://randomuser.me/api/portraits/men/23.jpg"
+                src="{{ participant.profile_photo.url }}"
                 alt=""
                 class="img-fluid img-profile-left rounded-circle mb-2 border border-2 border-success"
             /></a>
-            <a href="{% url 'profile' participant.id %}" class="fs-4"
+            <a href="{% url 'profile' participant.uuid %}" class="fs-4"
               >{{ participant.name }}</a
             >
           </li>
@@ -90,7 +90,7 @@
             {% for task in tasks %}
             <tr>
               <td>
-                <a href="{% url 'task_detail' task.id %}" class="table-tooltip"
+                <a href="{% url 'task_detail' task.uuid %}" class="table-tooltip"
                   >{{ task.title }}</a
                 >
               </td>
@@ -153,7 +153,7 @@
               <td>{{ task.deadline }}</td>
 
               <td>
-                <a href="{% url 'profile' task.assigned_to.id %}"
+                <a href="{% url 'profile' task.assigned_to.uuid %}"
                   >{{ task.assigned_to }}</a
                 >
               </td>
@@ -161,11 +161,13 @@
             {% endfor %}
           </tbody>
         </table>
-        <a href="{% url 'create_task_from_project' project.id %}"
+        {% if project.owner == request.user %}
+        <a href="{% url 'create_task_from_project' project.uuid %}"
           ><button class="btn btn-secondary text-light fw-bold mt-3 mb-5">
             Assign New Task
           </button></a
         >
+        {% endif %}
       </div>
     </div>
 

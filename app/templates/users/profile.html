@@ -47,10 +47,10 @@
                 <div class="col-md-7">
                   <div class="d-flex">
                     <h3 class="fw-bold mt-4">ABOUT ME</h3>
-                    {% if request.user == user %}
+                    {% if request.user.uuid == user.uuid %}
                     <div class="ms-2 pt-3">
                       <a
-                        href="{% url 'edit_profile' user.id %}"
+                        href="{% url 'edit_profile' user.uuid %}"
                         class="table-tooltip"
                         data-bs-toggle="tooltip"
                         data-bs-placement="bottom"

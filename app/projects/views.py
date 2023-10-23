@@ -7,26 +7,20 @@ from core.models import Project, Task
 from .forms import ProjectCreationForm, ProjectAddParticipantsForm
 
 
+User = get_user_model()
+
+
 @login_required(login_url="login")
 def myProjectsPage(request, pk):
-    user = get_object_or_404(get_user_model(), pk=pk)
+    user = get_object_or_404(User, uuid=pk)
     projects_owned = Project.objects.filter(owner=user)
-    # projects_participated = Project.objects.filter(participants=user.id).annotate(
-    #     tasks_count=Task.objects.filter(assigned_to=user)
-    #     .values("project__id")
-    #     .annotate(count=Count("project"))
-    #     .values_list("count")
-    # )
 
     projects_participated = (
         Task.objects.filter(assigned_to=user)
-        .values("project__name", "project__id")
+        .values("project__name", "project__uuid")
         .annotate(count=Count("project"))
     )
 
-    # projects_participated = tasks_assigned.values_list("project", flat=True).annotate(
-    #     count=Count("project")
-    # )
     context = {
         "projects_owned": projects_owned,
         "projects_participated": projects_participated,
@@ -35,9 +29,9 @@ def myProjectsPage(request, pk):
 
 
 def projectPage(request, pk):
-    project = get_object_or_404(Project, pk=pk)
+    project = get_object_or_404(Project, uuid=pk)
 
-    tasks = Task.objects.filter(project__id=pk)
+    tasks = Task.objects.filter(project__uuid=pk)
     context = {
         "project": project,
         "tasks": tasks,
@@ -56,14 +50,14 @@ def createProjectPage(request):
             project.owner = request.user
             project.save()
 
-            return redirect("my_projects", pk=request.user.id)
+            return redirect("my_projects", pk=request.user.uuid)
     return render(request, "projects/project_create.html", {"form": form, "page": page})
 
 
 @login_required(login_url="login")
 def editProjectPage(request, pk):
     page = "edit"
-    project = get_object_or_404(Project, pk=pk)
+    project = get_object_or_404(Project, uuid=pk)
     if project.owner.id == request.user.id:
         form = ProjectCreationForm(instance=project)
         if request.method == "POST":
@@ -79,12 +73,12 @@ def editProjectPage(request, pk):
 
 @login_required(login_url="login")
 def deleteProjectPage(request, pk):
-    project = get_object_or_404(Project, pk=pk)
+    project = get_object_or_404(Project, uuid=pk)
     object = project.name
     if request.user.id == project.owner.id:
         if request.method == "POST":
             project.delete()
-            return redirect("my_projects", pk=request.user.id)
+            return redirect("my_projects", pk=request.user.uuid)
     else:
         return redirect("home")
     return render(request, "delete.html", {"project": project, "object": object})
@@ -93,7 +87,7 @@ def deleteProjectPage(request, pk):
 @login_required(login_url="login")
 def addMembers(request, pk):
     page = "add"
-    project = get_object_or_404(Project, pk=pk)
+    project = get_object_or_404(Project, uuid=pk)
     if project.owner == request.user:
         form = ProjectAddParticipantsForm(instance=project)
 

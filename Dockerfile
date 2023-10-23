@@ -5,6 +5,7 @@ ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./app /app
+COPY ./skins /py/lib/python3.11/site-packages/tinymce/static/tinymce
 WORKDIR /app
 EXPOSE 8000
 

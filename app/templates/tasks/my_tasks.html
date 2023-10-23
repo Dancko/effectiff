@@ -58,13 +58,13 @@
             {% for task in tasks_assigned %}
             <tr>
               <td>
-                <a href="{% url 'task_detail' task.id %}" class="table-tooltip"
+                <a href="{% url 'task_detail' task.uuid %}" class="table-tooltip"
                   >{{ task.title }}</a
                 >
               </td>
               <td>
                 <a
-                  href="{% url 'project' task.project.id %}"
+                  href="{% url 'project' task.project.uuid %}"
                   class="table-tooltip"
                   >{{ task.project }}</a
                 >
@@ -124,7 +124,7 @@
                 {% endif %}
               </td>
               <td>{{ task.deadline }}</td>
-              <td><a href="#">{{ task.assigned_to.name }}</a></td>
+              <td><a href="{% url 'profile' task.assigned_to.uuid %}">{{ task.assigned_to.name }}</a></td>
             </tr>
             {% empty %}
             <tr>
@@ -192,9 +192,9 @@
           <tbody>
             {% for task in tasks %}
             <tr>
-              <td><a href="{% url 'task_detail' task.id %}" class="table-tooltip">{{ task.title }}</a></td>
+              <td><a href="{% url 'task_detail' task.uuid %}" class="table-tooltip">{{ task.title }}</a></td>
               <td>
-                <a href="{% url 'project' task.project.id %}" class="table-tooltip">{{ task.project }}</a>
+                <a href="{% url 'project' task.project.uuid %}" class="table-tooltip">{{ task.project }}</a>
               </td>
               <td class="ps-4">
                 {% if task.status == 'Awaits' %}
@@ -251,7 +251,7 @@
                 {% endif %}
               </td>
               <td>{{ task.deadline }}</td>
-              <td><a href="#">{{ task.project.owner.name }}</a></td>
+              <td><a href="{% url 'profile' task.project.owner.uuid %}">{{ task.project.owner.name }}</a></td>
             </tr>
             {% empty %}
             <tr>

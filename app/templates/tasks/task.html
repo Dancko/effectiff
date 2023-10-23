@@ -14,7 +14,7 @@
           {% if task.project.owner == request.user %}
           <div class="ms-auto pt-3">
             <a
-              href="{% url 'edit_task' task.id %}"
+              href="{% url 'edit_task' task.uuid %}"
               class="table-tooltip"
               data-bs-toggle="tooltip"
               data-bs-placement="bottom"
@@ -23,7 +23,7 @@
               <i class="fas fa-gear fa-lg text-primary px-2 py-4"></i>
             </a>
             <a
-              href="{% url 'delete_task' task.id %}"
+              href="{% url 'delete_task' task.uuid %}"
               class="table-tooltip"
               data-bs-toggle="tooltip"
               data-bs-placement="bottom"
@@ -34,14 +34,11 @@
           </div>
           {% else %}
           <div class="ms-auto pt-3">
-            <form action="{% url 'change_st' task.id %}" method="POST" >
+            <form action="{% url 'change_st' task.uuid %}" method="POST" >
               {% csrf_token %}
               <div class="input-group input-group-sm">
                 <select class="form-select" name="status">
-                  <!-- <option selected>Update Status</option>
-                  <option value="Awaits">Awaits</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Completed">Completed</option> -->
+                  
                   {% for status in statuses %}
                   {% if task.status == status %}
                   <option selected value="{{ status }}">{{ status }}</option>
@@ -104,7 +101,7 @@
           <div class="col-lg-8">
             <ul class="list-unstyled">
               <li class="list-item">
-                <a href="{% url 'profile' task.assigned_to.id %}"
+                <a href="{% url 'profile' task.assigned_to.uuid %}"
                   >{{ task.assigned_to.name }}</a
                 >
               </li>
@@ -119,7 +116,7 @@
           <div class="col-lg-8">
             <ul class="list-unstyled">
               <li class="list-item">
-                <a href="{% url 'profile' task.project.owner.id %}"
+                <a href="{% url 'profile' task.project.owner.uuid %}"
                   >{{ task.project.owner.name }}</a
                 >
               </li>
@@ -152,12 +149,12 @@
             class="col-sm-10 col-lg-8 ms-auto bg-primary d-flex gap-2 border border-primary rounded-5 p-3 m-3"
           >
             <img
-              src="https://randomuser.me/api/portraits/men/44.jpg"
+              src="{{ comment.author.profile_photo.url }}"
               alt=""
               class="img-fluid img-comment rounded-circle img-thumbnail border border-2 border-success"
             />
             <div>
-              <h4 class="fw-bold">{{ comment.author }}</h4>
+              <h4 class="fw-bold">{{ comment.author.name }}</h4>
               <small>{{ comment.created|timesince }} ago</small>
               <p class="mt-3">{{ comment.body }}</p>
             </div>
@@ -169,12 +166,12 @@
             class="col-sm-10 col-lg-8 d-flex gap-2 border border-primary rounded-5 p-3 m-3"
           >
             <img
-              src="https://randomuser.me/api/portraits/men/23.jpg"
+              src="{{ comment.author.profile_photo.url }}"
               alt=""
               class="img-fluid img-comment rounded-circle img-thumbnail border border-2 border-success"
             />
             <div>
-              <h4 class="fw-bold">{{ comment.author }}</h4>
+              <h4 class="fw-bold">{{ comment.author.name }}</h4>
               <small>{{ comment.created|timesince }} ago</small>
               <p class="mt-3">{{ comment.body }}</p>
             </div>
@@ -187,7 +184,8 @@
       </div>
       <div class="container mb-5">
         <form method="POST" action="#">
-          {% csrf_token %} {{ form }}
+          {% csrf_token %} 
+          {{ form }}
           <button
             type="submit"
             class="btn btn-secondary mt-3 rounded-1 btn-comment text-light fw-bold"
