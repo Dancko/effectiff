@@ -15,14 +15,14 @@
       <div
         class="group-item d-flex gap-2 border-bottom border-primary py-2 online"
       >
-        <a href="{% url 'profile' teammate.id %}"
+        <a href="{% url 'profile' teammate.uuid %}"
           ><img
             src="{{ teammate.profile_photo.url }}"
             alt=""
             class="img-fluid img-profile-left img-thumbnail rounded-circle border border-2 border-success"
         /></a>
 
-        <a href="{% url 'profile' teammate.id %}"><li class="text-white fs-5">{{ teammate.name }}</li></a>
+        <a href="{% url 'profile' teammate.uuid %}"><li class="text-white fs-5">{{ teammate.name }}</li></a>
       </div>
       {% endfor %}
     </ul>

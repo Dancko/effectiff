@@ -146,7 +146,7 @@
         {% if comment.author == request.user %}
         <div class="row">
           <div
-            class="col-sm-10 col-lg-8 ms-auto bg-primary d-flex gap-2 border border-primary rounded-5 p-3 m-3"
+            class="col-sm-10 col-lg-6 ms-auto bg-primary d-flex gap-2 border border-primary rounded-5 p-3 me-6"
           >
             <img
               src="{{ comment.author.profile_photo.url }}"
@@ -154,16 +154,16 @@
               class="img-fluid img-comment rounded-circle img-thumbnail border border-2 border-success"
             />
             <div>
-              <h4 class="fw-bold">{{ comment.author.name }}</h4>
-              <small>{{ comment.created|timesince }} ago</small>
-              <p class="mt-3">{{ comment.body }}</p>
+              <h4 class="fw-bold mb-1">{{ comment.author.name }}</h4>
+              <small class="mt-1">{{ comment.created|timesince }} ago</small>
+              <p class="mt-1">{{ comment.body }}</p>
             </div>
           </div>
         </div>
         {% else %}
         <div class="row">
           <div
-            class="col-sm-10 col-lg-8 d-flex gap-2 border border-primary rounded-5 p-3 m-3"
+            class="col-sm-10 col-lg-6 d-flex gap-2 border border-primary rounded-5 p-3 m-5"
           >
             <img
               src="{{ comment.author.profile_photo.url }}"
@@ -171,9 +171,9 @@
               class="img-fluid img-comment rounded-circle img-thumbnail border border-2 border-success"
             />
             <div>
-              <h4 class="fw-bold">{{ comment.author.name }}</h4>
-              <small>{{ comment.created|timesince }} ago</small>
-              <p class="mt-3">{{ comment.body }}</p>
+              <h4 class="fw-bold mb-1">{{ comment.author.name }}</h4>
+              <small class="mt-1">{{ comment.created|timesince }} ago</small>
+              <p class="mt-1">{{ comment.body }}</p>
             </div>
           </div>
         </div>

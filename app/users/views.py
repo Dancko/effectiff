@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpResponse
 
 from verify_email.email_handler import send_verification_email
 
@@ -57,13 +58,19 @@ def registerPage(request):
         if form.is_valid():
             inactive_user = send_verification_email(request, form)
             messages.success(request, "User has been created successfully.")
-            return redirect("register")
+            return redirect("verification_sent")
 
     return render(request, "core/index.html", {"form": form})
 
 
+def verification_sent(request):
+    """View for verification redirect."""
+    return render(request, "registration/verification_sent.html")
+
+
 def profilePage(request, pk):
     """Profile page view."""
+
     try:
         tasks = Task.objects.select_related("assigned_to").filter(assigned_to__uuid=pk)
         user = tasks.first().assigned_to
@@ -72,11 +79,19 @@ def profilePage(request, pk):
             completed_ontime = (
                 100 - tasks.filter(status="Expired").count() // completed_tasks
             )
+            print(completed_ontime)
+            if tasks:
+                print(tasks)
+            else:
+                print("no tasks")
         else:
             completed_ontime = "N/A"
         tasks_inprogress = tasks.filter(status="In Progress").count()
         tasks_await = tasks.filter(status="Awaits").count()
         skills = user.skills.all()
+        is_friend = False
+        if request.user.teammates_set.filter(uuid=user.uuid).exists():
+            is_friend = True
 
         context = {
             "user": user,
@@ -86,11 +101,19 @@ def profilePage(request, pk):
             "completed_ontime": completed_ontime,
             "tasks_inprogress": tasks_inprogress,
             "tasks_await": tasks_await,
+            "is_friend": is_friend,
         }
     except:
         user = get_object_or_404(User, uuid=pk)
         skills = user.skills.all()
-        context = {"user": user, "skills": skills}
+        is_friend = False
+        if request.user.teammates.filter(uuid=user.uuid).exists():
+            is_friend = True
+        context = {
+            "user": user,
+            "skills": skills,
+            "is_friend": is_friend,
+        }
 
     return render(request, "users/profile.html", context)
 
@@ -118,3 +141,27 @@ def deleteProfile(request, pk):
             user.delete()
             return redirect("home")
     return render(request, "users/delete_profile.html")
+
+
+@login_required(login_url="login")
+def add_to_team(request, pk):
+    user = User.objects.get(uuid=pk)
+    try:
+        request.user.teammates.get(uuid=user.uuid)
+        return redirect("profile", pk=user.uuid)
+
+    except:
+        if request.method == "POST":
+            request.user.teammates.add(user)
+            return redirect("profile", pk=user.uuid)
+    return render(request, "users/profile.html")
+
+
+@login_required(login_url="login")
+def delete_from_team(request, pk):
+    user = User.objects.get(uuid=pk)
+    if request.user.teammates.get(uuid=user.uuid):
+        if request.method == "POST":
+            request.user.teammates.remove(user)
+            return redirect("profile", pk=user.uuid)
+    return render(request, "users/profile.html")
