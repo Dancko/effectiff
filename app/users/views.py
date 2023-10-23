@@ -66,7 +66,7 @@ def verification_sent(request):
 
 
 def profilePage(request, pk):
-    """Profile page view."""
+    """Profile page view"""
 
     try:
         tasks = Task.objects.select_related("assigned_to").filter(assigned_to__uuid=pk)
