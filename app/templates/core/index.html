@@ -107,38 +107,12 @@
             <div class="col-lg-4 offset-md-1 pt-6">
               <form id="signup" method="POST" action="{% url 'register' %}">
                 {% csrf_token %}
+                {% for field in form.visible_fields %}
                 <div class="mb-4">
-                  <input
-                    type="email"
-                    name="email"
-                    class="form-control"
-                    placeholder="Enter Email"
-                  />
+                  {{ field }}
                 </div>
-                <div class="mb-4">
-                  <input
-                    type="text"
-                    name="username"
-                    class="form-control"
-                    placeholder="Enter Name"
-                  />
-                </div>
-                <div class="mb-4">
-                  <input
-                    type="password"
-                    name="password1"
-                    class="form-control"
-                    placeholder="Enter Password"
-                  />
-                </div>
-                <div class="mb-4">
-                  <input
-                    type="password"
-                    name="password2"
-                    class="form-control"
-                    placeholder="Repeat Your Password"
-                  />
-                </div>
+                {% endfor %}
+                
                 <div class="mb-4 form-check">
                   <input type="checkbox" id="agreecheck" />
                   <label for="agreecheck" class="form-check-label">
@@ -149,7 +123,7 @@
                 <div class="d-grid gap-2">
                   <input
                     type="submit"
-                    class="btn btn-secondary"
+                    class="btn btn-secondary text-light"
                     value="Create Account"
                   />
                 </div>

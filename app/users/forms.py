@@ -8,16 +8,39 @@ from django.contrib.auth import get_user_model
 class RegisterForm(UserCreationForm):
     """Login form."""
 
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={"class": "form-control", "placeholder": "Enter Email"}
+        ),
+        label="",
+    )
+    name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Enter Name"}
+        ),
+        label="",
+    )
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control", "placeholder": "Enter Password"}
+        ),
+        label="",
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control", "placeholder": "Confirm Your Password"}
+        ),
+        label="",
+    )
+
     class Meta:
         model = get_user_model()
         fields = ["email", "name", "password1", "password2"]
-        help_text = None
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
-
-        for fieldname in ["name", "password1", "password2"]:
-            self.fields[fieldname].help_text = None
+        self.fields["password1"].help_text = ""
+        self.fields["password2"].help_text = ""
 
 
 class ChangeUserForm(ModelForm):
