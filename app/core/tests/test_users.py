@@ -3,7 +3,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from core import views
+from users import views
 
 
 pytestmark = pytest.mark.django_db
@@ -37,7 +37,7 @@ def test_create_superuser():
 
 def test_get_home_page(client):
     """Test homepage status code 200."""
-    url = reverse(views.home)
+    url = reverse(views.registerPage)
     res = client.get(url)
 
     assert res.status_code == 200
