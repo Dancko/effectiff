@@ -11,7 +11,7 @@
       <div class="container mt-3">
         <div class="d-flex">
           <h2 class="py-4">{{ task.title }}</h2>
-          {% if task.project.owner == request.user %}
+          {% if task.project.owner == request.user and task.status != "Completed" %}
           <div class="ms-auto pt-3">
             <a
               href="{% url 'edit_task' task.uuid %}"
@@ -32,7 +32,7 @@
               <i class="fas fa-trash fa-lg text-secondary px-2 py-4"></i>
             </a>
           </div>
-          {% else %}
+          {% elif task.assigned_to == request.user %}
           <div class="ms-auto pt-3">
             <form action="{% url 'change_st' task.uuid %}" method="POST" >
               {% csrf_token %}

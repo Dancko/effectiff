@@ -110,7 +110,7 @@ def taskEditPage(request, pk):
     """View for editting the tasks."""
     page = "edit"
     task = get_object_or_404(Task, uuid=pk)
-    if request.user.uuid == task.project.owner.uuid:
+    if request.user.uuid == task.project.owner.uuid and task.status != "Completed":
         form = TaskCreateForm(instance=task, user=request.user)
         if request.method == "POST":
             form = TaskCreateForm(request.POST, instance=task, user=request.user)
