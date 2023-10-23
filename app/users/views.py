@@ -30,7 +30,7 @@ def loginPage(request):
         if user is not None:
             login(request, user)
             messages.success(request, "User was logged in successfully.")
-            return redirect("home")
+            return redirect("my_tasks", pk=user.uuid)
         else:
             messages.error(request, "Email or password is incorrect.")
             return render(request, "users/login.html")
@@ -55,10 +55,9 @@ def registerPage(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
+            inactive_user = send_verification_email(request, form)
             messages.success(request, "User has been created successfully.")
-            return redirect("edit_profile", pk=user.uuid)
+            return redirect("register")
 
     return render(request, "core/index.html", {"form": form})
 
