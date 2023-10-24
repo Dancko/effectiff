@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from verify_email.email_handler import send_verification_email
 
 from .forms import RegisterForm, ChangeUserForm
+from .tasks import complete_on_time
 from core.models import Task
 
 
@@ -72,10 +73,10 @@ def profilePage(request, pk):
         tasks = Task.objects.select_related("assigned_to").filter(assigned_to__uuid=pk)
         user = tasks.first().assigned_to
         completed_tasks = tasks.filter(status="Completed").count()
+        expired_tasks = tasks.filter(status="Expired").count()
         if completed_tasks > 0:
-            completed_ontime = (
-                100 - tasks.filter(status="Expired").count() // completed_tasks
-            )
+            result = complete_on_time.delay(completed_tasks, expired_tasks)
+            completed_ontime = result.get()
 
         else:
             completed_ontime = "N/A"
