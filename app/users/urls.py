@@ -7,6 +7,7 @@ urlpatterns = [
     path("login/", views.loginPage, name="login"),
     path("logout/", views.logoutPage, name="logout"),
     path("register/", views.registerPage, name="register"),
+    path("activate/<uidb64>/<token>/", views.activate, name="activate"),
     path("verification_sent/", views.verification_sent, name="verification_sent"),
     path("<uuid:pk>/", views.profilePage, name="profile"),
     path("edit/<uuid:pk>/", views.editProfilePage, name="edit_profile"),

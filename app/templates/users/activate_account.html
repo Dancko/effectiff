@@ -1,0 +1,9 @@
+
+{% autoescape off %}
+    Hi, {{ user.name }}, 
+
+    You received this mail because you attempted to make account on our website, Please click on the link below to confirm the email and activate your account.
+    Please verify your e-mail :
+
+    http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+{% endautoescape %}
