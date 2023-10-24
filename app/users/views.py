@@ -4,17 +4,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.template.loader import render_to_string
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
-from django.core.mail import EmailMessage
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
 
-from verify_email.email_handler import send_verification_email
 
 from .forms import RegisterForm, ChangeUserForm
 from .tokens import account_activation_token
-from .tasks import complete_on_time
+from .utils import activate_email
 from core.models import Task
 
 
@@ -39,33 +35,6 @@ def activate(request, uidb64, token):
     else:
         messages.error(request, "Verification link is invalid.")
         return redirect("register")
-
-
-def activateEmail(request, user, to_email):
-    mail_subject = "Email Verification Mail"
-    message = render_to_string(
-        "users/activate_account.html",
-        {
-            "user": user.name,
-            "domain": get_current_site(request).domain,
-            "uid": urlsafe_base64_encode(force_bytes(user.uuid)),
-            "token": account_activation_token.make_token(user),
-            "protocol": "https" if request.is_secure() else "http",
-        },
-    )
-    print(message)
-    email = EmailMessage(mail_subject, message, to=[to_email])
-    if email.send():
-        messages.success(
-            request,
-            f"Dear <b>{user}</b>, please go to your email <b>{to_email}</b> inbox and click \
-            on received activation link to confirm and complete activation. <b>Note:</b> check your spam folder.",
-        )
-    else:
-        messages.error(
-            request,
-            f"Problem sending email to {to_email}, check if you typed it correctly",
-        )
 
 
 def loginPage(request):
@@ -109,7 +78,7 @@ def registerPage(request):
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            activateEmail(request, user, form.cleaned_data.get("email"))
+            activate_email(request, user, form.cleaned_data.get("email"))
             messages.success(request, "User has been created successfully.")
             return redirect("verification_sent")
 
