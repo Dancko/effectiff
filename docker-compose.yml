@@ -26,6 +26,7 @@ services:
       - EMAIL_PW=${EMAIL_PW}
     depends_on:
       - db
+      - redis
 
   db:
     image: postgres:13
@@ -38,6 +39,33 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - DB_HOST=${POSTGRES_HOST}
       - DB_PORT=${POSTGRES_PORT}
+
+  redis:
+    image: redis:7.0.11-alpine
+
+  celery:
+    build:
+      context: .
+    volumes:
+      - ./app:/app
+    
+    env_file:
+     - ./app/.env
+
+    command: celery -A app worker -l INFO
+    
+    environment:
+      - DB_HOST=${POSTGRES_HOST}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_PORT=${POSTGRES_PORT}
+      - EMAIL_ID=${EMAIL_ID}
+      - EMAIL_PW=${EMAIL_PW}
+    depends_on:
+      - db
+      - redis
+    
 
 volumes:
   postgres_data:
