@@ -8,7 +8,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 
 
-from .forms import RegisterForm, ChangeUserForm
+from .forms import RegisterForm, ChangeUserForm, SetPasswordForm
 from .tokens import account_activation_token
 from .utils import activate_email
 from core.models import Task
@@ -66,7 +66,7 @@ def logoutPage(request):
         logout(request)
         messages.success(request, "You have been logged out.")
         return redirect("home")
-    return render(request, "users/logout.html", {"user": user})
+    return render(request, "registration/logout.html", {"user": user})
 
 
 def registerPage(request):
@@ -99,8 +99,7 @@ def profilePage(request, pk):
         completed_tasks = tasks.filter(status="Completed").count()
         expired_tasks = tasks.filter(status="Expired").count()
         if completed_tasks > 0:
-            result = complete_on_time.delay(completed_tasks, expired_tasks)
-            completed_ontime = result.get()
+            completed_ontime = int(100 - expired_tasks // (completed_tasks / 100))
 
         else:
             completed_ontime = "N/A"
@@ -179,3 +178,14 @@ def delete_from_team(request, pk):
             request.user.teammates.remove(user)
             return redirect("profile", pk=user.uuid)
     return render(request, "users/profile.html")
+
+
+@login_required(login_url="login")
+def setPasswordPage(request):
+    user = request.user
+    form = SetPasswordForm(user)
+
+    if request.method == "POST":
+        form = SetPasswordForm(user)
+        return redirect("profile", pk=user.uuid)
+    return render(request, "registration/reset.html", {"form": form})

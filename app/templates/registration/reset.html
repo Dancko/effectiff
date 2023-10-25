@@ -1,22 +1,39 @@
-{% extends 'base.html' %}
+{% extends '_base.html' %}
 
 {% block content %}
-<main class="formPage my-xl">
-    <div class="content-box">
-        <div class="formWrapper">
-            <h3>Enter new password</h3>
+<div class="container-fluid">
+    <div class="row">
+      <!-- Left section -->
+      {% include 'left_section.html' %}
+  
+      <!-- Main Section -->
+      <div class="col-lg-10 col-md-12 bg-dark vh-100 main-section">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="container mt-3 ms-4">
+                    <h2 class="fw-bold py-4">Change Password</h2>
 
-            <p>Please enter your new password twice so we can verify you typed it in correctly.</p>
-            <br>
+                    <p>Please enter your new password twice so we can verify you typed it in correctly.</p>
+                    <br>
 
-            <form class="form" action="" method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
+                    <form class="form mt-2" action="" method="POST">
+                        {% csrf_token %}
 
-                <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
-            </form>
+                    
+                        {% for field in form.visible_fields %}
+                            <div class="mt-3">
+                            {{ field }}
+                            </div>
+                        {% endfor %}
+                        <div class="text-center">
+                            <input class="btn btn-secondary mt-5 mb-6 text-light justify-content-center" type="submit" value="Confirm" />
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
+      </div>
     </div>
-</main>
+</div>
 
 {% endblock content %}

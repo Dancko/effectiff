@@ -41,7 +41,7 @@
           <a href="#" class="nav-link">My Team</a>
         </li>
         <li class="nav-item d-md-block d-lg-none">
-          <a href="#" class="nav-link">Settings</a>
+          <a href="{% url 'change_password' %}" class="nav-link">Settings</a>
         </li>
         <li class="nav-item d-md-block d-lg-none">
           <a href="{% url 'logout' %}" class="nav-link">Log Out</a>
@@ -72,7 +72,7 @@
         <i class="fas fa-caret-down text-light"></i>
       </a>
       <div class="dropdown-menu bg-light text-white" id="img-menu">
-        <a href="#" class="dropdown-item">Settings</a>
+        <a href="{% url 'change_password' %}" class="dropdown-item">Settings</a>
         <a href="{% url 'logout' %}" class="dropdown-item">Log Out</a>
       </div>
     </div>

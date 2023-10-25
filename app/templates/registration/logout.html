@@ -1,11 +1,24 @@
-{% extends 'base.html' %}
+{% extends '_base.html' %}
 {% block content %}
-<div class="logout-container">
-    <h1>Logout Page</h1>
-    <p>Are you sure you want to log out?</p>
-    <form method="POST">
-        {% csrf_token %}
-        <button type="submit">Log Out</button>
-    </form>
-  </div>
-{% endblock content %}
+    <!-- Central Part -->
+    <div class="container-fluid">
+      <div class="row vh-100">
+        <!-- Left section -->
+        {% include 'left_section.html' %}
+
+        <!-- Main Section -->
+        <div class="col-lg-10 col-md-12 bg-dark h-100 main-section">
+            <div class="container mt-3 vh-100">
+                <h2 class="mt-5">Log Out</h3>
+                <p class="lead mt-4">Are you sure you want to log out?</p>
+                <form action="#" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-secondary  text-light fw-bold mt-4">Log Out</button>
+                </form>
+            </div>
+        
+        </div>
+      </div>
+    </div>
+
+   {% endblock content %}

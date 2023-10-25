@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
 from django import forms
 from django.forms import ModelForm
 
@@ -65,3 +65,23 @@ class ChangeUserForm(ModelForm):
 
         for visible in self.visible_fields():
             visible.field.widget.attrs["class"] = "form-control"
+
+
+class SetPasswordForm(SetPasswordForm):
+    new_password1 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={"placeholder": "Enter New Password", "class": "form-control"}
+        ),
+        label="",
+    )
+
+    new_password2 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={"placeholder": "Confirm Your Password", "class": "form-control"}
+        ),
+        label="",
+    )
+
+    class Meta:
+        model = get_user_model()
+        fields = ["new_password1", "new_password2"]

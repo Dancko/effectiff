@@ -10,7 +10,7 @@ from .tasks import send_email
 def activate_email(request, user, to_email):
     mail_subject = "Email Verification Mail"
     message = render_to_string(
-        "users/activate_account.html",
+        "registration/activate_account.html",
         {
             "user": user.name,
             "domain": get_current_site(request).domain,
