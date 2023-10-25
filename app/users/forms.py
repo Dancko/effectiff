@@ -1,4 +1,8 @@
-from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
+from django.contrib.auth.forms import (
+    UserCreationForm,
+    SetPasswordForm,
+    PasswordResetForm,
+)
 from django import forms
 from django.forms import ModelForm
 
@@ -85,3 +89,12 @@ class SetPasswordForm(SetPasswordForm):
     class Meta:
         model = get_user_model()
         fields = ["new_password1", "new_password2"]
+
+
+class PasswordResetForm(PasswordResetForm):
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={"class": "form-control", "placeholder": "Enter Your Email"}
+        ),
+        label="",
+    )

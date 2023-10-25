@@ -4,13 +4,11 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 
 from .tokens import account_activation_token
-from .tasks import send_email
 
 
-def activate_email(request, user, to_email):
-    mail_subject = "Email Verification Mail"
+def email_maker(request, user, to_email, email_template):
     message = render_to_string(
-        "registration/activate_account.html",
+        str(email_template),
         {
             "user": user.name,
             "domain": get_current_site(request).domain,
@@ -19,4 +17,4 @@ def activate_email(request, user, to_email):
             "protocol": "https" if request.is_secure() else "http",
         },
     )
-    send_email.delay(mail_subject, message, to=[to_email])
+    return message

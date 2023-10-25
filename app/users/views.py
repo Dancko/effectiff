@@ -8,9 +8,10 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 
 
-from .forms import RegisterForm, ChangeUserForm, SetPasswordForm
+from .forms import RegisterForm, ChangeUserForm, SetPasswordForm, PasswordResetForm
 from .tokens import account_activation_token
-from .utils import activate_email
+from .utils import email_maker
+from .tasks import send_email
 from core.models import Task
 
 
@@ -78,11 +79,53 @@ def registerPage(request):
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            activate_email(request, user, form.cleaned_data.get("email"))
+            email_subject = "Email Verification Mail"
+            email_template = "emails/activate_account.html"
+            message = email_maker(
+                request, user, user.email, email_template=email_template
+            )
+            send_email.delay(email_subject, message, to=[user.email])
             messages.success(request, "User has been created successfully.")
             return redirect("verification_sent")
 
     return render(request, "core/index.html", {"form": form})
+
+
+def password_reset(request):
+    form = PasswordResetForm()
+    if request.method == "POST":
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            user = User.objects.filter(email=email).first()
+            if user:
+                email = user.email
+                email_subject = "Password Reset"
+                email_template = "emails/reset_password_email.html"
+                message = email_maker(
+                    request, user, user.email, email_template=email_template
+                )
+                send_email.delay(email_subject, message, to=[user.email])
+                return redirect("password_reset_sent")
+
+    return render(request, "registration/reset_password.html", {"form": form})
+
+
+def password_reset_message_sent(request):
+    return render(request, "registration/reset_password_sent.html")
+
+
+def password_reset_activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(uuid=uid)
+    except:
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        return redirect("change_password")
+    else:
+        messages.error(request, "Verification link is invalid.")
+        return redirect("password_reset")
 
 
 def verification_sent(request):
@@ -187,5 +230,7 @@ def setPasswordPage(request):
 
     if request.method == "POST":
         form = SetPasswordForm(user)
-        return redirect("profile", pk=user.uuid)
+        if form.is_valid():
+            form.save()
+            return redirect("profile", pk=user.uuid)
     return render(request, "registration/reset.html", {"form": form})
