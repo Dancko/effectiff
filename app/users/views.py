@@ -54,7 +54,7 @@ def loginPage(request):
             return redirect("my_tasks", pk=user.uuid)
         else:
             messages.error(request, "Email or password is incorrect.")
-            return render(request, "users/login.html")
+            return render(request, "registration/login.html")
 
     return render(request, "registration/login.html")
 
@@ -122,10 +122,24 @@ def password_reset_activate(request, uidb64, token):
     except:
         user = None
     if user is not None and account_activation_token.check_token(user, token):
-        return redirect("change_password")
+        return redirect("password_reset_complete", pk=user.uuid)
     else:
         messages.error(request, "Verification link is invalid.")
         return redirect("password_reset")
+
+
+def password_reset_complete(request, pk):
+    user = get_object_or_404(User, uuid=pk)
+    print(user)
+    form = SetPasswordForm(user)
+    if request.method == "POST":
+        form = SetPasswordForm(user, request.POST)
+        if form.is_valid():
+            form.save()
+            print(form)
+            messages.success(request, "Your password has been changed.")
+            return redirect("login")
+    return render(request, "registration/reset_anonym.html", {"form": form})
 
 
 def verification_sent(request):
@@ -229,8 +243,8 @@ def setPasswordPage(request):
     form = SetPasswordForm(user)
 
     if request.method == "POST":
-        form = SetPasswordForm(user)
+        form = SetPasswordForm(user, request.POST)
         if form.is_valid():
             form.save()
-            return redirect("profile", pk=user.uuid)
+            return redirect("login")
     return render(request, "registration/reset.html", {"form": form})

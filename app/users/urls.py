@@ -19,6 +19,11 @@ urlpatterns = [
         views.password_reset_message_sent,
         name="password_reset_sent",
     ),
+    path(
+        "password_reset_complete/<uuid:pk>/",
+        views.password_reset_complete,
+        name="password_reset_complete",
+    ),
     path("verification_sent/", views.verification_sent, name="verification_sent"),
     path("<uuid:pk>/", views.profilePage, name="profile"),
     path("edit/<uuid:pk>/", views.editProfilePage, name="edit_profile"),
