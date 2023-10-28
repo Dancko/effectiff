@@ -91,6 +91,8 @@ class SetPasswordForm(SetPasswordForm):
         label="",
     )
 
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox(attrs={"data-theme": "dark"}))
+
     class Meta:
         model = get_user_model()
         fields = ["new_password1", "new_password2"]
