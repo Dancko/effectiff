@@ -5,9 +5,6 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
@@ -32,6 +29,7 @@ INSTALLED_APPS = [
     "projects.apps.ProjectsConfig",
     "tasks.apps.TasksConfig",
     "tinymce",
+    "captcha",
 ]
 
 MIDDLEWARE = [
@@ -130,6 +128,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "static/images")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "core.user"
+
+RECAPTCHA_PUBLIC_KEY = os.environ.get("RECAPTCHA_PUBLIC_KEY")
+RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY")
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "redis://redis:6379/0")

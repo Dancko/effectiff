@@ -104,7 +104,7 @@
                 Your Trusted Partner for Effortless Project Management
               </p>
             </div>
-            <div class="col-lg-4 offset-md-1 pt-6">
+            <div class="col-lg-4 offset-md-1 pt-5">
               <form id="signup" method="POST" action="{% url 'register' %}">
                 {% csrf_token %}
                 {% for field in form.visible_fields %}

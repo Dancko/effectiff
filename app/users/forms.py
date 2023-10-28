@@ -6,6 +6,9 @@ from django.contrib.auth.forms import (
 from django import forms
 from django.forms import ModelForm
 
+from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV2Checkbox
+
 from django.contrib.auth import get_user_model
 
 
@@ -37,9 +40,11 @@ class RegisterForm(UserCreationForm):
         label="",
     )
 
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox(attrs={"data-theme": "dark"}))
+
     class Meta:
         model = get_user_model()
-        fields = ["email", "name", "password1", "password2"]
+        fields = ["email", "name", "password1", "password2", "captcha"]
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
@@ -98,3 +103,5 @@ class PasswordResetForm(PasswordResetForm):
         ),
         label="",
     )
+
+    captcha = ReCaptchaField()
