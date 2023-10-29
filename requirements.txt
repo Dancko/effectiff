@@ -19,4 +19,5 @@ celery==5.3.4
 redis==5.0.1
 six==1.16.0
 django-recaptcha==3.0.0
-Django-Verify-Email
+Django-Verify-Email==2.0.3
+django-debug-toolbar==4.2.0

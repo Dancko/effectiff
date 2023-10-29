@@ -11,6 +11,7 @@ urlpatterns = [
     path("tasks/", include("tasks.urls")),
     path("tinymce/", include("tinymce.urls")),
     path("verification/", include("verify_email.urls")),
+    path("__debug__/", include("debug_toolbar.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

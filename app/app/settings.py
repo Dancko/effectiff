@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "verify_email.apps.VerifyEmailConfig",
+    "debug_toolbar",
     "core.apps.CoreConfig",
     "users.apps.UsersConfig",
     "projects.apps.ProjectsConfig",
@@ -40,6 +41,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "app.urls"
@@ -109,6 +111,19 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
+
+INTERNAL_IPS = [
+    "localhost",
+]
+
+
+def show_toolbar(request):  # <-- NEW
+    return True  # <-- NEW
+
+
+DEBUG_TOOLBAR_CONFIG = {  # <-- NEW
+    "SHOW_TOOLBAR_CALLBACK": show_toolbar,  # <-- NEW
+}
 
 
 # Static files (CSS, JavaScript, Images)

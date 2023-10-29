@@ -35,10 +35,18 @@ def myTasksPage(request, pk):
 @login_required(login_url="login")
 def taskDetailPage(request, pk):
     statuses = ["Awaits", "In Progress", "Completed"]
-    task = Task.objects.select_related("assigned_to", "project").get(uuid=pk)
+
+    comments = (
+        Comment.objects.prefetch_related("task", "task__project").filter(task=pk).all()
+    )
+
+    if comments:
+        task = comments.first().task
+    else:
+        task = get_object_or_404(Task, uuid=pk)
 
     task.is_outdated()
-    comments = Comment.objects.filter(task=task)
+    # comments = Comment.objects.filter(task=task)
     form = CommentForm()
     if request.user == task.project.owner or task.assigned_to == request.user:
         if request.method == "POST":
