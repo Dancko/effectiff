@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.db.models import Q
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
 from core.models import Task, Project, Comment
 from .forms import (
@@ -21,13 +23,16 @@ User = get_user_model()
 @login_required(login_url="login")
 def myTasksPage(request):
     user = request.user
+    cache.set(user.id, user, timeout=600)
 
     tasks_all = Task.objects.select_related(
         "project", "project__owner", "assigned_to"
     ).filter(Q(project__owner=user) | Q(assigned_to=user))
 
-    tasks_assigned = tasks_all.filter(project__owner=user)
-    tasks = tasks_all.filter(assigned_to=user)
+    cache.set(f"{user.id}_tasks", tasks_all, 600)
+
+    tasks_assigned = cache.get(f"{user.id}_tasks").filter(project__owner=user)
+    tasks = cache.get(f"{user.id}_tasks").filter(assigned_to=user)
     context = {
         "tasks": tasks,
         "tasks_assigned": tasks_assigned,
@@ -37,6 +42,7 @@ def myTasksPage(request):
 
 @login_required(login_url="login")
 def taskDetailPage(request, pk):
+    user = request.user
     statuses = ["Awaits", "In Progress", "Completed"]
 
     comments = (
@@ -52,12 +58,12 @@ def taskDetailPage(request, pk):
 
     task.is_outdated()
     form = CommentForm()
-    if request.user == task.project.owner or task.assigned_to == request.user:
+    if user == task.project.owner or task.assigned_to == user:
         if request.method == "POST":
             form = CommentForm(request.POST)
             if form.is_valid():
                 comment = form.save(commit=False)
-                comment.author = request.user
+                comment.author = user
                 comment.task = task
                 comment.save()
                 return redirect("task_detail", pk=pk)

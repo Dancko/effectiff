@@ -4,7 +4,7 @@ from . import views
 
 
 urlpatterns = [
-    path("my_projects/<uuid:pk>/", views.myProjectsPage, name="my_projects"),
+    path("my_projects/", views.myProjectsPage, name="my_projects"),
     path("<uuid:pk>/", views.projectPage, name="project"),
     path("new_project/", views.createProjectPage, name="create_project"),
     path("edit_project/<uuid:pk>/", views.editProjectPage, name="edit_project"),
