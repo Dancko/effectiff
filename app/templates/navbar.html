@@ -50,7 +50,7 @@
     </div>
 
     <div class="image-container ms-4 d-none d-lg-block">
-      <a href="{% url 'profile' request.user.uuid %}">
+      <a href="{% url 'profile' user.uuid %}">
         <img
           src="{{ request.user.profile_photo.url }}"
           alt=""

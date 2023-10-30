@@ -1,12 +1,9 @@
-import uuid
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.db.models import Q
 from django.views.decorators.cache import cache_page
-from django.core.cache import cache
 
 from core.models import Task, Project, Comment
 from .forms import (
@@ -20,23 +17,17 @@ from .forms import (
 User = get_user_model()
 
 
+@cache_page(60 * 15)
 @login_required(login_url="login")
 def myTasksPage(request):
     user = request.user
-    cache.set(user.id, user, timeout=600)
-
     tasks_all = Task.objects.select_related(
         "project", "project__owner", "assigned_to"
     ).filter(Q(project__owner=user) | Q(assigned_to=user))
 
-    cache.set(f"{user.id}_tasks", tasks_all, 600)
-
-    tasks_assigned = cache.get(f"{user.id}_tasks").filter(project__owner=user)
-    tasks = cache.get(f"{user.id}_tasks").filter(assigned_to=user)
-    context = {
-        "tasks": tasks,
-        "tasks_assigned": tasks_assigned,
-    }
+    tasks_assigned = tasks_all.filter(project__owner=user)
+    tasks = tasks_all.filter(assigned_to=user)
+    context = {"tasks": tasks, "tasks_assigned": tasks_assigned}
     return render(request, "tasks/my_tasks.html", context)
 
 
