@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
+from django.views.decorators.cache import cache_page
 
 
 from .forms import RegisterForm, ChangeUserForm, SetPasswordForm, PasswordResetForm
@@ -147,6 +148,7 @@ def verification_sent(request):
     return render(request, "registration/verification_sent.html")
 
 
+@cache_page(60 * 10)
 def profilePage(request, pk):
     """Profile page view"""
 

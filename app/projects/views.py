@@ -38,10 +38,8 @@ def projectPage(request, pk):
     project = get_object_or_404(Project, uuid=pk)
 
     tasks = Task.objects.filter(project__uuid=pk)
-    context = {
-        "project": project,
-        "tasks": tasks,
-    }
+    participants = project.participants.only("uuid", "name", "profile_photo")
+    context = {"project": project, "tasks": tasks, "participants": participants}
     return render(request, "projects/project1.html", context)
 
 

@@ -17,13 +17,26 @@ from .forms import (
 User = get_user_model()
 
 
-@cache_page(60 * 15)
+@cache_page(60 * 10)
 @login_required(login_url="login")
 def myTasksPage(request):
     user = request.user
-    tasks_all = Task.objects.select_related(
-        "project", "project__owner", "assigned_to"
-    ).filter(Q(project__owner=user) | Q(assigned_to=user))
+    tasks_all = (
+        Task.objects.select_related("project", "project__owner", "assigned_to")
+        .filter(Q(project__owner__id=user.id) | Q(assigned_to__id=user.id))
+        .only(
+            "title",
+            "uuid",
+            "project__uuid",
+            "project__name",
+            "project__owner",
+            "status",
+            "priority",
+            "deadline",
+            "assigned_to__uuid",
+            "assigned_to__name",
+        )
+    )
 
     tasks_assigned = tasks_all.filter(project__owner=user)
     tasks = tasks_all.filter(assigned_to=user)

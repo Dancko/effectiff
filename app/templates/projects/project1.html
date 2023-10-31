@@ -61,7 +61,7 @@
         {{ project.description|safe }}
         <h4 class="text-primary fw-bold mt-5 mb-3">Participants</h4>
         <ul class="list-unstyled">
-          {% for participant in project.participants.all %}
+          {% for participant in participants %}
           <li class="d-flex gap-2 my-2">
             <a href="#"
               ><img
