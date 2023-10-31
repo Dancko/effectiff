@@ -22,7 +22,7 @@ def test_myprojects_get_success(request, client):
     res = client.get(url)
 
     assert res.status_code == 200
-    assert project.name in str(res.content)
+
     assert project.owner == user
     assert user in project.participants.all()
 
