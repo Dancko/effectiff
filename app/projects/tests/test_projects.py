@@ -17,7 +17,7 @@ def test_myprojects_get_success(request, client):
     project = Project.objects.create(name="TestProj", owner=user)
     project.participants.add(user)
     client.login(email=user.email, password="testpass123")
-    url = reverse("my_projects", args=[str(user.uuid)])
+    url = reverse("my_projects")
 
     res = client.get(url)
 
@@ -33,7 +33,7 @@ def test_my_project_unauth_redirect(client):
         email="test@example.com", password="testpass123"
     )
     project = Project.objects.create(name="TestProj", owner=user)
-    url = reverse("my_projects", args=[str(user.uuid)])
+    url = reverse("my_projects")
 
     res = client.get(url)
 
