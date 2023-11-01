@@ -17,7 +17,6 @@ from .forms import (
 User = get_user_model()
 
 
-@cache_page(60 * 10)
 @login_required(login_url="login")
 def myTasksPage(request):
     user = request.user
@@ -50,7 +49,7 @@ def taskDetailPage(request, pk):
     statuses = ["Awaits", "In Progress", "Completed"]
 
     comments = (
-        Comment.objects.select_related("task", "task__project")
+        Comment.objects.select_related("task", "task__project", "author")
         .filter(task__uuid=pk)
         .all()
     )
@@ -58,7 +57,7 @@ def taskDetailPage(request, pk):
     if comments:
         task = comments.first().task
     else:
-        task = get_object_or_404(Task, uuid=pk)
+        task = Task.objects.select_related("assigned_to").get(uuid=pk)
 
     task.is_outdated()
     form = CommentForm()
@@ -123,7 +122,7 @@ def taskCreateFromProject(request, pk):
             task = form.save(commit=False)
             task.project = project
             task.save()
-            return redirect("my_projects", pk=request.user.uuid)
+            return redirect("my_projects")
     return render(request, "tasks/new_task.html", {"form": form, "page": page})
 
 

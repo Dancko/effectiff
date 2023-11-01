@@ -1,4 +1,4 @@
-import uuid
+from datetime import datetime
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model, authenticate, login, logout
@@ -11,7 +11,7 @@ from django.views.decorators.cache import cache_page
 
 from .forms import RegisterForm, ChangeUserForm, SetPasswordForm, PasswordResetForm
 from .tokens import account_activation_token
-from .utils import email_maker
+from .utils import email_maker, threshold_30
 from .tasks import send_email
 from core.models import Task
 
@@ -52,7 +52,7 @@ def loginPage(request):
         if user is not None:
             login(request, user)
             messages.success(request, "User was logged in successfully.")
-            return redirect("my_tasks", pk=user.uuid)
+            return redirect("my_tasks")
         else:
             messages.error(request, "Email or password is incorrect.")
             return render(request, "registration/login.html")
@@ -148,40 +148,34 @@ def verification_sent(request):
     return render(request, "registration/verification_sent.html")
 
 
-@cache_page(60 * 10)
+# @cache_page(60 * 2)
 def profilePage(request, pk):
     """Profile page view"""
+    user = get_object_or_404(User, uuid=pk)
 
-    try:
-        tasks = Task.objects.select_related("assigned_to").filter(assigned_to__uuid=pk)
-        user = tasks.first().assigned_to
-        completed_tasks = tasks.filter(status="Completed").count()
-        expired_tasks = tasks.filter(status="Expired").count()
-        if completed_tasks > 0:
-            completed_ontime = int(100 - expired_tasks // (completed_tasks / 100))
+    tasks = Task.objects.filter(assigned_to__uuid=pk)
+    utc_now = datetime.utcnow()
+    threshold = threshold_30(utc_now)
+    completed_tasks = tasks.filter(status="Completed").count()
+    expired_tasks = tasks.filter(status="Expired").count()
+    if completed_tasks > 0:
+        completed_ontime = int(100 - expired_tasks // (completed_tasks / 100))
+    else:
+        completed_ontime = "N/A"
+    tasks_inprogress = tasks.filter(status="In Progress").count()
+    tasks_await = tasks.filter(status="Awaits").count()
+    skills = user.skills.all()
 
-        else:
-            completed_ontime = "N/A"
-        tasks_inprogress = tasks.filter(status="In Progress").count()
-        tasks_await = tasks.filter(status="Awaits").count()
-        skills = user.skills.all()
+    context = {
+        "user": user,
+        "skills": skills,
+        "tasks": tasks,
+        "completed_tasks": completed_tasks,
+        "completed_ontime": completed_ontime,
+        "tasks_inprogress": tasks_inprogress,
+        "tasks_await": tasks_await,
+    }
 
-        context = {
-            "user": user,
-            "skills": skills,
-            "tasks": tasks,
-            "completed_tasks": completed_tasks,
-            "completed_ontime": completed_ontime,
-            "tasks_inprogress": tasks_inprogress,
-            "tasks_await": tasks_await,
-        }
-    except:
-        user = get_object_or_404(User, uuid=pk)
-        skills = user.skills.all()
-        context = {
-            "user": user,
-            "skills": skills,
-        }
     is_friend = False
     if request.user.teammates.filter(uuid=user.uuid).exists():
         is_friend = True

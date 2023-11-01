@@ -13,16 +13,11 @@ User = get_user_model()
 @login_required(login_url="login")
 def myProjectsPage(request):
     user = request.user
-    all_tasks = Task.objects.select_related("project").filter(
-        Q(project__owner=user) | Q(assigned_to=user)
-    )
 
-    projects_owned = all_tasks.filter(project__owner=user).values(
-        "project__name", "project__uuid"
-    )
+    projects_owned = Project.objects.filter(owner=user).distinct()
 
     projects_participated = (
-        all_tasks.filter(assigned_to=user)
+        Task.objects.filter(assigned_to=user)
         .values("project__name", "project__uuid")
         .annotate(count=Count("project"))
     )
@@ -35,9 +30,13 @@ def myProjectsPage(request):
 
 
 def projectPage(request, pk):
-    project = get_object_or_404(Project, uuid=pk)
-
-    tasks = Task.objects.filter(project__uuid=pk)
+    tasks = Task.objects.select_related("project", "assigned_to").filter(
+        project__uuid=pk
+    )
+    if tasks:
+        project = tasks.first().project
+    else:
+        project = get_object_or_404(Project, uuid=pk)
     participants = project.participants.only("uuid", "name", "profile_photo")
     context = {"project": project, "tasks": tasks, "participants": participants}
     return render(request, "projects/project1.html", context)
@@ -54,7 +53,7 @@ def createProjectPage(request):
             project.owner = request.user
             project.save()
 
-            return redirect("my_projects", pk=request.user.uuid)
+            return redirect("my_projects")
     return render(request, "projects/project_create.html", {"form": form, "page": page})
 
 
@@ -82,7 +81,7 @@ def deleteProjectPage(request, pk):
     if request.user.id == project.owner.id:
         if request.method == "POST":
             project.delete()
-            return redirect("my_projects", pk=request.user.uuid)
+            return redirect("my_projects")
     else:
         return redirect("home")
     return render(request, "delete.html", {"project": project, "object": object})

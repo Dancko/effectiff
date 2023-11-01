@@ -15,10 +15,10 @@
         <h2 class="pt-4">Projects I Own</h3>
         {% for project in projects_owned %}
         <div class="container my-4 border-bottom d-flex">
-          <a href="{% url 'project' project.project__uuid %}" class="table-tooltip">{{ project.project__name }}</a>
+          <a href="{% url 'project' project.uuid %}" class="table-tooltip">{{ project.name }}</a>
           <div class="ms-auto">
             <a
-              href="{% url 'add_members' project.project__uuid %}"
+              href="{% url 'add_members' project.uuid %}"
               class="table-tooltip"
               data-bs-toggle="tooltip"
               data-bs-placement="bottom"
@@ -27,7 +27,7 @@
               <i class="fas fa-plus  text-success px-2 "></i>
             </a>
             <a
-              href="{% url 'edit_project' project.project__uuid %}"
+              href="{% url 'edit_project' project.uuid %}"
               class="table-tooltip"
               data-bs-toggle="tooltip"
               data-bs-placement="bottom"
@@ -36,7 +36,7 @@
               <i class="fas fa-gear  text-primary px-2 "></i>
             </a>
             <a
-              href="{% url 'delete_project' project.project__uuid %}"
+              href="{% url 'delete_project' project.uuid %}"
               class="table-tooltip"
               data-bs-toggle="tooltip"
               data-bs-placement="bottom"
