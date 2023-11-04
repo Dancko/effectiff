@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.db.models import Q
-from django.views.decorators.cache import cache_page
 
 from .models import Task, Comment
 from projects.models import Project
@@ -20,10 +19,12 @@ User = get_user_model()
 
 @login_required(login_url="login")
 def myTasksPage(request):
+    """View for the page where current tasks of the user are depicted."""
     user = request.user
     tasks_all = (
         Task.objects.select_related("project", "project__owner", "assigned_to")
         .filter(Q(project__owner__id=user.id) | Q(assigned_to__id=user.id))
+        .exclude(status="Completed")
         .only(
             "title",
             "uuid",
@@ -46,6 +47,7 @@ def myTasksPage(request):
 
 @login_required(login_url="login")
 def taskDetailPage(request, pk):
+    """View for detailed info of a task page."""
     user = request.user
     statuses = ["Awaits", "In Progress", "Completed"]
 
@@ -81,7 +83,8 @@ def taskDetailPage(request, pk):
 
 
 @login_required(login_url="login")
-def taskChangeStatus(request, pk):
+def task_change_status(request, pk):
+    """View for the form which changes the status of a task."""
     task = get_object_or_404(Task, uuid=pk)
     if request.method == "POST":
         new_status = request.POST["status"]
@@ -93,7 +96,7 @@ def taskChangeStatus(request, pk):
 
 @login_required(login_url="login")
 def taskCreatePage(request):
-    """View for creating a task."""
+    """View for creating a task page."""
     page = "create"
     user = request.user
     form = TaskCreateForm(user=user)
@@ -110,8 +113,8 @@ def taskCreatePage(request):
 
 
 @login_required(login_url="login")
-def taskCreateFromProject(request, pk):
-    """View for creating a task from project page."""
+def create_task_from_project(request, pk):
+    """View for creating a task from the project form."""
     page = "create"
     project = Project.objects.get(uuid=pk)
 
@@ -128,8 +131,8 @@ def taskCreateFromProject(request, pk):
 
 
 @login_required(login_url="login")
-def taskEditPage(request, pk):
-    """View for editting the tasks."""
+def edit_task(request, pk):
+    """View for editting the tasks form."""
     page = "edit"
     task = get_object_or_404(Task, uuid=pk)
     if request.user.uuid == task.project.owner.uuid and task.status != "Completed":
@@ -146,7 +149,7 @@ def taskEditPage(request, pk):
 
 @login_required(login_url="login")
 def deleteTaskPage(request, pk):
-    """View for deleting a task."""
+    """View for deleting a task page."""
 
     task = get_object_or_404(Task, uuid=pk)
     object = task.title
@@ -158,7 +161,8 @@ def deleteTaskPage(request, pk):
 
 
 @login_required(login_url="login")
-def addMembers(request, pk):
+def change_assignee(request, pk):
+    """View for changing an assignee for a task form."""
     page = "edit"
     task = Task.objects.select_related("project").get(uuid=pk)
     if task.project.owner == request.user:
@@ -168,7 +172,5 @@ def addMembers(request, pk):
             form = TaskAddPartiicipantsForm(request.POST, instance=task)
             if form.is_valid():
                 form.save()
-                return redirect("task_detail", uuid=pk)
-        return render(
-            request, "tasks/create_update_task.html", {"form": form, "page": page}
-        )
+                return redirect("task_detail", pk=pk)
+        return render(request, "tasks/new_task.html", {"form": form, "page": page})

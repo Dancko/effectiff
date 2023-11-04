@@ -14,6 +14,15 @@
           {% if task.project.owner == request.user and task.status != "Completed" %}
           <div class="ms-auto pt-3">
             <a
+              href="{% url 'change_assignee' task.uuid %}"
+              class="table-tooltip"
+              data-bs-toggle="tooltip"
+              data-bs-placement="bottom"
+              data-bs-title="Change Assignee"
+            >
+              <i class="fas fa-user fa-lg text-success px-2 py-4"></i>
+            </a>
+            <a
               href="{% url 'edit_task' task.uuid %}"
               class="table-tooltip"
               data-bs-toggle="tooltip"

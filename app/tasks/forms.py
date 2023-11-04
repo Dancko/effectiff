@@ -62,8 +62,9 @@ class TaskAddPartiicipantsForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(TaskAddPartiicipantsForm, self).__init__(*args, **kwargs)
 
-        assignee = self.instance.project.owner.teammates.all()
+        assignee = self.instance.project.participants.all()
         self.fields["assigned_to"].queryset = assignee
+        self.fields["assigned_to"].widget.attrs["class"] = "form-control"
 
 
 class CommentForm(ModelForm):
