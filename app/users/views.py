@@ -160,6 +160,14 @@ def profilePage(request, pk):
     tasks = Task.objects.filter(assigned_to__uuid=pk, created__gt=threshold).values(
         "status"
     )
+    skills = user.skills.all()
+
+    context = {
+        "user": user,
+        "skills": skills,
+        "tasks": tasks,
+    }
+
     if tasks:
         completed_tasks = tasks.filter(status="Completed").count()
         expired_tasks = tasks.filter(status="Expired").count()
@@ -169,18 +177,10 @@ def profilePage(request, pk):
             completed_ontime = "N/A"
         tasks_inprogress = tasks.filter(status="In Progress").count()
         tasks_await = tasks.filter(status="Awaits").count()
-
-    skills = user.skills.all()
-
-    context = {
-        "user": user,
-        "skills": skills,
-        "tasks": tasks,
-        "completed_tasks": completed_tasks,
-        "completed_ontime": completed_ontime,
-        "tasks_inprogress": tasks_inprogress,
-        "tasks_await": tasks_await,
-    }
+        context["completed_tasks"] = completed_tasks
+        context["completed_ontime"] = completed_ontime
+        context["tasks_inprogress"] = tasks_inprogress
+        context["tasks_await"] = tasks_await
 
     is_friend = False
     if request.user.teammates.filter(uuid=user.uuid).exists():
