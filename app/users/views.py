@@ -13,7 +13,7 @@ from .forms import RegisterForm, ChangeUserForm, SetPasswordForm, PasswordResetF
 from .tokens import account_activation_token
 from .utils import email_maker, threshold_30
 from .tasks import send_email
-from core.models import Task
+from tasks.models import Task
 
 
 User = get_user_model()
@@ -73,6 +73,8 @@ def logoutPage(request):
 
 def registerPage(request):
     """Register page view."""
+    if request.user.is_authenticated:
+        return redirect("my_tasks")
     form = RegisterForm()
     if request.method == "POST":
         form = RegisterForm(request.POST)
@@ -153,17 +155,21 @@ def profilePage(request, pk):
     """Profile page view"""
     user = get_object_or_404(User, uuid=pk)
 
-    tasks = Task.objects.filter(assigned_to__uuid=pk)
     utc_now = datetime.utcnow()
     threshold = threshold_30(utc_now)
-    completed_tasks = tasks.filter(status="Completed").count()
-    expired_tasks = tasks.filter(status="Expired").count()
-    if completed_tasks > 0:
-        completed_ontime = int(100 - expired_tasks // (completed_tasks / 100))
-    else:
-        completed_ontime = "N/A"
-    tasks_inprogress = tasks.filter(status="In Progress").count()
-    tasks_await = tasks.filter(status="Awaits").count()
+    tasks = Task.objects.filter(assigned_to__uuid=pk, created__gt=threshold).values(
+        "status"
+    )
+    if tasks:
+        completed_tasks = tasks.filter(status="Completed").count()
+        expired_tasks = tasks.filter(status="Expired").count()
+        if completed_tasks > 0:
+            completed_ontime = int(100 - expired_tasks // (completed_tasks / 100))
+        else:
+            completed_ontime = "N/A"
+        tasks_inprogress = tasks.filter(status="In Progress").count()
+        tasks_await = tasks.filter(status="Awaits").count()
+
     skills = user.skills.all()
 
     context = {

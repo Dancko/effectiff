@@ -3,7 +3,7 @@ import pytest
 from django.contrib.auth import get_user_model, login, authenticate
 from django.shortcuts import reverse
 
-from core.models import Project
+from projects.models import Project
 
 
 pytestmark = pytest.mark.django_db

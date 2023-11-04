@@ -5,7 +5,8 @@ from django.http import HttpResponse
 from django.db.models import Q
 from django.views.decorators.cache import cache_page
 
-from core.models import Task, Project, Comment
+from .models import Task, Comment
+from projects.models import Project
 from .forms import (
     TaskCreateForm,
     TaskAddPartiicipantsForm,

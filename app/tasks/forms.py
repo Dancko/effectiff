@@ -1,7 +1,8 @@
 from django.forms import ModelForm
 from django import forms
 
-from core.models import Task, Comment, Project
+from tasks.models import Task, Comment
+from projects.models import Project
 
 
 class DateTimeInput(forms.DateTimeInput):

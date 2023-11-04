@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
 
-from core.models import Project, Task
+from tasks.models import Task
+from projects.models import Project
 from .forms import ProjectCreationForm, ProjectAddParticipantsForm
 
 
