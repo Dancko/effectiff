@@ -63,6 +63,7 @@ def loginPage(request):
 @login_required
 def logoutPage(request):
     """Logout page view."""
+
     user = request.user
     if request.method == "POST":
         logout(request)
@@ -73,6 +74,7 @@ def logoutPage(request):
 
 def registerPage(request):
     """Register page view."""
+
     if request.user.is_authenticated:
         return redirect("my_tasks")
     form = RegisterForm()
@@ -95,6 +97,8 @@ def registerPage(request):
 
 
 def password_reset(request):
+    """View for reset password page."""
+
     form = PasswordResetForm()
     if request.method == "POST":
         form = PasswordResetForm(request.POST)
@@ -153,6 +157,7 @@ def verification_sent(request):
 # @cache_page(60 * 2)
 def profilePage(request, pk):
     """Profile page view"""
+
     user = get_object_or_404(User, uuid=pk)
 
     utc_now = datetime.utcnow()
@@ -193,6 +198,7 @@ def profilePage(request, pk):
 @login_required(login_url="login")
 def editProfilePage(request, pk):
     """Edit profile view."""
+
     if request.user.uuid == pk:
         form = ChangeUserForm(instance=request.user)
         if request.method == "POST":
@@ -200,23 +206,25 @@ def editProfilePage(request, pk):
             if form.is_valid():
                 form.save()
                 return redirect("profile", pk=pk)
-        return render(request, "users/edit_profile1.html", {"form": form})
+        return render(request, "users/edit_profile.html", {"form": form})
     else:
         return redirect("home")
 
 
-@login_required(login_url="login")
-def deleteProfile(request, pk):
-    if request.user.uuid == pk:
-        user = User.objects.get(uuid=pk)
-        if request.method == "POST":
-            user.delete()
-            return redirect("home")
-    return render(request, "users/delete_profile.html")
+# @login_required(login_url="login")
+# def deleteProfilePage(request, pk):
+#     if request.user.uuid == pk:
+#         user = User.objects.get(uuid=pk)
+#         if request.method == "POST":
+#             user.delete()
+#             return redirect("home")
+#     return render(request, "users/delete_profile.html")
 
 
 @login_required(login_url="login")
 def add_to_team(request, pk):
+    """View for adding a user to the team button."""
+
     user = User.objects.get(uuid=pk)
     try:
         request.user.teammates.get(uuid=user.uuid)
@@ -231,6 +239,8 @@ def add_to_team(request, pk):
 
 @login_required(login_url="login")
 def delete_from_team(request, pk):
+    """View for deleting a user from the team button."""
+
     user = User.objects.get(uuid=pk)
     if request.user.teammates.get(uuid=user.uuid):
         if request.method == "POST":
@@ -241,6 +251,8 @@ def delete_from_team(request, pk):
 
 @login_required(login_url="login")
 def setPasswordPage(request):
+    """View for changing the password of authorized user."""
+
     user = request.user
     form = SetPasswordForm(user)
 
