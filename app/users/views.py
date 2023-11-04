@@ -67,7 +67,7 @@ def logoutPage(request):
     if request.method == "POST":
         logout(request)
         messages.success(request, "You have been logged out.")
-        return redirect("home")
+        return redirect("register")
     return render(request, "registration/logout.html", {"user": user})
 
 
