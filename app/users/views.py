@@ -262,3 +262,9 @@ def setPasswordPage(request):
             form.save()
             return redirect("login")
     return render(request, "registration/reset.html", {"form": form})
+
+
+def myTeamPage(request):
+    user = User.objects.get(uuid=request.user.uuid)
+    teammates = user.objects.teammates.all()
+    return render(request, "users/my_team.html", {"teammates": teammates})

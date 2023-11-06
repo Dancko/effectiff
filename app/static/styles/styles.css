@@ -71,6 +71,11 @@
   max-height: auto;
 }
 
+.img-myteam-page {
+  max-width: 130px;
+  max-height: auto;
+}
+
 .profile-hr {
   display: block;
   width: 3.5rem;

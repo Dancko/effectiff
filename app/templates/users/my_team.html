@@ -1,0 +1,80 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="left-section d-none d-lg-block col-lg-2 h-100 overflow-auto">
+  <div class="container mt-3">
+    <h3 class="fw-bold border-bottom border-secondary py-4">My Team</h3>
+    <form>
+      <input
+        type="search"
+        class="form-control rounded-pill"
+        id="search-teammates"
+        style="height: 50px"
+        placeholder="Search in teammates"
+      />
+    </form>
+    <ul class="list-group profiles-left mt-3 list-unstyled vstack gap-3">
+      {% for teammate in request.user.teammates.all %}
+      <div
+        class="group-item d-flex gap-2 border-bottom border-primary py-2 online"
+      >
+        <a href="{% url 'profile' teammate.uuid %}"
+          ><img
+            src="{{ teammate.profile_photo.url }}"
+            alt=""
+            class="img-fluid img-profile-left img-thumbnail rounded-circle border border-2 border-success"
+        /></a>
+
+        <a href="{% url 'profile' teammate.uuid %}"><li class="text-white fs-5">{{ teammate.name }}</li></a>
+      </div>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+        <div class="col-lg-10 col-md-12 bg-dark vh-100">
+            <div class="container mt-3">
+                <div class="row">
+                    <h2 class="fw-bold py-4">My Team</h2>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="card bg-black border-1 border-primary rounded-3">
+                                <div class="d-flex flex-row">
+                                    <div class="img-container">
+                                        <img src="{{ request.user.profile_photo.url }}" 
+                                             alt=""
+                                             class="img-fluid d-flex rounded-circle img-myteam-page border border-3 border-success m-4 justify-content-center align-items-center">
+
+                                    </div>
+                                    <div class="card-body">
+                                        <h4 class="card-text">Daniil</h4>
+                                        <p class="lead">Django Web Developer</p>
+                                        <p>Prachinburi, Thailand</p>
+                                        <p class="fst-italic">Local Time: 20:19</p>
+                                        <span
+                                        class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
+                                        >Bootstrap</span>
+                                        <span
+                                        class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
+                                        >Bootstrap</span>
+                                        <span
+                                        class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
+                                        >Bootstrap</span>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+    

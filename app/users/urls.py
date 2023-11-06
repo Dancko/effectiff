@@ -27,6 +27,7 @@ urlpatterns = [
     path("verification_sent/", views.verification_sent, name="verification_sent"),
     path("<uuid:pk>/", views.profilePage, name="profile"),
     path("edit/<uuid:pk>/", views.editProfilePage, name="edit_profile"),
+    path("my_team/", views.myTeamPage, name="my_team"),
     # path("delete/<uuid:pk>/", views.deleteProfilePage, name="delete_profile"),
     path("add_teammate/<uuid:pk>/", views.add_to_team, name="add_teammate"),
     path("delete_teammate/<uuid:pk>/", views.delete_from_team, name="delete_teammate"),
