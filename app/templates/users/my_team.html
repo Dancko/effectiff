@@ -17,7 +17,7 @@
       />
     </form>
     <ul class="list-group profiles-left mt-3 list-unstyled vstack gap-3">
-      {% for teammate in request.user.teammates.all %}
+      {% for teammate in teammates %}
       <div
         class="group-item d-flex gap-2 border-bottom border-primary py-2 online"
       >
@@ -40,21 +40,26 @@
                 <div class="row">
                     <h2 class="fw-bold py-4">My Team</h2>
                     <div class="row">
-                        <div class="col-lg-6">
+                      
+                      {% for teammate in teammates %}
+                        
+                      
+                        
+                        <div class="col-lg-4">
                             <div class="card bg-black border-1 border-primary rounded-3">
                                 <div class="d-flex flex-row">
                                     <div class="img-container">
-                                        <img src="{{ request.user.profile_photo.url }}" 
+                                        <img src="{{ teammate.profile_photo.url }}" 
                                              alt=""
                                              class="img-fluid d-flex rounded-circle img-myteam-page border border-3 border-success m-4 justify-content-center align-items-center">
 
                                     </div>
                                     <div class="card-body">
-                                        <h4 class="card-text">Daniil</h4>
-                                        <p class="lead">Django Web Developer</p>
-                                        <p>Prachinburi, Thailand</p>
+                                        <h4 class="card-text">{{ teammate.name }}</h4>
+                                        <p class="lead">{{ teammate.intro }}</p>
+                                        <p>{{ teammate.location }}</p>
                                         <p class="fst-italic">Local Time: 20:19</p>
-                                        <span
+                                        <!-- <span
                                         class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
                                         >Bootstrap</span>
                                         <span
@@ -62,12 +67,13 @@
                                         >Bootstrap</span>
                                         <span
                                         class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
-                                        >Bootstrap</span>
+                                        >Bootstrap</span> -->
                                     </div>
                                 </div>
                                 
                             </div>
                         </div>
+                        {% endfor %}
                     </div>
                 </div>
         </div>

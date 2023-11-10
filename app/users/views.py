@@ -265,6 +265,6 @@ def setPasswordPage(request):
 
 
 def myTeamPage(request):
-    user = User.objects.get(uuid=request.user.uuid)
-    teammates = user.objects.teammates.all()
+    user = request.user
+    teammates = user.teammates.all()
     return render(request, "users/my_team.html", {"teammates": teammates})
