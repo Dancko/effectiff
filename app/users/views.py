@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from django.views.decorators.cache import cache_page
+from django.db.models import Count, Q
 
 
 from .forms import RegisterForm, ChangeUserForm, SetPasswordForm, PasswordResetForm
@@ -158,34 +159,42 @@ def verification_sent(request):
 def profilePage(request, pk):
     """Profile page view"""
 
-    user = get_object_or_404(User, uuid=pk)
+    completed_tasks = Count("task", filter=Q(task__status="Completed"))
+    inprogress_tasks = Count("task", filter=Q(task__status="In Progress"))
+    expired_tasks = Count("task", filter=Q(task__status="Expired"))
+    await_tasks = Count("task", filter=Q(task__status="Awats"))
 
-    utc_now = datetime.utcnow()
-    threshold = threshold_30(utc_now)
-    tasks = Task.objects.filter(assigned_to__uuid=pk, created__gt=threshold).values(
-        "status"
-    )
+    user = User.objects.annotate(
+        completed_tasks=completed_tasks,
+        expired_tasks=expired_tasks,
+        inprogress_tasks=inprogress_tasks,
+        await_tasks=await_tasks,
+    ).get(uuid=pk)
+
+    # utc_now = datetime.utcnow()
+    # threshold = threshold_30(utc_now)
+    # tasks = Task.objects.filter(assigned_to__uuid=pk, created__gt=threshold).values(
+    #     "status"
+    # )
     skills = user.skills.all()
 
     context = {
         "user": user,
         "skills": skills,
-        "tasks": tasks,
     }
 
-    if tasks:
-        completed_tasks = tasks.filter(status="Completed").count()
-        expired_tasks = tasks.filter(status="Expired").count()
-        if completed_tasks > 0:
-            completed_ontime = int(100 - expired_tasks // (completed_tasks / 100))
-        else:
-            completed_ontime = "N/A"
-        tasks_inprogress = tasks.filter(status="In Progress").count()
-        tasks_await = tasks.filter(status="Awaits").count()
-        context["completed_tasks"] = completed_tasks
-        context["completed_ontime"] = completed_ontime
-        context["tasks_inprogress"] = tasks_inprogress
-        context["tasks_await"] = tasks_await
+    completed_tasks = user.completed_tasks
+    expired_tasks = user.expired_tasks
+    if completed_tasks > 0:
+        completed_ontime = int(100 - expired_tasks // (completed_tasks / 100))
+    else:
+        completed_ontime = "N/A"
+    inprogress_tasks = user.inprogress_tasks
+    await_tasks = user.await_tasks
+    context["completed_tasks"] = completed_tasks
+    context["completed_ontime"] = completed_ontime
+    context["inprogress_tasks"] = inprogress_tasks
+    context["await_tasks"] = await_tasks
 
     is_friend = False
     if request.user.teammates.filter(uuid=user.uuid).exists():
