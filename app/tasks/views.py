@@ -64,6 +64,9 @@ def taskDetailPage(request, pk):
     else:
         task = Task.objects.select_related("assigned_to").get(uuid=pk)
 
+    attachments = TaskFile.objects.filter(task=task)
+    print(attachments[0].file.name)
+    print(attachments[0].file.url)
     task.is_outdated()
     form = CommentForm()
     if request.user == task.project.owner or task.assigned_to == request.user:
@@ -77,6 +80,7 @@ def taskDetailPage(request, pk):
                 return redirect("task_detail", pk=pk)
     context = {
         "task": task,
+        "attachments": attachments,
         "comments": comments,
         "form": form,
         "statuses": statuses,

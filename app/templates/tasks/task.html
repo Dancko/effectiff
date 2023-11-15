@@ -143,6 +143,21 @@
             </ul>
           </div>
         </div>
+        <div class="row my-5">
+          <div class="col-lg-4">
+            <h4 class="fw-bold text-primary">Attachments</h4>
+          </div>
+          <div class="col-lg-8">
+            <ul class="list-unstyled">
+              
+              {% for attachment in attachments %}
+              <a href="{{ attachment.file.url }}"><li class="list-item">{{ attachment.file.name }}</li></a>
+              {% endfor %}
+                
+              
+            </ul>
+          </div>
+        </div>
         <h2 class="mb-5 mt-7">Discussion</h2>
       </div>
 
