@@ -130,7 +130,7 @@
 
               <!-- Stats -->
               <div class="row my-5">
-                {% if completed_tasks %}
+                {% if completed_tasks or inprogress_tasks or await_tasks %}
                 <div
                   class="col-md-3 border-end border-primary border-3 text-center justify-content-center my-5"
                 >

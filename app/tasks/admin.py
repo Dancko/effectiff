@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Task, Comment
+from .models import Task, TaskFile, Comment
 
 
 @admin.register(Task)
@@ -9,3 +9,4 @@ class TaskAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Comment)
+admin.site.register(TaskFile)

@@ -54,6 +54,14 @@ class Task(models.Model):
         return self.outdated
 
 
+class TaskFile(models.Model):
+    task = models.ForeignKey("Task", on_delete=models.CASCADE)
+    file = models.FileField(upload_to="tasks_attachments/")
+
+    def __str__(self):
+        return self.task.title
+
+
 class Comment(models.Model):
     author = models.ForeignKey("users.User", on_delete=models.CASCADE)
     task = models.ForeignKey("tasks.Task", on_delete=models.CASCADE, default=None)

@@ -17,7 +17,7 @@
         <h2 class="fw-bold py-4">Edit Task</h2>
         {% endif %}
 
-        <form method="POST" action="#">
+        <form method="POST" action="#" enctype="multipart/form-data">
           {% csrf_token %}
           {{ form.media }} 
           {% for field in form.visible_fields %} 

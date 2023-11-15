@@ -158,11 +158,21 @@ def verification_sent(request):
 # @cache_page(60 * 2)
 def profilePage(request, pk):
     """Profile page view"""
+    utc_now = datetime.utcnow()
+    threshold = threshold_30(utc_now)
 
-    completed_tasks = Count("task", filter=Q(task__status="Completed"))
-    inprogress_tasks = Count("task", filter=Q(task__status="In Progress"))
-    expired_tasks = Count("task", filter=Q(task__status="Expired"))
-    await_tasks = Count("task", filter=Q(task__status="Awats"))
+    completed_tasks = Count(
+        "task", filter=Q(task__status="Completed") & Q(task__updated__gt=threshold)
+    )
+    inprogress_tasks = Count(
+        "task", filter=Q(task__status="In Progress") & Q(task__updated__gt=threshold)
+    )
+    expired_tasks = Count(
+        "task", filter=Q(task__status="Expired") & Q(task__updated__gt=threshold)
+    )
+    await_tasks = Count(
+        "task", filter=Q(task__status="Awaits") & Q(task__updated__gt=threshold)
+    )
 
     user = User.objects.annotate(
         completed_tasks=completed_tasks,
@@ -171,17 +181,7 @@ def profilePage(request, pk):
         await_tasks=await_tasks,
     ).get(uuid=pk)
 
-    # utc_now = datetime.utcnow()
-    # threshold = threshold_30(utc_now)
-    # tasks = Task.objects.filter(assigned_to__uuid=pk, created__gt=threshold).values(
-    #     "status"
-    # )
     skills = user.skills.all()
-
-    context = {
-        "user": user,
-        "skills": skills,
-    }
 
     completed_tasks = user.completed_tasks
     expired_tasks = user.expired_tasks
@@ -191,15 +191,20 @@ def profilePage(request, pk):
         completed_ontime = "N/A"
     inprogress_tasks = user.inprogress_tasks
     await_tasks = user.await_tasks
-    context["completed_tasks"] = completed_tasks
-    context["completed_ontime"] = completed_ontime
-    context["inprogress_tasks"] = inprogress_tasks
-    context["await_tasks"] = await_tasks
 
     is_friend = False
     if request.user.teammates.filter(uuid=user.uuid).exists():
         is_friend = True
-    context["is_friend"] = is_friend
+
+    context = {
+        "user": user,
+        "skills": skills,
+        "completed_tasks": completed_tasks,
+        "completed_ontime": completed_ontime,
+        "inprogress_tasks": inprogress_tasks,
+        "await_tasks": await_tasks,
+        "is_friend": is_friend,
+    }
 
     return render(request, "users/profile.html", context)
 
