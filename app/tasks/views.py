@@ -64,7 +64,7 @@ def taskDetailPage(request, pk):
     else:
         task = Task.objects.select_related("assigned_to").get(uuid=pk)
 
-    attachments = TaskFile.objects.filter(task=task)
+    attachments = task.taskfile_set.all()
 
     task.is_outdated()
     form = CommentForm()

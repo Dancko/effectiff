@@ -30,7 +30,7 @@ def myProjectsPage(request):
     return render(request, "projects/project_list.html", context)
 
 
-def projectPage(request, pk):
+def projectDetailPage(request, pk):
     tasks = Task.objects.select_related("project", "assigned_to").filter(
         project__uuid=pk
     )
@@ -38,8 +38,15 @@ def projectPage(request, pk):
         project = tasks.first().project
     else:
         project = get_object_or_404(Project, uuid=pk)
+
+    attachments = project.projectfile_set.all()
     participants = project.participants.only("uuid", "name", "profile_photo")
-    context = {"project": project, "tasks": tasks, "participants": participants}
+    context = {
+        "project": project,
+        "tasks": tasks,
+        "participants": participants,
+        "attachments": attachments,
+    }
     return render(request, "projects/project1.html", context)
 
 

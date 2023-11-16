@@ -76,6 +76,13 @@
           {% endfor %}
         </ul>
 
+        <h4 class="text-primary fw-bold mt-5 mb-3">Attachments</h4>
+        
+        {% for attachment in attachments %}
+          <a href="{{ attachment.file.url }}">{{ attachment.file.name }} </a>
+        {% endfor %}
+          
+
         <h4 class="fw-bold mt-5 text-primary">Tasks Assigned</h4>
         <table class="table table-hover mb-7">
           <thead>
