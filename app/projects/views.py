@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
 
 from tasks.models import Task
-from projects.models import Project
+from projects.models import Project, ProjectFile
 from .forms import ProjectCreationForm, ProjectAddParticipantsForm
 
 
@@ -48,11 +48,15 @@ def createProjectPage(request):
     page = "create"
     form = ProjectCreationForm()
     if request.method == "POST":
-        form = ProjectCreationForm(request.POST)
+        form = ProjectCreationForm(request.POST, request.FILES)
         if form.is_valid():
             project = form.save(commit=False)
             project.owner = request.user
+            files = request.FILES.getlist("files")
             project.save()
+
+            for file in files:
+                ProjectFile.objects.create(project=project, file=file)
 
             return redirect("my_projects")
     return render(request, "projects/project_create.html", {"form": form, "page": page})

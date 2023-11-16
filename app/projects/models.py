@@ -24,6 +24,14 @@ class Project(models.Model):
         ordering = ["-updated", "-created"]
 
 
+class ProjectFile(models.Model):
+    project = models.ForeignKey("Project", on_delete=models.CASCADE)
+    file = models.FileField(upload_to="project_attachments/")
+
+    def __str__(self) -> str:
+        return self.project.name
+
+
 class Category(models.Model):
     name = models.CharField(max_length=255)
 
