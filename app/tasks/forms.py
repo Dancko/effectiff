@@ -97,12 +97,18 @@ class CommentForm(ModelForm):
             }
         )
     )
+    files = MultipleFileField()
 
     class Meta:
         model = Comment
-        fields = ["body"]
+        fields = ["body", "files"]
 
     def __init__(self, *args, **kwargs):
         super(CommentForm, self).__init__(*args, **kwargs)
 
         self.fields["body"].label = ""
+        self.fields["files"].label = ""
+        self.fields["files"].initial = "<i class='fas fa-paperclip></i>"
+        self.fields["files"].text = "<i class='fas fa-paperclip></i>"
+        self.fields["files"].widget.attrs["class"] = "form-control mt-3"
+        self.fields["files"].widget.attrs["style"] = "max-width: 350px;"

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.db.models import Q
 
-from .models import Task, TaskFile, Comment
+from .models import Task, TaskFile, Comment, CommentFile
 from projects.models import Project
 from .forms import (
     TaskCreateForm,
@@ -70,12 +70,15 @@ def taskDetailPage(request, pk):
     form = CommentForm()
     if request.user == task.project.owner or task.assigned_to == request.user:
         if request.method == "POST":
-            form = CommentForm(request.POST)
+            form = CommentForm(request.POST, request.FILES)
             if form.is_valid():
                 comment = form.save(commit=False)
                 comment.author = user
                 comment.task = task
                 comment.save()
+                files = request.FILES.getlist("files")
+                for file in files:
+                    CommentFile.objects.create(comment=comment, file=file)
                 return redirect("task_detail", pk=pk)
     context = {
         "task": task,

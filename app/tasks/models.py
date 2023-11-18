@@ -75,3 +75,11 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ["created"]
+
+
+class CommentFile(models.Model):
+    comment = models.ForeignKey("Comment", on_delete=models.CASCADE)
+    file = models.FileField(upload_to="comment_attachments/")
+
+    def __str__(self):
+        return self.comment
