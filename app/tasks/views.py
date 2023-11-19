@@ -53,20 +53,16 @@ def taskDetailPage(request, pk):
     user = request.user
     statuses = ["Awaits", "In Progress", "Completed"]
 
-    comments = (
-        Comment.objects.select_related("task", "task__project", "author")
-        .filter(task__uuid=pk)
-        .all()
+    task = get_object_or_404(
+        Task.objects.prefetch_related(
+            "comment", "comment__author", "comment__files", "files"
+        ).select_related("project", "project__owner", "assigned_to"),
+        uuid=pk,
     )
 
-    if comments:
-        task = comments.first().task
-    else:
-        task = Task.objects.select_related("assigned_to").get(uuid=pk)
+    print(task.comment.all())
 
-    attachments = task.taskfile_set.all()
-
-    task.is_outdated()
+    # task.is_outdated()
     form = CommentForm()
     if request.user == task.project.owner or task.assigned_to == request.user:
         if request.method == "POST":
@@ -82,8 +78,8 @@ def taskDetailPage(request, pk):
                 return redirect("task_detail", pk=pk)
     context = {
         "task": task,
-        "attachments": attachments,
-        "comments": comments,
+        # "attachments": attachments,
+        # "comments": comments,
         "form": form,
         "statuses": statuses,
     }

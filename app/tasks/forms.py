@@ -1,5 +1,6 @@
 from django.forms import ModelForm
 from django import forms
+from django.core.exceptions import ValidationError
 
 from tasks.models import Task, Comment
 from projects.models import Project
@@ -14,13 +15,16 @@ class MultipleFileInput(forms.ClearableFileInput):
 
 
 class MultipleFileField(forms.FileField):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, max_files=None, **kwargs):
+        self.max_files = max_files
         kwargs.setdefault("widget", MultipleFileInput())
         super().__init__(*args, **kwargs)
 
     def clean(self, data, initial=None):
         single_file_clean = super().clean
         if isinstance(data, (list, tuple)):
+            if self.max_files and len(data) > self.max_files:
+                raise ValidationError(f"Only {self.max_files} files allowed.")
             result = [single_file_clean(d, initial) for d in data]
         else:
             result = single_file_clean(data, initial)
@@ -29,7 +33,7 @@ class MultipleFileField(forms.FileField):
 
 class TaskCreateForm(ModelForm):
     # body = forms.CharField(widget=forms.Textarea(attrs={"rows":"5"}))
-    files = MultipleFileField()
+    files = MultipleFileField(max_files=10)
 
     class Meta:
         model = Task
@@ -58,9 +62,11 @@ class TaskCreateForm(ModelForm):
 
 
 class TaskCreateFromProjectForm(ModelForm):
+    files = MultipleFileField(max_files=10)
+
     class Meta:
         model = Task
-        fields = ["title", "body", "deadline", "priority", "assigned_to"]
+        fields = ["title", "body", "files", "deadline", "priority", "assigned_to"]
         widgets = {"deadline": DateTimeInput()}
 
     def __init__(self, *args, **kwargs):
@@ -97,7 +103,7 @@ class CommentForm(ModelForm):
             }
         )
     )
-    files = MultipleFileField()
+    files = MultipleFileField(max_files=10)
 
     class Meta:
         model = Comment
@@ -109,6 +115,9 @@ class CommentForm(ModelForm):
         self.fields["body"].label = ""
         self.fields["files"].label = ""
         self.fields["files"].initial = "<i class='fas fa-paperclip></i>"
-        self.fields["files"].text = "<i class='fas fa-paperclip></i>"
-        self.fields["files"].widget.attrs["class"] = "form-control mt-3"
+        self.fields["files"].text = "upload"
+        self.fields["files"].widget.attrs[
+            "class"
+        ] = "form-control comment-upload mt-3 border-0 bg-dark d-flex"
         self.fields["files"].widget.attrs["style"] = "max-width: 350px;"
+        self.fields["files"].widget.attrs["value"] = "Upload"

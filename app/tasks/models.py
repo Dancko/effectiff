@@ -55,7 +55,7 @@ class Task(models.Model):
 
 
 class TaskFile(models.Model):
-    task = models.ForeignKey("Task", on_delete=models.CASCADE)
+    task = models.ForeignKey("Task", related_name="files", on_delete=models.CASCADE)
     file = models.FileField(upload_to="tasks_attachments/")
 
     def __str__(self):
@@ -64,7 +64,9 @@ class TaskFile(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey("users.User", on_delete=models.CASCADE)
-    task = models.ForeignKey("tasks.Task", on_delete=models.CASCADE, default=None)
+    task = models.ForeignKey(
+        "tasks.Task", related_name="comment", on_delete=models.CASCADE, default=None
+    )
     body = models.TextField(null=True, default=None)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -78,8 +80,10 @@ class Comment(models.Model):
 
 
 class CommentFile(models.Model):
-    comment = models.ForeignKey("Comment", on_delete=models.CASCADE)
+    comment = models.ForeignKey(
+        "Comment", related_name="files", on_delete=models.CASCADE
+    )
     file = models.FileField(upload_to="comment_attachments/")
 
     def __str__(self):
-        return self.comment
+        return str(self.comment)

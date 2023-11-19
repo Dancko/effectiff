@@ -150,8 +150,10 @@
           <div class="col-lg-8">
             <ul class="list-unstyled">
               
-              {% for attachment in attachments %}
-              <a href="{{ attachment.file.url }}"><li class="list-item">{{ attachment.file.name }}</li></a>
+              {% for attachment in task.files.all %}
+              
+              <a href="{{ attachment.file.url }}"><img src="{{ attachment.file.url }}" alt="" style="max-width: 250px; max-height: 250px;"></a>
+              <a href="{{ attachment.file.url }}"><p>{{ attachment.file.name }}</p></a>
               {% endfor %}
                 
               
@@ -166,7 +168,7 @@
         class="container mb-5 overflow-auto p-3 rounded-3 comment-container"
         style="max-height: 500px"
       >
-        {% for comment in comments %}
+        {% for comment in task.comment.all %}
         {% if comment.author == request.user %}
         <div class="row">
           <div
@@ -181,6 +183,13 @@
               <h4 class="fw-bold mb-1">{{ comment.author.name }}</h4>
               <small class="mt-1">{{ comment.created|timesince }} ago</small>
               <p class="mt-1">{{ comment.body }}</p>
+              
+              {% for file in comment.files.all %}
+            <p>File: {{ file.file.name }}</p>
+            <!-- Display other file details as needed -->
+        {% endfor %}
+                
+              
             </div>
           </div>
         </div>
@@ -210,6 +219,7 @@
         <form method="POST" action="#" enctype="multipart/form-data">
           {% csrf_token %} 
           {{ form }}
+          
           <button
             type="submit"
             class="btn btn-secondary mt-3 rounded-1 btn-comment text-light fw-bold"
@@ -221,5 +231,19 @@
     </div>
   </div>
 </div>
+<style>
+  .form-control::file-selector-button{
+    content: "Upload";
+    border-right: none;
+  }
+  .form-control::file-selector-button::after{
+    content: "Upload";
+    
+  }
+  #id_files {
+    content: 'Upload';
+  }
+</style>
+
 
 {% endblock content %}
