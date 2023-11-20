@@ -1,4 +1,4 @@
-{% extends '_base.html' %} {% block content %}
+{% extends '_base.html' %} {% load static %} {% block content %}
 
 <!-- Central Part -->
 <div class="container-fluid">
@@ -149,13 +149,26 @@
           </div>
           <div class="col-lg-8">
             <ul class="list-unstyled">
-              
+              <div class="d-flex">
               {% for attachment in task.files.all %}
               
-              <a href="{{ attachment.file.url }}"><img src="{{ attachment.file.url }}" alt="" style="max-width: 250px; max-height: 250px;"></a>
-              <a href="{{ attachment.file.url }}"><p>{{ attachment.file.name }}</p></a>
-              {% endfor %}
+                <div class="m-2 mt-auto">
+              <a href="{{ attachment.file.url }}">
                 
+                
+                {% if attachment.get_ext == 'pdf' %}
+                
+                <img src="{% static 'images/pdf_file_icon.png' %}" alt="" style="max-height: 80px;">
+                {% else %}
+                
+                  
+                <img class="img-task" src="{{ attachment.file.url }}" alt=""></a>
+                {% endif %}
+              <a href="{{ attachment.file.url }}"><p>{{ attachment.short_name }}</p></a>
+            </div>
+            
+              {% endfor %}
+            </div>
               
             </ul>
           </div>
@@ -180,14 +193,27 @@
               class="img-fluid img-comment rounded-circle img-thumbnail border border-2 border-success"
             />
             <div>
+              
               <h4 class="fw-bold mb-1">{{ comment.author.name }}</h4>
               <small class="mt-1">{{ comment.created|timesince }} ago</small>
+              <div class="d-flex">
+                {% for file in comment.files.all %}
+                <div>
+                  
+                  {% if file.file.name.get_ext == '.pdf' %}
+                  <img class="img-comment" src="{% static 'images/pdf_file_icon.webp' %}" alt="">
+                  {% else %}
+                    
+                  <img class="img-comment" src="{{ file.file.url }}" alt="">
+                  {% endif %}
+                  <a href="{{ file.file.url }}">{{ file.file.name }}</a>
+                </div>
+            
+              {% endfor %}
+              </div>
               <p class="mt-1">{{ comment.body }}</p>
               
-              {% for file in comment.files.all %}
-            <p>File: {{ file.file.name }}</p>
-            <!-- Display other file details as needed -->
-        {% endfor %}
+              
                 
               
             </div>

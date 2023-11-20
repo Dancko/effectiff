@@ -60,8 +60,6 @@ def taskDetailPage(request, pk):
         uuid=pk,
     )
 
-    print(task.comment.all())
-
     # task.is_outdated()
     form = CommentForm()
     if request.user == task.project.owner or task.assigned_to == request.user:

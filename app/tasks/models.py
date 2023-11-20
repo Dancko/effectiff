@@ -1,4 +1,5 @@
 import uuid
+import os
 
 from django.db import models
 from django.utils import timezone
@@ -59,7 +60,17 @@ class TaskFile(models.Model):
     file = models.FileField(upload_to="tasks_attachments/")
 
     def __str__(self):
-        return self.task.title
+        return self.file.name
+
+    @property
+    def get_ext(self):
+        filename = str(self.file.name)
+        return filename.split(".")[-1] if "." in filename else None
+
+    @property
+    def short_name(self):
+        filename = str(self.file.name)
+        return filename[18:]
 
 
 class Comment(models.Model):
@@ -77,6 +88,11 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ["created"]
+
+    @property
+    def get_ext(filename):
+        ext = os.path.splitext(filename)[1]
+        return ext
 
 
 class CommentFile(models.Model):

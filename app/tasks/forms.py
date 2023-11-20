@@ -15,7 +15,7 @@ class MultipleFileInput(forms.ClearableFileInput):
 
 
 class MultipleFileField(forms.FileField):
-    def __init__(self, *args, max_files=None, **kwargs):
+    def __init__(self, *args, max_files=10, **kwargs):
         self.max_files = max_files
         kwargs.setdefault("widget", MultipleFileInput())
         super().__init__(*args, **kwargs)
@@ -32,7 +32,6 @@ class MultipleFileField(forms.FileField):
 
 
 class TaskCreateForm(ModelForm):
-    # body = forms.CharField(widget=forms.Textarea(attrs={"rows":"5"}))
     files = MultipleFileField(max_files=10)
 
     class Meta:
@@ -114,8 +113,6 @@ class CommentForm(ModelForm):
 
         self.fields["body"].label = ""
         self.fields["files"].label = ""
-        self.fields["files"].initial = "<i class='fas fa-paperclip></i>"
-        self.fields["files"].text = "upload"
         self.fields["files"].widget.attrs[
             "class"
         ] = "form-control comment-upload mt-3 border-0 bg-dark d-flex"
