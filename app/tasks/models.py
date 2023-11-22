@@ -78,7 +78,7 @@ class Comment(models.Model):
     task = models.ForeignKey(
         "tasks.Task", related_name="comment", on_delete=models.CASCADE, default=None
     )
-    body = models.TextField(null=True, default=None)
+    body = models.TextField(blank=True, null=True, default=None)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
@@ -89,11 +89,6 @@ class Comment(models.Model):
     class Meta:
         ordering = ["created"]
 
-    @property
-    def get_ext(filename):
-        ext = os.path.splitext(filename)[1]
-        return ext
-
 
 class CommentFile(models.Model):
     comment = models.ForeignKey(
@@ -102,4 +97,9 @@ class CommentFile(models.Model):
     file = models.FileField(upload_to="comment_attachments/")
 
     def __str__(self):
-        return str(self.comment)
+        return str(self.file.name)
+
+    @property
+    def get_ext(self):
+        filename = str(self.file.name)
+        return filename.split(".") if "." in filename else None

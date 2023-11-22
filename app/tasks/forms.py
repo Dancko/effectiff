@@ -102,7 +102,7 @@ class CommentForm(ModelForm):
             }
         )
     )
-    files = MultipleFileField(max_files=10)
+    files = MultipleFileField(max_files=10, required=False)
 
     class Meta:
         model = Comment

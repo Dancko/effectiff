@@ -153,19 +153,20 @@
               {% for attachment in task.files.all %}
               
                 <div class="m-2 mt-auto">
-              <a href="{{ attachment.file.url }}">
+              
                 
                 
                 {% if attachment.get_ext == 'pdf' %}
-                
-                <img src="{% static 'images/pdf_file_icon.png' %}" alt="" style="max-height: 80px;">
+                <a href="{{ attachment.file.url }}">
+                <img src="{% static 'images/pdf_file_icon.png' %}" alt="" style="max-height: 80px;"></a>
+                <a href="{{ attachment.file.url }}"><p>{{ attachment.short_name }}</p></a>
                 {% else %}
                 
-                  
+                <a href="{{ attachment.file.url }}" data-lightbox="task-img" data-title="{{attachment.file.name}}">  
                 <img class="img-task" src="{{ attachment.file.url }}" alt=""></a>
                 {% endif %}
-              <a href="{{ attachment.file.url }}"><p>{{ attachment.short_name }}</p></a>
-            </div>
+              
+                </div>
             
               {% endfor %}
             </div>
@@ -179,7 +180,7 @@
       <!-- Comments section -->
       <div
         class="container mb-5 overflow-auto p-3 rounded-3 comment-container"
-        style="max-height: 500px"
+        style="max-height: 1000px"
       >
         {% for comment in task.comment.all %}
         {% if comment.author == request.user %}
@@ -198,15 +199,15 @@
               <small class="mt-1">{{ comment.created|timesince }} ago</small>
               <div class="d-flex">
                 {% for file in comment.files.all %}
-                <div>
+                <div class="m-2">
                   
-                  {% if file.file.name.get_ext == '.pdf' %}
-                  <img class="img-comment" src="{% static 'images/pdf_file_icon.webp' %}" alt="">
+                  {% if file.get_ext == 'pdf' %}
+                  <a href="{{ file.file.url }}"><img class="img-comment" src="{% static 'images/pdf_file_icon.png' %}" alt=""></a>
                   {% else %}
                     
-                  <img class="img-comment" src="{{ file.file.url }}" alt="">
+                  <a href="{{ file.file.url }}" data-lightbox="comment-images" data-title="{{ file.name }}"><img class="img-comment"  src="{{ file.file.url }}" alt=""></a>
                   {% endif %}
-                  <a href="{{ file.file.url }}">{{ file.file.name }}</a>
+                  
                 </div>
             
               {% endfor %}
