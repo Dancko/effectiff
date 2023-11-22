@@ -103,3 +103,8 @@ class CommentFile(models.Model):
     def get_ext(self):
         filename = str(self.file.name)
         return filename.split(".") if "." in filename else None
+
+    @property
+    def short_name(self):
+        filename = str(self.file.name)
+        return filename[20:]

@@ -162,7 +162,7 @@
                 <a href="{{ attachment.file.url }}"><p>{{ attachment.short_name }}</p></a>
                 {% else %}
                 
-                <a href="{{ attachment.file.url }}" data-lightbox="task-img" data-title="{{attachment.file.name}}">  
+                <a href="{{ attachment.file.url }}" data-lightbox="task-img" data-title="{{attachment.short_name}}">  
                 <img class="img-task" src="{{ attachment.file.url }}" alt=""></a>
                 {% endif %}
               
@@ -205,7 +205,7 @@
                   <a href="{{ file.file.url }}"><img class="img-comment" src="{% static 'images/pdf_file_icon.png' %}" alt=""></a>
                   {% else %}
                     
-                  <a href="{{ file.file.url }}" data-lightbox="comment-images" data-title="{{ file.name }}"><img class="img-comment"  src="{{ file.file.url }}" alt=""></a>
+                  <a href="{{ file.file.url }}" data-lightbox="comment-images" data-title="{{ file.short_name }}"><img class="img-comment"  src="{{ file.file.url }}" alt=""></a>
                   {% endif %}
                   
                 </div>
@@ -263,13 +263,7 @@
     content: "Upload";
     border-right: none;
   }
-  .form-control::file-selector-button::after{
-    content: "Upload";
-    
-  }
-  #id_files {
-    content: 'Upload';
-  }
+ 
 </style>
 
 

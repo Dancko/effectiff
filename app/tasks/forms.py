@@ -32,7 +32,7 @@ class MultipleFileField(forms.FileField):
 
 
 class TaskCreateForm(ModelForm):
-    files = MultipleFileField(max_files=10)
+    files = MultipleFileField(max_files=10, required=False)
 
     class Meta:
         model = Task
@@ -49,10 +49,14 @@ class TaskCreateForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
+        files = kwargs.pop("files", None)
         super(TaskCreateForm, self).__init__(*args, **kwargs)
 
         for visible in self.visible_fields():
             visible.field.widget.attrs["class"] = "form-control"
+
+        if files:
+            self.fields["files"].queryset = files
 
         teammates = user.teammates.all()
         self.fields["assigned_to"].queryset = teammates

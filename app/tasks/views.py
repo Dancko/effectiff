@@ -134,7 +134,11 @@ def create_task_from_project(request, pk):
         if form.is_valid():
             task = form.save(commit=False)
             task.project = project
+            files = request.FILES.getlist("files")
             task.save()
+
+            for file in files:
+                TaskFile.objects.create(task=task, file=file)
             return redirect("my_projects")
     return render(request, "tasks/new_task.html", {"form": form, "page": page})
 
@@ -144,14 +148,31 @@ def edit_task(request, pk):
     """View for editting the tasks form."""
 
     page = "edit"
-    task = get_object_or_404(Task, uuid=pk)
+    task = get_object_or_404(
+        Task.objects.prefetch_related("files").select_related(
+            "project", "project__owner"
+        ),
+        uuid=pk,
+    )
+
+    files = task.files.all()
     if request.user.uuid == task.project.owner.uuid and task.status != "Completed":
-        form = TaskCreateForm(instance=task, user=request.user)
+        form = TaskCreateForm(instance=task, user=request.user, files=files)
         if request.method == "POST":
-            form = TaskCreateForm(request.POST, instance=task, user=request.user)
+            form = TaskCreateForm(
+                request.POST, request.FILES, instance=task, user=request.user
+            )
             if form.is_valid():
-                form.save()
-                return redirect("my_tasks")
+                task = form.save()
+                new_files = request.FILES.getlist("files")
+
+                if len(new_files) == 0:
+                    files.delete()
+                else:
+                    for file in new_files:
+                        TaskFile.objects.create(task=task, file=file)
+
+                return redirect("task_detail", pk=pk)
     else:
         return redirect("my_tasks")
     return render(request, "tasks/new_task.html", {"page": page, "form": form})

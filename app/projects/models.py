@@ -10,7 +10,9 @@ class Project(models.Model):
     category = models.ManyToManyField("Category", blank=True)
     description = HTMLField(blank=True, null=True)
     owner = models.ForeignKey(
-        "users.User", on_delete=models.CASCADE, related_name="owner"
+        "users.User",
+        related_name="projects",
+        on_delete=models.CASCADE,
     )
     participants = models.ManyToManyField("users.User", blank=True)
     updated = models.DateTimeField(auto_now=True)
