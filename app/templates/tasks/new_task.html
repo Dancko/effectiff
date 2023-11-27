@@ -65,13 +65,14 @@
   tinymce.init({
     selector: "textarea",
     plugins:
-      "powerpaste casechange searchreplace autolink directionality advcode visualblocks visualchars image link media mediaembed codesample table charmap pagebreak nonbreaking anchor tableofcontents insertdatetime advlist lists checklist wordcount tinymcespellchecker editimage help formatpainter permanentpen charmap linkchecker emoticons advtable export autosave",
+      "paste casechange searchreplace autolink directionality advcode visualblocks visualchars image link media mediaembed codesample table charmap pagebreak nonbreaking anchor tableofcontents insertdatetime advlist lists checklist wordcount tinymcespellchecker editimage help formatpainter permanentpen charmap linkchecker emoticons advtable export autosave",
     toolbar:
-      "undo redo print spellcheckdialog formatpainter | blocks fontfamily fontsize | bold italic underline forecolor backcolor | link image | alignleft aligncenter alignright alignjustify lineheight | checklist bullist numlist indent outdent | removeformat aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | ",
+    "undo redo print spellcheckdialog formatpainter | blocks fontfamily fontsize | bold italic underline strikethrough| fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor| removeformat |  casechange permanentpen formatpainter | pagebreak | link codesample |  insertfile image media pageembed template  anchor  | charmap emoticons |",
     height: "700px",
     skin: "CUSTOMNEW",
     content_style:
       "body { background: #0c0c0c; color: white; font-size: 14pt; font-family: Arial; }",
+    paste_as_text: true
   });
 </script>
 {% endblock content %}
