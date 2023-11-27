@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,8 +16,14 @@
     <link rel="stylesheet" href="{% static 'styles/lightbox.min.css' %}" />
     <link rel="stylesheet" href="{% static 'styles/bootstrap.css' %}" />
     <link rel="stylesheet" href="{% static 'styles/styles.css' %}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="icon" href="{% static 'images/logo-color.png' %}" />
-    <title>Welcome To Effektiff</title>
+    
+    <title>
+    {% block title %}
+      
+    {% endblock title %}
+      </title>
   </head>
   <body>
     {% include 'navbar.html' %}
@@ -35,6 +42,7 @@
       </div>
     </footer>
 
+    
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/lightbox-plus-jquery.min.js' %}"></script>
     <script src="{% static 'js/script.js' %}"></script>

@@ -1,7 +1,14 @@
 {% extends '_base.html' %}
-{% load static %}
+
+
+{% block title %}
+  My Team
+{% endblock title %}
+  
 
 {% block content %}
+
+{% load static %}
 <div class="container-fluid">
     <div class="row">
         <div class="left-section d-none d-lg-block col-lg-2 h-100 overflow-auto">
@@ -81,6 +88,8 @@
         </div>
     </div>
 </div>
+
+
 
 
 {% endblock content %}

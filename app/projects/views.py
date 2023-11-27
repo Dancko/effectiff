@@ -108,6 +108,7 @@ def addMembers(request, pk):
 
         if request.method == "POST":
             form = ProjectAddParticipantsForm(request.POST, instance=project)
+            print(f"VALID: {form}")
             if form.is_valid():
                 form.save()
                 return redirect("project", pk=pk)

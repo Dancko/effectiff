@@ -26,7 +26,11 @@ class ProjectCreationForm(ModelForm):
 class ProjectAddParticipantsForm(ModelForm):
     participants = forms.ModelMultipleChoiceField(
         queryset=User.objects.all(),
-        widget=forms.SelectMultiple(attrs={"class": "form-control overflow-hidden"}),
+        widget=forms.SelectMultiple(
+            attrs={
+                "class": "form-control",
+            }
+        ),
     )
 
     class Meta:
