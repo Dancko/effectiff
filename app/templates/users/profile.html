@@ -43,11 +43,47 @@
                     >
                       Send Message
                     </button>
-                    <button
+                    
+              
+                    <a
+                      data-bs-toggle="modal"
+                      data-bs-target="#modal-addTo">
+                      <button
                       class="btn btn-light mb-5 fw-semibold text-dark fs-5 rounded-3"
+                      data-toggle="modal" data-target="#addToProject"
+                      
                     >
                       + Add To Project
-                    </button>
+                    </button></a>
+
+                    <div class="modal-login modal fade" id="modal-addTo">
+                      <div class="modal-dialog modal-lg mt-7">
+                        <div class="modal-content bg-dark p-5">
+                          <h3 class="fw-bold text-center">Add To Project</h3>
+                          <form id="login" method="POST" action="#">
+                            {% csrf_token %}
+                            {{ add_to_project_form }}
+                            
+                            <div class="d-grid mt-5 gap-3">
+                              <button type="submit" class="btn btn-secondary text-light">
+                                Add
+                              </button>
+                              <button
+                                type="button"
+                                class="btn btn-primary"
+                                data-bs-dismiss="modal"
+                              >
+                                Close
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+
+                    
+
+
                     
                     {% if is_friend %}
                     <form action="{% url 'delete_teammate' user.uuid %}" method="POST">

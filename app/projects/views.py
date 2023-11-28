@@ -2,10 +2,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
+from django.http import HttpResponse
 
 from tasks.models import Task
 from projects.models import Project, ProjectFile
-from .forms import ProjectCreationForm, ProjectAddParticipantsForm
+from .forms import (
+    ProjectCreationForm,
+    ProjectAddParticipantsForm,
+    ProjectAddParticipantForm,
+)
 
 
 User = get_user_model()

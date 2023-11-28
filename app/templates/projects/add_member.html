@@ -1,0 +1,29 @@
+{% extends '_base.html' %}
+
+{% block title %}
+    Add User To Project
+{% endblock title %}
+
+
+{% block content %}
+<!-- Central Part -->
+<div class="container-fluid">
+    <div class="row">
+      <!-- Left section -->
+      {% include 'left_section.html' %}
+  
+      <!-- Main Section -->
+        <div class="col-lg-10 col-md-12 bg-dark vh-100 main-section">
+            <div class="container mt-3">
+                <form action="#" method="POST">
+                    {% csrf_token %}
+                    {{ form }}
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+    
+    

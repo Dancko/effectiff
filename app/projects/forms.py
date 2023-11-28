@@ -43,3 +43,17 @@ class ProjectAddParticipantsForm(ModelForm):
         participants = self.instance.owner.teammates.all()
         self.fields["participants"].queryset = participants
         self.fields["participants"].label = ""
+
+
+class ProjectAddParticipantForm(forms.Form):
+    def __init__(self, *args, projects, **kwargs):
+        super(ProjectAddParticipantForm, self).__init__(*args, **kwargs)
+
+        self.fields["project"].choices = [
+            (project.uuid, project.name) for project in projects
+        ]
+        # self.fields["project"].initial = "Hi"
+
+    project = forms.ChoiceField(
+        widget=forms.Select(attrs={"class": "form-control"}), label=""
+    )

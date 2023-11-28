@@ -8,6 +8,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from django.views.decorators.cache import cache_page
 from django.db.models import Count, Q
+from django.http import HttpResponse
 
 
 from .forms import RegisterForm, ChangeUserForm, SetPasswordForm, PasswordResetForm
@@ -15,6 +16,8 @@ from .tokens import account_activation_token
 from .utils import email_maker, threshold_30
 from .tasks import send_email
 from tasks.models import Task
+from projects.models import Project
+from projects.forms import ProjectAddParticipantForm
 
 
 User = get_user_model()
@@ -196,6 +199,20 @@ def profilePage(request, pk):
     if request.user.teammates.filter(uuid=user.uuid).exists():
         is_friend = True
 
+    projects = Project.objects.filter(owner=request.user).exclude(participants=user)
+
+    add_to_project_form = ProjectAddParticipantForm(
+        projects=projects,
+    )
+
+    if request.method == "POST":
+        add_to_project_form = ProjectAddParticipantForm(request.POST, projects=projects)
+        if add_to_project_form.is_valid():
+            project_uuid = add_to_project_form.cleaned_data["project"]
+            project = Project.objects.get(uuid=project_uuid).participants.add(user)
+
+            return redirect("profile", pk=pk)
+
     context = {
         "user": user,
         "skills": skills,
@@ -204,6 +221,7 @@ def profilePage(request, pk):
         "inprogress_tasks": inprogress_tasks,
         "await_tasks": await_tasks,
         "is_friend": is_friend,
+        "add_to_project_form": add_to_project_form,
     }
 
     return render(request, "users/profile.html", context)
