@@ -13,6 +13,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["0.0.0.0", "localhost"]
 
+SITE_ID = 2
+
 
 # Application definition
 
@@ -23,6 +25,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
     "verify_email.apps.VerifyEmailConfig",
     "debug_toolbar",
     "core.apps.CoreConfig",
@@ -33,6 +40,10 @@ INSTALLED_APPS = [
     "captcha",
 ]
 
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {"SCOPE": ["profile", "email"], "AUTH_PARAMS": {"access_type": "online"}}
+}
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -42,6 +53,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "app.urls"
@@ -189,3 +201,11 @@ EMAIL_HOST_USER = os.environ.get("EMAIL_ID")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PW")
 
 DEFAULT_FROM_EMAIL = "noreply<no_reply@domain.com>"
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
