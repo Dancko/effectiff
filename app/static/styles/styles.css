@@ -21,7 +21,7 @@
       no-repeat;
   background-size: cover;
   background-attachment: fixed;
-  height: 700px;
+  height: 1000px;
 }
 
 .list-group-item {
@@ -156,4 +156,12 @@ a.table-tooltip {
     width: 90%;
     height: 150px;
   }
+}
+
+.fa-google {
+  background: conic-gradient(from -45deg, #ea4335 110deg, #4285f4 90deg 180deg, #34a853 180deg 270deg, #fbbc05 270deg) 73% 55%/150% 150% no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }

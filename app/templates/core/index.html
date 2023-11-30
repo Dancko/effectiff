@@ -116,7 +116,7 @@
                 {% endfor %}
 
                 
-                <a href="{% provider_login_url 'google' %}">GOOGLE</a>
+                
                 
                 <div class="mb-4 form-check">
                   <input type="checkbox" id="agreecheck" />
@@ -131,6 +131,7 @@
                     class="btn btn-secondary text-light"
                     value="Create Account"
                   />
+                  <a class="btn btn-light" href="{% provider_login_url 'google' %}"><i class="fa-brands fa-google ms-auto"></i> Continue with Google</a>
                 </div>
               </form>
             </div>
