@@ -101,6 +101,7 @@ class CommentForm(ModelForm):
         widget=forms.Textarea(
             attrs={
                 "class": "form-control rounded-3 form-comment",
+                "id": "project-chat-input",
                 "placeholder": "Enter Your Message Here",
                 "rows": "7",
             }

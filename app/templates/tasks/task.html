@@ -191,6 +191,8 @@
         class="container mb-5 overflow-auto p-3 rounded-3 comment-container"
         style="max-height: 1000px"
       >
+      
+
         {% for comment in task.comment.all %}
         {% if comment.author == request.user %}
         <div class="row">
@@ -274,6 +276,44 @@
   }
  
 </style>
+{{ pk|json_script:"room-name" }}
+<script>
+  const roomName = JSON.parse(document.getElementById("room-name").textContent);
+  const chatSocket = new WebSocket(
+    'ws://'
+    + window.location.host
+    + '/ws/project/chat'
+    + roomName
+    + '/'
+  );
+
+  chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    document.querySelector('#comment-container').value += data.message + '\n';
+  };
+
+  chatSocket.onclose = function(e) {
+    console.error("Websocket closed unexpectedly");
+  };
+
+  document.querySelector("#project-chat-input").focus();
+  document.querySelector("#project-chat-input").onclick = function(e){
+    if (e.keyCode === 13){
+      document.querySelector("#project-chat-input").click();
+    }
+  };
+
+  document.querySelector("#project-chat-input").onclick = function(e){
+    const messageInputDom = document.querySelector("#project-chat-input");
+    const message = messageInputDom.value;
+    chatSocket.send(JSON.stringify({
+      'type': 'project-message',
+      'message': message
+    }));
+    messageInputDom.value = '';
+  }
+
+</script>
 
 
 {% endblock content %}

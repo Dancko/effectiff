@@ -75,6 +75,7 @@ def taskDetailPage(request, pk):
                     CommentFile.objects.create(comment=comment, file=file)
                 return redirect("task_detail", pk=pk)
     context = {
+        "pk": pk,
         "task": task,
         # "attachments": attachments,
         # "comments": comments,
