@@ -19,7 +19,22 @@
     <link rel="icon" href="{% static 'images/logo-color.png' %}" />
     <title>Welcome To Effektiff</title>
   </head>
+  {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+      
+      <div class="alert  alert-dismissible alert-primary fade show mb-0" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      {% endfor %}
+    </div>
+   
+    </div>
+    {% endif %}
   <body>
+    
     <nav class="navbar navbar-expand-md fixed-top">
       <div class="container">
         <a href="start_page.html" class="navbar-brand">
@@ -51,6 +66,8 @@
         </ul>
       </div>
     </nav>
+
+    
 
     <div class="modal-login modal fade" id="modal-login">
       <div class="modal-dialog modal-lg mt-7">
