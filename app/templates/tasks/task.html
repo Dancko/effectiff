@@ -188,7 +188,8 @@
 
       <!-- Comments section -->
       <div
-        class="container mb-5 overflow-auto p-3 rounded-3 comment-container"
+        class="container mb-5 overflow-auto p-3 rounded-3"
+        id="comment-container"
         style="max-height: 1000px"
       >
       
@@ -261,6 +262,7 @@
           <button
             type="submit"
             class="btn btn-secondary mt-3 rounded-1 btn-comment text-light fw-bold"
+            id="chat-message-submit"
           >
             Submit
           </button>
@@ -282,36 +284,36 @@
   const chatSocket = new WebSocket(
     'ws://'
     + window.location.host
-    + '/ws/project/chat'
+    + '/ws/task/chat/'
     + roomName
     + '/'
   );
 
   chatSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
-    document.querySelector('#comment-container').value += data.message + '\n';
+    document.querySelector('#comment-container').value += (data.message + '\n');
   };
 
   chatSocket.onclose = function(e) {
     console.error("Websocket closed unexpectedly");
   };
 
-  document.querySelector("#project-chat-input").focus();
-  document.querySelector("#project-chat-input").onclick = function(e){
+  document.querySelector("#task-chat-input").focus();
+  document.querySelector("#task-chat-input").onkeyup = function(e){
     if (e.keyCode === 13){
-      document.querySelector("#project-chat-input").click();
+      document.querySelector("#chat-message-submit").click();
     }
   };
 
-  document.querySelector("#project-chat-input").onclick = function(e){
-    const messageInputDom = document.querySelector("#project-chat-input");
+  document.querySelector("#task-chat-input").onclick = function(e){
+    const messageInputDom = document.querySelector("#task-chat-input");
     const message = messageInputDom.value;
     chatSocket.send(JSON.stringify({
-      'type': 'project-message',
+      'type': 'task-message',
       'message': message
     }));
     messageInputDom.value = '';
-  }
+  };
 
 </script>
 

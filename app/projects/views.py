@@ -77,7 +77,7 @@ def createProjectPage(request):
 @login_required(login_url="login")
 def editProjectPage(request, pk):
     page = "edit"
-    project = get_object_or_404(Project, uuid=pk)
+    project = get_object_or_404(Project.objects.select_related("owner"), uuid=pk)
     if project.owner.id == request.user.id:
         form = ProjectCreationForm(instance=project)
         if request.method == "POST":
@@ -93,7 +93,7 @@ def editProjectPage(request, pk):
 
 @login_required(login_url="login")
 def deleteProjectPage(request, pk):
-    project = get_object_or_404(Project, uuid=pk)
+    project = get_object_or_404(Project.objects.select_related("owner"), uuid=pk)
     object = project.name
     if request.user.id == project.owner.id:
         if request.method == "POST":
@@ -107,16 +107,20 @@ def deleteProjectPage(request, pk):
 @login_required(login_url="login")
 def addMembers(request, pk):
     page = "add"
-    project = get_object_or_404(Project, uuid=pk)
+    project = get_object_or_404(Project.objects.select_related("owner"), uuid=pk)
+    teammates = request.user.teammates.all()
     if project.owner == request.user:
-        form = ProjectAddParticipantsForm(instance=project)
+        form = ProjectAddParticipantsForm(teammates=teammates, instance=project)
 
         if request.method == "POST":
-            form = ProjectAddParticipantsForm(request.POST, instance=project)
-            print(f"VALID: {form}")
+            form = ProjectAddParticipantsForm(
+                request.POST, teammates=teammates, instance=project
+            )
             if form.is_valid():
                 form.save()
                 return redirect("project", pk=pk)
         return render(
-            request, "projects/project_create.html", {"form": form, "page": page}
+            request,
+            "projects/project_create.html",
+            {"form": form, "page": page, "teammates": teammates},
         )

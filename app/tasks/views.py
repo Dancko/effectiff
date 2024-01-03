@@ -150,12 +150,12 @@ def edit_task(request, pk):
 
     page = "edit"
     task = get_object_or_404(
-        Task.objects.prefetch_related("files").select_related(
-            "project", "project__owner"
-        ),
+        Task.objects.prefetch_related(
+            "files", "project__owner__teammates"
+        ).select_related("project", "project__owner"),
         uuid=pk,
     )
-
+    teammates = task.project.owner.teammates.all()
     files = task.files.all()
     if request.user.uuid == task.project.owner.uuid and task.status != "Completed":
         form = TaskCreateForm(instance=task, user=request.user, files=files)
@@ -176,14 +176,18 @@ def edit_task(request, pk):
                 return redirect("task_detail", pk=pk)
     else:
         return redirect("my_tasks")
-    return render(request, "tasks/new_task.html", {"page": page, "form": form})
+    return render(
+        request,
+        "tasks/new_task.html",
+        {"page": page, "form": form, "teammates": teammates},
+    )
 
 
 @login_required(login_url="login")
 def deleteTaskPage(request, pk):
     """View for deleting a task page."""
 
-    task = get_object_or_404(Task, uuid=pk)
+    task = get_object_or_404(Task.objects.select_related("project__owner"), uuid=pk)
     object = task.title
     if task.project.owner == request.user:
         if request.method == "POST":
@@ -197,7 +201,7 @@ def change_assignee(request, pk):
     """View for changing an assignee for a task form."""
 
     page = "edit"
-    task = Task.objects.select_related("project").get(uuid=pk)
+    task = Task.objects.select_related("project", "project__owner").get(uuid=pk)
     if task.project.owner == request.user:
         form = TaskAddPartiicipantsForm(instance=task)
 

@@ -38,10 +38,11 @@ class ProjectAddParticipantsForm(ModelForm):
         fields = ["participants"]
 
     def __init__(self, *args, **kwargs):
+        teammates = kwargs.pop("teammates", None)
         super(ProjectAddParticipantsForm, self).__init__(*args, **kwargs)
 
-        participants = self.instance.owner.teammates.all()
-        self.fields["participants"].queryset = participants
+        # participants = self.instance.owner.teammates.all()
+        self.fields["participants"].queryset = teammates
         self.fields["participants"].label = ""
 
 
