@@ -4,5 +4,5 @@ from users import views
 
 
 urlpatterns = [
-    path("", views.registerPage, name="home"),
+    path("", views.registerPage, name="core.home"),
 ]

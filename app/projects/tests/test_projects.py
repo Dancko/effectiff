@@ -8,13 +8,13 @@ from projects.models import Project
 
 pytestmark = pytest.mark.django_db
 
+User = get_user_model()
+
 
 def test_myprojects_get_success(request, client):
     """Test get request for authed user is a success."""
-    user = get_user_model().objects.create_user(
-        email="test@example.com", password="testpass123"
-    )
-    project = Project.objects.create(name="TestProj", owner=user)
+    user = User.objects.create_user(email="test@example.com", password="testpass123")
+    project = Project.objects.create(name="TestProject", owner=user)
     project.participants.add(user)
     client.login(email=user.email, password="testpass123")
     url = reverse("my_projects")
@@ -29,9 +29,7 @@ def test_myprojects_get_success(request, client):
 
 def test_my_project_unauth_redirect(client):
     """Test unauthed user is redirected to login page."""
-    user = get_user_model().objects.create_user(
-        email="test@example.com", password="testpass123"
-    )
+    user = User.objects.create_user(email="test@example.com", password="testpass123")
     project = Project.objects.create(name="TestProj", owner=user)
     url = reverse("my_projects")
 
