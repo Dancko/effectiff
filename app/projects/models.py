@@ -6,7 +6,7 @@ from tinymce.models import HTMLField
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
     category = models.ManyToManyField("Category", blank=True)
     description = HTMLField(blank=True, null=True)
     owner = models.ForeignKey(
@@ -20,7 +20,7 @@ class Project(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     def __str__(self):
-        return self.name
+        return self.title
 
     class Meta:
         ordering = ["-updated", "-created"]
@@ -30,15 +30,15 @@ class ProjectFile(models.Model):
     project = models.ForeignKey("Project", on_delete=models.CASCADE)
     file = models.FileField(upload_to="project_attachments/")
 
-    def __str__(self) -> str:
-        return self.project.name
+    def __str__(self):
+        return self.project.title
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.name
+        return self.title
 
     class Meta:
         verbose_name_plural = "Categories"

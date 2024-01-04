@@ -30,7 +30,7 @@ def myTasksPage(request):
             "title",
             "uuid",
             "project__uuid",
-            "project__name",
+            "project__title",
             "project__owner",
             "status",
             "priority",

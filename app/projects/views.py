@@ -24,7 +24,7 @@ def myProjectsPage(request):
 
     projects_participated = (
         Task.objects.filter(assigned_to=user)
-        .values("project__name", "project__uuid")
+        .values("project__title", "project__uuid")
         .annotate(count=Count("project"))
     )
 
@@ -94,7 +94,7 @@ def editProjectPage(request, pk):
 @login_required(login_url="login")
 def deleteProjectPage(request, pk):
     project = get_object_or_404(Project.objects.select_related("owner"), uuid=pk)
-    object = project.name
+    object = project.title
     if request.user.id == project.owner.id:
         if request.method == "POST":
             project.delete()

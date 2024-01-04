@@ -20,12 +20,17 @@ def test_redirect_unathed_home_page(client):
     assert res.url == reverse("login") + "?next=/"
 
 
-def test_get_homepage_authed(client):
+def test_get_homepage_auth(client, create_testuser, user_data):
     """Test homepage status code 200 for authed users."""
-    user = User.objects.create_user(email="test@example.com", password="test123")
+
+    create_testuser
     url = reverse("my_tasks")
 
-    client.login(email="test@example.com", password="test123")
+    client.login(email="test@example.com", password="pass123")
     res = client.get(url)
 
     assert res.status_code == 200
+
+
+def test_task_get(client):
+    pass

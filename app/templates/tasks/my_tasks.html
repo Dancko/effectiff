@@ -195,7 +195,7 @@
             <tr>
               <td><a href="{% url 'task_detail' task.uuid %}" class="table-tooltip">{{ task.title }}</a></td>
               <td>
-                <a href="{% url 'project' task.project.uuid %}" class="table-tooltip">{{ task.project }}</a>
+                <a href="{% url 'project' task.project.uuid %}" class="table-tooltip">{{ task.project.title }}</a>
               </td>
               <td class="ps-4">
                 {% if task.status == 'Awaits' %}

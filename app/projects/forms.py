@@ -14,7 +14,7 @@ class ProjectCreationForm(ModelForm):
 
     class Meta:
         model = Project
-        fields = ["name", "description", "files"]
+        fields = ["title", "description", "files"]
 
     def __init__(self, *args, **kwargs):
         super(ProjectCreationForm, self).__init__(*args, **kwargs)
@@ -51,7 +51,7 @@ class ProjectAddParticipantForm(forms.Form):
         super(ProjectAddParticipantForm, self).__init__(*args, **kwargs)
 
         self.fields["project"].choices = [
-            (project.uuid, project.name) for project in projects
+            (project.uuid, project.title) for project in projects
         ]
         # self.fields["project"].initial = "Hi"
 
