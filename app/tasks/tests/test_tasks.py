@@ -23,7 +23,7 @@ def test_redirect_unauthed_home_page(client):
     "test_url",
     ["task_detail", "edit_task", "delete_task", "change_assignee", "change_st"],
 )
-def test_redirect_logout_user(client, create_test_task, test_url):
+def test_redirect_logout_user(client, create_test_task, test_url, create_testuser):
     """Test redirect a logged out user from pages that require auth."""
     test_task = create_test_task
 

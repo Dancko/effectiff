@@ -24,11 +24,21 @@ def create_testuser(user_data):
 
 
 @pytest.fixture
-def create_test_task(create_testuser, user_data):
-    """Fixture for creating a test task."""
+def create_test_project(create_testuser):
+    """Fixture for creating a test project."""
 
     test_user = create_testuser
     test_project = Project.objects.create(title="Test Project", owner=test_user)
+    return test_project
+
+
+@pytest.fixture
+def create_test_task(create_test_project, create_testuser):
+    """Fixture for creating a test task."""
+
+    test_user = create_testuser
+    test_project = create_test_project
+
     test_task = Task.objects.create(
         title="Test Task",
         project=test_project,
