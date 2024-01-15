@@ -79,3 +79,12 @@ def test_TaskAddPartiicipantsForm(create_test_task):
     form = forms.TaskAddPartiicipantsForm(instance=task, data={"assigned_to": user2})
 
     assert form.is_valid()
+
+
+@pytest.mark.django_db
+def test_CommentForm(create_test_task):
+    """Test form for adding comments."""
+
+    form = forms.CommentForm(data={"body": "test message"})
+
+    assert form.is_valid()
