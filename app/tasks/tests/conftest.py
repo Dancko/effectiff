@@ -1,13 +1,19 @@
 import pytest
 import datetime
 
+from pytest_factoryboy import register
+
 from users.models import User
 from projects.models import Project
 from tasks.models import Task
 
+from .factories import TaskFactory
+
 # from django.contrib.auth import get_user_model
 
 # User = get_user_model()
+
+register(TaskFactory)
 
 
 @pytest.fixture
