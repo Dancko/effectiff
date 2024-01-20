@@ -7,46 +7,46 @@ from tasks import forms
 
 
 @pytest.mark.django_db
-def test_TaskCreateForm(create_testuser, create_test_project):
+def test_TaskCreateForm(user_factory, project_factory):
     """Test form for creating tasks."""
 
-    user1 = create_testuser
-    user2 = get_user_model().objects.create_user(
-        email="tom@example.com", password="test123"
-    )
+    user1 = user_factory(email="test@example.com")
+
+    user2 = user_factory(email="test1@example.com")
 
     user1.teammates.add(user2)
-    test_project = create_test_project
+
+    test_project = project_factory(owner=user1)
+
+    data = {
+        "project": test_project.id,
+        "title": "Test Form Task",
+        "body": "",
+        "deadline": datetime.datetime(2026, 10, 12, 0, 0, tzinfo=datetime.timezone.utc),
+        "priority": "Moderate",
+        "assigned_to": user2.id,
+        "files": "",
+    }
 
     form = forms.TaskCreateForm(
         user=user1,
-        data={
-            "project": test_project.id,
-            "title": "Test Form Task",
-            "body": "",
-            "deadline": datetime.datetime(
-                2026, 10, 12, 0, 0, tzinfo=datetime.timezone.utc
-            ),
-            "priority": "Moderate",
-            "assigned_to": user2.id,
-            "files": "",
-        },
+        data=data,
     )
 
     assert form.is_valid()
 
 
 @pytest.mark.django_db
-def test_TaskCreateFromProjectForm(create_test_project):
+def test_TaskCreateFromProjectForm(project_factory, user_factory):
     """Test form for creating tasks thru projects."""
 
-    project = create_test_project
-    user1 = project.owner
-    user2 = get_user_model().objects.create_user(
-        email="tom@example.com", password="test123"
+    project = project_factory(
+        participants=[
+            user_factory(),
+        ]
     )
-    user1.teammates.add(user2)
-    project.participants.add(user2)
+
+    user2 = project.participants.first()
 
     form = forms.TaskCreateFromProjectForm(
         project=project,
@@ -66,15 +66,11 @@ def test_TaskCreateFromProjectForm(create_test_project):
 
 
 @pytest.mark.django_db
-def test_TaskAddPartiicipantsForm(create_test_task):
+def test_TaskAddPartiicipantsForm(task_factory, project_factory, user_factory):
     """Test form for adding participants to tasks."""
 
-    task = create_test_task
-    project = task.project
-    user2 = get_user_model().objects.create_user(
-        email="tom@example.com", password="test123"
-    )
-    project.participants.add(user2)
+    task = task_factory(project=project_factory(participants=[user_factory()]))
+    user2 = task.project.participants.first()
 
     form = forms.TaskAddPartiicipantsForm(instance=task, data={"assigned_to": user2})
 

@@ -8,6 +8,8 @@ from projects.models import Project
 from tasks.models import Task
 
 from .factories import TaskFactory, CommentFactory
+from users.tests.factories import UserFactory
+from projects.tests.factories import ProjectFactory
 
 # from django.contrib.auth import get_user_model
 
@@ -15,6 +17,8 @@ from .factories import TaskFactory, CommentFactory
 
 register(TaskFactory)
 register(CommentFactory)
+register(UserFactory)
+register(ProjectFactory)
 
 
 @pytest.fixture

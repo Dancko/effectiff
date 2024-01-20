@@ -10,3 +10,12 @@ class ProjectFactory(factory.django.DjangoModelFactory):
 
     title = "Test Project"
     owner = factory.SubFactory(UserFactory)
+
+    @factory.post_generation
+    def participants(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for participant in extracted:
+                self.participants.add(participant)
