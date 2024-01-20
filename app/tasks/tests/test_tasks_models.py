@@ -23,3 +23,9 @@ def test_task_isoutdated_true(task_factory):
     )
 
     assert task.is_outdated() == True
+
+
+def task_str_return(CommentFactory):
+    comment = CommentFactory(body="Hello")
+
+    assert comment.__str__() == "Hello"

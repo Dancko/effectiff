@@ -3,7 +3,7 @@ import datetime
 
 from django.contrib.auth import get_user_model
 
-from tasks.models import Task
+from tasks.models import Task, Comment
 from projects.models import Project
 
 
@@ -35,3 +35,12 @@ class TaskFactory(factory.django.DjangoModelFactory):
     deadline = datetime.datetime(2026, 10, 12, 0, 0, tzinfo=datetime.timezone.utc)
     project = factory.SubFactory(ProjectFactory)
     assigned_to = factory.SubFactory(UserFactory)
+
+
+class CommentFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Comment
+
+    author = factory.SubFactory(UserFactory)
+    task = factory.SubFactory(TaskFactory)
+    body = "x"
