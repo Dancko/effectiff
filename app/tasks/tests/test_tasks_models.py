@@ -8,7 +8,7 @@ pytestmark = pytest.mark.django_db
 def test_task_str_return(task_factory):
     task = task_factory(title="Test Task 1")
 
-    assert str(task) == "Test Task 1"
+    assert task.__str__() == "Test Task 1"
 
 
 def test_task_isoutdated_false(task_factory):
@@ -25,7 +25,7 @@ def test_task_isoutdated_true(task_factory):
     assert task.is_outdated() == True
 
 
-def task_str_return(CommentFactory):
-    comment = CommentFactory(body="Hello")
+def test_task_str_return(comment_factory):
+    comment = comment_factory(body="Hello")
 
     assert comment.__str__() == "Hello"
