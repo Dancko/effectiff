@@ -59,9 +59,6 @@ class TaskFile(models.Model):
     task = models.ForeignKey("Task", related_name="files", on_delete=models.CASCADE)
     file = models.FileField(upload_to="tasks_attachments/")
 
-    def __str__(self):
-        return self.file.name
-
     @property
     def get_ext(self):
         filename = str(self.file.name)
@@ -70,7 +67,10 @@ class TaskFile(models.Model):
     @property
     def short_name(self):
         filename = str(self.file.name)
-        return filename[18:]
+        return filename.split("/")[-1]
+
+    def __str__(self):
+        return self.short_name
 
 
 class Comment(models.Model):

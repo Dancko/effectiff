@@ -1,5 +1,9 @@
 import pytest
 import datetime
+import time
+
+from django.core.files.uploadedfile import SimpleUploadedFile
+from tasks.models import TaskFile
 
 
 pytestmark = pytest.mark.django_db
@@ -29,3 +33,28 @@ def test_comment_str_return(comment_factory):
     comment = comment_factory(body="Hello")
 
     assert comment.__str__() == "Hello"
+
+
+def test_task_file_str_return(task_factory, cleanup_files):
+    task = task_factory(title="Test Task With File")
+    timestamp = int(time.time())
+
+    file_content = b"Test File"
+    filename = f"testfile1_{timestamp}"
+    file = SimpleUploadedFile(filename, file_content)
+
+    task_file = TaskFile.objects.create(task=task, file=file)
+
+    cleanup_files.append({"path": task_file.file.path, "id": task_file.id})
+    assert task_file.__str__() == filename
+
+
+def test_task_file_get_ext(task_factory, cleanup_files):
+    task = task_factory(title="Test task with files")
+    file_content = b"Test File"
+    filename = f"testfile1.txt"
+    file = SimpleUploadedFile(filename, file_content)
+    task_file = TaskFile.objects.create(task=task, file=file)
+    cleanup_files.append({"path": task_file.file.path, "id": task_file.id})
+
+    assert task_file.get_ext == "txt"

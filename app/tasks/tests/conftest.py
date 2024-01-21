@@ -3,9 +3,11 @@ import datetime
 
 from pytest_factoryboy import register
 
+from django.core.files.storage import default_storage
+
 from users.models import User
 from projects.models import Project
-from tasks.models import Task
+from tasks.models import Task, TaskFile
 
 from .factories import TaskFactory, CommentFactory
 from users.tests.factories import UserFactory
@@ -58,3 +60,18 @@ def create_test_task(create_test_project, create_testuser):
     )
 
     return test_task
+
+
+@pytest.fixture
+def cleanup_files(request):
+    created_files = []
+
+    def cleanup():
+        for file in created_files:
+            default_storage.delete(file["path"])
+
+        TaskFile.objects.filter(id__in=[file["id"] for file in created_files]).delete()
+
+    request.addfinalizer(cleanup)
+
+    return created_files
