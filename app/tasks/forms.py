@@ -112,7 +112,8 @@ class CommentForm(ModelForm):
                 "placeholder": "Enter Your Message Here",
                 "rows": "7",
             }
-        )
+        ),
+        required=False,
     )
     files = MultipleFileField(max_files=10, required=False)
 
@@ -130,3 +131,13 @@ class CommentForm(ModelForm):
         ] = "form-control comment-upload mt-3 border-0 bg-dark d-flex"
         self.fields["files"].widget.attrs["style"] = "max-width: 350px;"
         self.fields["files"].widget.attrs["value"] = "Upload"
+
+    def clean(self):
+        cleaned_data = super().clean()
+        body = cleaned_data.get("body")
+        files = cleaned_data.get("files")
+
+        if not body and not files:
+            raise ValidationError("Comment should contain text or attachments.")
+
+        return cleaned_data
