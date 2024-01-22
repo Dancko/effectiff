@@ -3,7 +3,7 @@ import datetime
 import time
 
 from django.core.files.uploadedfile import SimpleUploadedFile
-from tasks.models import TaskFile
+from tasks.models import TaskFile, CommentFile
 
 
 pytestmark = pytest.mark.django_db
@@ -58,3 +58,32 @@ def test_task_file_get_ext(task_factory, cleanup_files):
     cleanup_files.append({"path": task_file.file.path, "id": task_file.id})
 
     assert task_file.get_ext == "txt"
+
+
+def test_commentfile_str_return(comment_factory, cleanup_files):
+    """Test string representation of CommentFile."""
+    comment = comment_factory()
+
+    file_content = b"Test File"
+    timestamp = int(time.time())
+    filename = f"test_task_{timestamp}.txt"
+    test_file = SimpleUploadedFile(filename, file_content)
+    comment_file = CommentFile.objects.create(comment=comment, file=test_file)
+
+    cleanup_files.append({"path": comment_file.file.path, "id": comment_file.id})
+    print("file str: ", str(comment_file))
+
+    assert comment_file.__str__() == filename[-20:]
+
+
+def test_commentfile_get_ext(comment_factory, cleanup_files):
+    """Test get_ext method of commentfile."""
+    comment = comment_factory()
+
+    file_content = b"Test File"
+    test_file = SimpleUploadedFile("test_file.txt", file_content)
+
+    comment_file = CommentFile.objects.create(comment=comment, file=test_file)
+    cleanup_files.append({"path": comment_file.file.path, "id": comment_file.id})
+
+    assert comment_file.get_ext == "txt"

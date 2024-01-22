@@ -96,15 +96,15 @@ class CommentFile(models.Model):
     )
     file = models.FileField(upload_to="comment_attachments/")
 
-    def __str__(self):
-        return str(self.file.name)
-
     @property
     def get_ext(self):
         filename = str(self.file.name)
-        return filename.split(".") if "." in filename else None
+        return filename.split(".")[-1] if "." in filename else None
 
     @property
     def short_name(self):
-        filename = str(self.file.name)
-        return filename[20:]
+        filename = str(self.file.name).split("/")[-1]
+        return filename[-20:]
+
+    def __str__(self):
+        return self.short_name

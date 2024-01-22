@@ -26,6 +26,9 @@ class MultipleFileField(forms.FileField):
             if self.max_files and len(data) > self.max_files:
                 raise ValidationError(f"Only {self.max_files} files allowed.")
             result = [single_file_clean(d, initial) for d in data]
+
+            if len(result) > self.max_files:
+                raise ValidationError(f"Only {self.max_files} files allowed.")
         else:
             result = single_file_clean(data, initial)
         return result
@@ -49,7 +52,7 @@ class TaskCreateForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
-        files = kwargs.pop("files", None)
+        files = kwargs.get("files", None)
         super(TaskCreateForm, self).__init__(*args, **kwargs)
 
         for visible in self.visible_fields():
@@ -65,7 +68,7 @@ class TaskCreateForm(ModelForm):
 
 
 class TaskCreateFromProjectForm(ModelForm):
-    files = MultipleFileField(max_files=10)
+    files = MultipleFileField(max_files=10, required=False)
 
     class Meta:
         model = Task

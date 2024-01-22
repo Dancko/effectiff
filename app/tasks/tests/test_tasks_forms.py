@@ -2,6 +2,7 @@ import pytest
 import datetime
 
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.urls import reverse
 
 from tasks import forms
 
@@ -37,6 +38,35 @@ def test_TaskCreateForm(user_factory, project_factory):
 
 
 @pytest.mark.django_db
+def test_taskCreateForm_too_many_files(user_factory, project_factory):
+    """Test attempt to upload more than 10 files will raise error."""
+    user1 = user_factory(email="test@example.com")
+
+    user2 = user_factory(email="test1@example.com")
+
+    user1.teammates.add(user2)
+
+    test_project = project_factory(owner=user1)
+
+    file_content = b"Test FIle"
+    files = [SimpleUploadedFile(f"test_file_{i}.txt", file_content) for i in range(15)]
+    files = {"files": files}
+
+    data = {
+        "project": test_project.id,
+        "title": "Test Form Task",
+        "body": "",
+        "deadline": datetime.datetime(2026, 10, 12, 0, 0, tzinfo=datetime.timezone.utc),
+        "priority": "Moderate",
+        "assigned_to": user2.id,
+    }
+
+    form = forms.TaskCreateForm(user=user1, data=data, files=files)
+
+    assert form.is_valid() == False
+
+
+@pytest.mark.django_db
 def test_TaskCreateFromProjectForm(project_factory, user_factory):
     """Test form for creating tasks thru projects."""
 
@@ -58,7 +88,6 @@ def test_TaskCreateFromProjectForm(project_factory, user_factory):
             ),
             "priority": "Moderate",
             "assigned_to": user2.id,
-            "files": "",
         },
     )
 
@@ -108,13 +137,11 @@ def test_TaskCreateForm_uploading_files(user_factory, project_factory):
         "deadline": datetime.datetime(2026, 10, 12, 0, 0, tzinfo=datetime.timezone.utc),
         "priority": "Moderate",
         "assigned_to": user2.id,
-        "files": [test_file, test_file2],
     }
 
-    form = forms.TaskCreateForm(
-        user=user1,
-        data=data,
-    )
+    files = {"files": [test_file, test_file2]}
+
+    form = forms.TaskCreateForm(user=user1, data=data, files=files)
 
     assert form.is_valid()
 

@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.db.models import Q
+from django.core.exceptions import ValidationError
 
 from .models import Task, TaskFile, Comment, CommentFile
 from projects.models import Project
@@ -114,7 +115,7 @@ def taskCreatePage(request):
 
             for file in files:
                 TaskFile.objects.create(task=task, file=file)
-
+        else:
             return redirect("my_tasks")
     return render(
         request, "tasks/new_task.html", {"form": form, "page": page, "user": user}
