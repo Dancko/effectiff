@@ -43,6 +43,7 @@ jobs:
               echo "Docker Compose version:"
               docker-compose --version
               docker ps
+              pwd
       - name: Set Permissions
         run: chmod +x static/images/
       - name: Test
