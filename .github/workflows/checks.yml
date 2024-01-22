@@ -43,6 +43,8 @@ jobs:
               echo "Docker Compose version:"
               docker-compose --version
               docker ps
+      - name: Set Permissions
+        run: chmod +x static/images/
       - name: Test
 
-        run: docker-compose -f docker-compose-githubactions.yml run --rm app sh -c "python manage.py wait_for_db && pytest"
+        run: docker-compose -f docker-compose-githubactions.yml run --rm app sh -c "python manage.py wait_for_db && pytest -v -s"
