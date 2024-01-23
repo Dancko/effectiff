@@ -1,12 +1,18 @@
 import pytest
 
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
+
+from tasks.models import Comment, CommentFile, Task
 
 
 pytestmark = pytest.mark.django_db
 
 User = get_user_model()
+
+
+# ---------------------Unauthed tests-------------------
 
 
 def test_redirect_unauthed_home_page(client):
@@ -23,9 +29,9 @@ def test_redirect_unauthed_home_page(client):
     "test_url",
     ["task_detail", "edit_task", "delete_task", "change_assignee", "change_st"],
 )
-def test_redirect_logout_user(client, create_test_task, test_url, create_testuser):
+def test_redirect_logout_user(client, task_factory, test_url):
     """Test redirect a logged out user from pages that require auth."""
-    test_task = create_test_task
+    test_task = task_factory()
 
     url = reverse(test_url, args=[test_task.uuid])
     res = client.get(url)
@@ -33,18 +39,81 @@ def test_redirect_logout_user(client, create_test_task, test_url, create_testuse
     assert res.status_code == 302
 
 
+# -------------------------Authed Tests----------------------
+
+
 @pytest.mark.parametrize("test_url", ["my_tasks", "create_task"])
-def test_get_homepage_auth(client, create_testuser, test_url):
+def test_get_homepage_auth(client, user_factory, test_url):
     """Test homepage and create_task status code 200 for authed users."""
 
-    create_testuser
+    user = user_factory(email="testuser@example.com", password="test123", name="Test")
     url = reverse(test_url)
+    client.force_login(user)
 
-    client.login(email="test@example.com", password="pass123")
     res = client.get(url)
 
     assert res.status_code == 200
 
 
-def test_task_get(client):
-    pass
+def test_task_detail_get(client, task_factory):
+    """Test task detail page get request."""
+    task = task_factory()
+    user = task.project.owner
+    url = reverse("task_detail", args=[task.uuid])
+    client.force_login(user)
+
+    res = client.get(url)
+
+    assert res.status_code == 200
+
+
+def test_task_detail_comment_post(client, task_factory):
+    """Test leaving comments post request."""
+    task = task_factory()
+    user = task.project.owner
+    url = reverse("task_detail", args=[task.uuid])
+    client.force_login(user)
+
+    file_content = b"Test"
+    file = SimpleUploadedFile("test_file.txt", file_content)
+
+    data = {"body": "test message", "files": file}
+
+    res = client.post(url, data)
+
+    assert res.status_code == 302
+    assert res.url == reverse("task_detail", args=[task.uuid])
+    assert Comment.objects.filter(body="test message")
+    assert CommentFile.objects.filter(file__icontains="test_file")
+
+
+def test_change_status_get(client, task_factory):
+    """Test change status get request."""
+
+    task = task_factory()
+    url = reverse("change_st", args=[task.uuid])
+    user = task.project.owner
+    client.force_login(user)
+
+    res = client.get(url)
+
+    assert res.status_code == 200
+
+
+def test_change_status_post(client, task_factory):
+    """Test change status post request."""
+
+    task = task_factory()
+    url = reverse("change_st", args=[task.uuid])
+    user = task.project.owner
+    client.force_login(user)
+
+    data = {"status": "In Progress"}
+
+    res = client.post(url, data)
+
+    updated_task = Task.objects.get(id=task.id)
+
+    assert res.status_code == 302
+    assert res.url == reverse("task_detail", args=[task.uuid])
+    assert updated_task.status == "In Progress"

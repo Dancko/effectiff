@@ -64,6 +64,7 @@ def test_taskCreateForm_too_many_files(user_factory, project_factory):
     form = forms.TaskCreateForm(user=user1, data=data, files=files)
 
     assert form.is_valid() == False
+    assert form.errors == {"files": ["Only 10 files allowed."]}
 
 
 @pytest.mark.django_db
