@@ -149,3 +149,34 @@ def test_task_create_post(client, project_factory, user_factory):
 
     assert res.status_code == 302
     assert res.url == reverse("my_tasks")
+
+
+def test_task_create_from_project_post(client, project_factory, user_factory):
+    """Test creating tasks from project is success."""
+
+    project = project_factory()
+    user = project.owner
+    user2 = user_factory(email="test1@example.com")
+    project.participants.add(user2)
+
+    user.teammates.add(user2)
+    user2 = user.teammates.first()
+    client.force_login(user)
+    url = reverse("create_task_from_project", args=[project.uuid])
+
+    file_content = b"Test"
+    file = SimpleUploadedFile("test.txt", file_content)
+
+    data = {
+        "title": "Test Form Task",
+        "body": "",
+        "deadline": datetime.datetime(2026, 10, 12, 0, 0, tzinfo=datetime.timezone.utc),
+        "priority": "Moderate",
+        "assigned_to": user2.id,
+        "files": [file],
+    }
+
+    res = client.post(url, data)
+
+    assert res.status_code == 302
+    assert res.url == reverse("my_projects")
