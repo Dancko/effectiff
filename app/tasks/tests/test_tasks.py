@@ -1,4 +1,5 @@
 import pytest
+import datetime
 
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -117,3 +118,34 @@ def test_change_status_post(client, task_factory):
     assert res.status_code == 302
     assert res.url == reverse("task_detail", args=[task.uuid])
     assert updated_task.status == "In Progress"
+
+
+def test_task_create_post(client, project_factory, user_factory):
+    """Test creating tasks is success."""
+
+    project = project_factory()
+    user = project.owner
+    user2 = user_factory(email="test1@example.com")
+
+    user.teammates.add(user2)
+    user2 = user.teammates.first()
+    client.force_login(user)
+    url = reverse("create_task")
+
+    file_content = b"Test"
+    file = SimpleUploadedFile("test.txt", file_content)
+
+    data = {
+        "project": project.id,
+        "title": "Test Form Task",
+        "body": "",
+        "deadline": datetime.datetime(2026, 10, 12, 0, 0, tzinfo=datetime.timezone.utc),
+        "priority": "Moderate",
+        "assigned_to": user2.id,
+        "files": file,
+    }
+
+    res = client.post(url, data)
+
+    assert res.status_code == 302
+    assert res.url == reverse("my_tasks")

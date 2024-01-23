@@ -115,7 +115,6 @@ def taskCreatePage(request):
 
             for file in files:
                 TaskFile.objects.create(task=task, file=file)
-        else:
             return redirect("my_tasks")
     return render(
         request, "tasks/new_task.html", {"form": form, "page": page, "user": user}
