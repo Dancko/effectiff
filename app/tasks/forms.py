@@ -22,6 +22,7 @@ class MultipleFileField(forms.FileField):
 
     def clean(self, data, initial=None):
         single_file_clean = super().clean
+
         if isinstance(data, (list, tuple)):
             if self.max_files and len(data) > self.max_files:
                 raise ValidationError(f"Only {self.max_files} files allowed.")
@@ -52,11 +53,17 @@ class TaskCreateForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
-        files = kwargs.get("files", None)
+        files_dict = kwargs.pop("files", {})
+
         super(TaskCreateForm, self).__init__(*args, **kwargs)
 
         for visible in self.visible_fields():
             visible.field.widget.attrs["class"] = "form-control"
+
+        files = files_dict.get("files", []) if isinstance(files_dict, dict) else []
+
+        if len(files) > 10:
+            self.add_error("files", "Only 10 files allowed.")
 
         if files:
             self.fields["files"].queryset = files

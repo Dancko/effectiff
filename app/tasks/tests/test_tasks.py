@@ -3,6 +3,7 @@ import datetime
 
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.storage import default_storage
 from django.urls import reverse
 
 from tasks.models import Comment, CommentFile, Task
@@ -43,6 +44,22 @@ def test_redirect_logout_user(client, task_factory, test_url):
 # -------------------------Authed Tests----------------------
 
 
+@pytest.mark.parametrize(
+    "test_url",
+    ["task_detail", "edit_task", "delete_task", "change_assignee", "change_st"],
+)
+def test_get_login_user_success(client, task_factory, test_url):
+    """Test get request 200 for logged in users."""
+    test_task = task_factory()
+    user = test_task.project.owner
+    client.force_login(user)
+
+    url = reverse(test_url, args=[test_task.uuid])
+    res = client.get(url)
+
+    assert res.status_code == 200
+
+
 @pytest.mark.parametrize("test_url", ["my_tasks", "create_task"])
 def test_get_homepage_auth(client, user_factory, test_url):
     """Test homepage and create_task status code 200 for authed users."""
@@ -81,6 +98,7 @@ def test_task_detail_comment_post(client, task_factory):
     data = {"body": "test message", "files": file}
 
     res = client.post(url, data)
+    default_storage.delete(file.name)
 
     assert res.status_code == 302
     assert res.url == reverse("task_detail", args=[task.uuid])
@@ -146,6 +164,7 @@ def test_task_create_post(client, project_factory, user_factory):
     }
 
     res = client.post(url, data)
+    default_storage.delete(file.name)
 
     assert res.status_code == 302
     assert res.url == reverse("my_tasks")
@@ -177,6 +196,51 @@ def test_task_create_from_project_post(client, project_factory, user_factory):
     }
 
     res = client.post(url, data)
+    default_storage.delete(file.name)
 
     assert res.status_code == 302
     assert res.url == reverse("my_projects")
+
+
+def test_create_task_from_project_get(client, project_factory):
+    """Test create task from project page get request."""
+    project = project_factory()
+    user = project.owner
+    client.force_login(user)
+    url = reverse("create_task_from_project", args=[project.uuid])
+
+    res = client.get(url)
+
+    assert res.status_code == 200
+
+
+def test_task_edit_page_post(client, task_factory):
+    """Test task edit page post request."""
+
+    task = task_factory(title="Test Task")
+    user = task.project.owner
+    user2 = task.assigned_to
+    user.teammates.add(user2)
+    client.force_login(user)
+    url = reverse("edit_task", args=[task.uuid])
+
+    file_content = b"Test"
+    file = SimpleUploadedFile("test.txt", file_content)
+
+    data = {
+        "project": task.project.id,
+        "title": "Test Form Task (Edited)",
+        "body": "",
+        "deadline": datetime.datetime(2026, 10, 12, 0, 0, tzinfo=datetime.timezone.utc),
+        "priority": "Moderate",
+        "assigned_to": user2.id,
+        "files": [file],
+    }
+
+    res = client.post(url, data)
+
+    edited_task = Task.objects.get(id=task.id)
+
+    assert res.status_code == 302
+    assert res.url == reverse("task_detail", args=[task.uuid])
+    assert edited_task.title == "Test Form Task (Edited)"

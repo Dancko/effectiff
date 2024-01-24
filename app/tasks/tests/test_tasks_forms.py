@@ -50,7 +50,6 @@ def test_taskCreateForm_too_many_files(user_factory, project_factory):
 
     file_content = b"Test FIle"
     files = [SimpleUploadedFile(f"test_file_{i}.txt", file_content) for i in range(15)]
-    files = {"files": files}
 
     data = {
         "project": test_project.id,
@@ -60,8 +59,9 @@ def test_taskCreateForm_too_many_files(user_factory, project_factory):
         "priority": "Moderate",
         "assigned_to": user2.id,
     }
+    files_dict = {"files": files}
 
-    form = forms.TaskCreateForm(user=user1, data=data, files=files)
+    form = forms.TaskCreateForm(user=user1, data=data, files=files_dict)
 
     assert form.is_valid() == False
     assert form.errors == {"files": ["Only 10 files allowed."]}

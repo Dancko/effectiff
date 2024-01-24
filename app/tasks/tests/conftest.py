@@ -70,8 +70,6 @@ def cleanup_files(request):
         for file in created_files:
             default_storage.delete(file["path"])
 
-        TaskFile.objects.filter(id__in=[file["id"] for file in created_files]).delete()
-
     request.addfinalizer(cleanup)
 
     return created_files

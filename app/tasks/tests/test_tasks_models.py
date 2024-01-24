@@ -71,7 +71,6 @@ def test_commentfile_str_return(comment_factory, cleanup_files):
     comment_file = CommentFile.objects.create(comment=comment, file=test_file)
 
     cleanup_files.append({"path": comment_file.file.path, "id": comment_file.id})
-    print("file str: ", str(comment_file))
 
     assert comment_file.__str__() == filename[-20:]
 
