@@ -93,17 +93,20 @@ def test_task_detail_comment_post(client, task_factory):
     client.force_login(user)
 
     file_content = b"Test"
-    file = SimpleUploadedFile("test_file.txt", file_content)
+    file_name = "test_task_detail_comment_post.txt"
+    file = SimpleUploadedFile(file_name, file_content)
 
     data = {"body": "test message", "files": file}
 
     res = client.post(url, data)
-    default_storage.delete(file.name)
+    default_storage.delete(f"comment_attachments/{file_name}")
 
     assert res.status_code == 302
     assert res.url == reverse("task_detail", args=[task.uuid])
     assert Comment.objects.filter(body="test message")
-    assert CommentFile.objects.filter(file__icontains="test_file")
+    assert CommentFile.objects.filter(
+        file__icontains="test_task_detail_comment_post.txt"
+    )
 
 
 def test_change_status_get(client, task_factory):
@@ -151,7 +154,8 @@ def test_task_create_post(client, project_factory, user_factory):
     url = reverse("create_task")
 
     file_content = b"Test"
-    file = SimpleUploadedFile("test.txt", file_content)
+    file_name = "test_task_create_post.txt"
+    file = SimpleUploadedFile(file_name, file_content)
 
     data = {
         "project": project.id,
@@ -164,7 +168,7 @@ def test_task_create_post(client, project_factory, user_factory):
     }
 
     res = client.post(url, data)
-    default_storage.delete(file.name)
+    default_storage.delete(f"tasks_attachments/{file_name}")
 
     assert res.status_code == 302
     assert res.url == reverse("my_tasks")
@@ -184,7 +188,8 @@ def test_task_create_from_project_post(client, project_factory, user_factory):
     url = reverse("create_task_from_project", args=[project.uuid])
 
     file_content = b"Test"
-    file = SimpleUploadedFile("test.txt", file_content)
+    file_name = "test_task_create_from_project_post.txt"
+    file = SimpleUploadedFile(file_name, file_content)
 
     data = {
         "title": "Test Form Task",
@@ -196,7 +201,7 @@ def test_task_create_from_project_post(client, project_factory, user_factory):
     }
 
     res = client.post(url, data)
-    default_storage.delete(file.name)
+    default_storage.delete(f"tasks_attachments/{file_name}")
 
     assert res.status_code == 302
     assert res.url == reverse("my_projects")
@@ -225,7 +230,8 @@ def test_task_edit_page_post_deleting_files(client, task_factory):
     url = reverse("edit_task", args=[task.uuid])
 
     file_content = b"Test"
-    file = SimpleUploadedFile("test.txt", file_content)
+    file_name = "test_task_edit_page_post_deleting_files.txt"
+    file = SimpleUploadedFile(file_name, file_content)
 
     TaskFile.objects.create(task=task, file=file)
 
@@ -242,6 +248,8 @@ def test_task_edit_page_post_deleting_files(client, task_factory):
     res = client.post(url, data)
 
     edited_task = Task.objects.get(id=task.id)
+
+    default_storage.delete(f"tasks_attachments/{file_name}")
 
     assert res.status_code == 302
     assert res.url == reverse("task_detail", args=[task.uuid])
@@ -260,7 +268,8 @@ def test_task_edit_page_post_new_file(client, task_factory):
     url = reverse("edit_task", args=[task.uuid])
 
     file_content = b"Test FIle for editing a task"
-    file = SimpleUploadedFile("test.txt", file_content, content_type="text/plain")
+    file_name = "test_task_edit_page_post_new_file.txt"
+    file = SimpleUploadedFile(file_name, file_content, content_type="text/plain")
 
     data = {
         "project": task.project.id,
@@ -275,6 +284,8 @@ def test_task_edit_page_post_new_file(client, task_factory):
     res = client.post(url, data=data)
 
     edited_task = Task.objects.get(id=task.id)
+
+    default_storage.delete(f"tasks_attachments/{file_name}")
 
     assert res.status_code == 302
     assert res.url == reverse("task_detail", args=[task.uuid])
