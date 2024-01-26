@@ -6,7 +6,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.files.storage import default_storage
 from django.urls import reverse
 
-from tasks.models import Comment, CommentFile, Task
+from tasks.models import Comment, CommentFile, Task, TaskFile
 
 
 pytestmark = pytest.mark.django_db
@@ -214,8 +214,8 @@ def test_create_task_from_project_get(client, project_factory):
     assert res.status_code == 200
 
 
-def test_task_edit_page_post(client, task_factory):
-    """Test task edit page post request."""
+def test_task_edit_page_post_deleting_files(client, task_factory):
+    """Test task edit page post request when no new files provided."""
 
     task = task_factory(title="Test Task")
     user = task.project.owner
@@ -227,6 +227,8 @@ def test_task_edit_page_post(client, task_factory):
     file_content = b"Test"
     file = SimpleUploadedFile("test.txt", file_content)
 
+    TaskFile.objects.create(task=task, file=file)
+
     data = {
         "project": task.project.id,
         "title": "Test Form Task (Edited)",
@@ -234,7 +236,7 @@ def test_task_edit_page_post(client, task_factory):
         "deadline": datetime.datetime(2026, 10, 12, 0, 0, tzinfo=datetime.timezone.utc),
         "priority": "Moderate",
         "assigned_to": user2.id,
-        "files": [file],
+        "files": "",
     }
 
     res = client.post(url, data)
@@ -244,3 +246,37 @@ def test_task_edit_page_post(client, task_factory):
     assert res.status_code == 302
     assert res.url == reverse("task_detail", args=[task.uuid])
     assert edited_task.title == "Test Form Task (Edited)"
+    assert len(edited_task.files.all()) == 0
+
+
+def test_task_edit_page_post_new_file(client, task_factory):
+    """Test task edit page post request with file."""
+
+    task = task_factory(title="Test Task")
+    user = task.project.owner
+    user2 = task.assigned_to
+    user.teammates.add(user2)
+    client.force_login(user)
+    url = reverse("edit_task", args=[task.uuid])
+
+    file_content = b"Test FIle for editing a task"
+    file = SimpleUploadedFile("test.txt", file_content, content_type="text/plain")
+
+    data = {
+        "project": task.project.id,
+        "title": "Test Form Task (Edited)",
+        "body": "",
+        "deadline": datetime.datetime(2026, 10, 12, 0, 0, tzinfo=datetime.timezone.utc),
+        "priority": "Moderate",
+        "assigned_to": user2.id,
+        "files": file,
+    }
+
+    res = client.post(url, data=data)
+
+    edited_task = Task.objects.get(id=task.id)
+
+    assert res.status_code == 302
+    assert res.url == reverse("task_detail", args=[task.uuid])
+    assert edited_task.title == "Test Form Task (Edited)"
+    assert len(edited_task.files.all()) == 1
