@@ -326,3 +326,19 @@ def test_delete_task_post_success(client, task_factory):
 
     assert res.status_code == 302
     assert len(Task.objects.filter(id=task.id)) == 0
+
+
+def task_change_assignee_by_owner_success(client, task_factory, user_factory):
+    task = task_factory()
+    user = task.project.owner
+    client.force_login(user)
+    new_assignee = user_factory()
+    url = reverse("change_assignee", args=[task.uuid])
+
+    data = {"assigned_to": new_assignee}
+
+    res = client.post(url, data)
+
+    assert res.status_code == 302
+    assert res.url == reverse("task_detail", args=[task.uuid])
+    assert Task.objects.get(id=task.id).assigned_to == new_assignee
