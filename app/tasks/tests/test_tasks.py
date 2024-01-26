@@ -280,3 +280,35 @@ def test_task_edit_page_post_new_file(client, task_factory):
     assert res.url == reverse("task_detail", args=[task.uuid])
     assert edited_task.title == "Test Form Task (Edited)"
     assert len(edited_task.files.all()) == 1
+
+
+def test_not_owner_change_task_fail(client, user_factory, task_factory):
+    """Test not owner cannot edit task."""
+
+    not_owner = user_factory(name="NotOwner")
+    task = task_factory(title="Cannot change me")
+
+    task.project.owner.teammates.add(not_owner)
+    task.project.participants.add(not_owner)
+    task.assigned_to = not_owner
+
+    client.force_login(not_owner)
+
+    data = {
+        "project": task.project.id,
+        "title": "Trying to edit",
+        "body": "",
+        "deadline": datetime.datetime(2026, 10, 12, 0, 0, tzinfo=datetime.timezone.utc),
+        "priority": "Moderate",
+        "assigned_to": not_owner,
+        "files": "",
+    }
+
+    url = reverse("edit_task", args=[task.uuid])
+    res = client.post(url, data)
+
+    task_after = Task.objects.get(id=task.id)
+
+    assert res.status_code == 302
+    assert res.url == reverse("my_tasks")
+    assert task_after.title == "Cannot change me"
