@@ -328,14 +328,17 @@ def test_delete_task_post_success(client, task_factory):
     assert len(Task.objects.filter(id=task.id)) == 0
 
 
-def task_change_assignee_by_owner_success(client, task_factory, user_factory):
+def test_task_change_assignee_by_owner_success(client, task_factory, user_factory):
+    """Test change assignee page by owner is success."""
     task = task_factory()
     user = task.project.owner
     client.force_login(user)
     new_assignee = user_factory()
+    user.teammates.add(new_assignee)
+    task.project.participants.add(new_assignee)
     url = reverse("change_assignee", args=[task.uuid])
 
-    data = {"assigned_to": new_assignee}
+    data = {"assigned_to": new_assignee.id}
 
     res = client.post(url, data)
 
