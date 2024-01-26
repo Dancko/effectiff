@@ -312,3 +312,17 @@ def test_not_owner_change_task_fail(client, user_factory, task_factory):
     assert res.status_code == 302
     assert res.url == reverse("my_tasks")
     assert task_after.title == "Cannot change me"
+
+
+def test_delete_task_post_success(client, task_factory):
+    """Test deleting a task by the owner is success."""
+
+    task = task_factory()
+    user = task.project.owner
+    client.force_login(user)
+    url = reverse("delete_task", args=[task.uuid])
+
+    res = client.post(url, data={})
+
+    assert res.status_code == 302
+    assert len(Task.objects.filter(id=task.id)) == 0
