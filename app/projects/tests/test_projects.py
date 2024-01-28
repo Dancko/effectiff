@@ -161,6 +161,20 @@ def test_delete_project_post(client, project_factory):
     assert len(deleted) == 0
 
 
+def test_delete_project_not_by_owner_redirect(client, project_factory, user_factory):
+    """Test attempting to get a delete project page by not owner will redirect."""
+    project = project_factory()
+    user = user_factory()
+    client.force_login(user)
+
+    url = reverse("delete_project", args=[project.uuid])
+
+    res = client.get(url)
+
+    assert res.status_code == 302
+    assert res.url == reverse("my_tasks")
+
+
 def test_add_members_to_project_post(client, project_factory, user_factory):
     """Test adding members to a project is a success."""
 
