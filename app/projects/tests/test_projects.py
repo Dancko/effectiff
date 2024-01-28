@@ -63,7 +63,7 @@ def test_project_detail_get_success(client, project_factory):
     user = project.owner
 
     client.force_login(user)
-    url = reverse("my_projects")
+    url = reverse("project", args=[project.uuid])
     res = client.get(url)
 
     res.status_code == 200
