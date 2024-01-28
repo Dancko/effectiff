@@ -145,3 +145,26 @@ def test_delete_project_post(client, project_factory):
     assert res.status_code == 302
     assert res.url == reverse("my_projects")
     assert len(deleted) == 0
+
+
+def test_add_members_to_project_post(client, project_factory, user_factory):
+    """Test adding members to a project is a success."""
+
+    project = project_factory()
+    owner = project.owner
+    client.force_login(owner)
+    user2 = user_factory(name="Bobb")
+    user3 = user_factory(name="Tom")
+    owner.teammates.add(user2, user3)
+    url = reverse("add_members", args=[project.uuid])
+
+    data = {"participants": [user2.id, user3.id]}
+
+    res = client.post(url, data)
+
+    new_project = Project.objects.get(id=project.id)
+
+    assert res.status_code == 302
+    assert res.url == reverse("project", args=[project.uuid])
+    assert user2 in new_project.participants.all()
+    assert user3 in new_project.participants.all()
