@@ -129,3 +129,19 @@ def test_edit_project_with_files_post(client, project_factory):
     assert edited_project.title == "Test Project (Edited)"
     assert edited_project.description == "test description of updating a project"
     assert len(edited_project.project_files.all()) == 2
+
+
+def test_delete_project_post(client, project_factory):
+    """Test delete peoject post is a success."""
+
+    project = project_factory()
+    user = project.owner
+    client.force_login(user)
+    url = reverse("delete_project", args=[project.uuid])
+
+    res = client.post(url, data={})
+    deleted = Project.objects.filter(id=project.id)
+
+    assert res.status_code == 302
+    assert res.url == reverse("my_projects")
+    assert len(deleted) == 0

@@ -115,7 +115,7 @@ def deleteProjectPage(request, pk):
             project.delete()
             return redirect("my_projects")
     else:
-        return redirect("home")
+        return redirect("my_tasks")
     return render(request, "delete.html", {"project": project, "object": object})
 
 
