@@ -35,6 +35,7 @@ def myProjectsPage(request):
     return render(request, "projects/project_list.html", context)
 
 
+@login_required(login_url="login")
 def projectDetailPage(request, pk):
     tasks = Task.objects.select_related("project", "assigned_to").filter(
         project__uuid=pk
