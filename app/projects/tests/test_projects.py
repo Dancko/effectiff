@@ -99,3 +99,33 @@ def test_create_project_with_multiple_files_post(client, user_factory):
     assert res.url == reverse("my_projects")
     assert project is not None
     assert len(project.project_files.all()) == 2
+
+
+def test_edit_project_with_files_post(client, project_factory):
+    """Test updating existing project info is success."""
+    project = project_factory(title="Test project")
+    user = project.owner
+    client.force_login(user)
+    url = reverse("edit_project", args=[project.uuid])
+
+    file1 = create_projectfile(filename="test1.pdf")
+    file2 = create_projectfile(filename="test2.pdf")
+
+    data = {
+        "title": "Test Project (Edited)",
+        "description": "test description of updating a project",
+        "files": [file1, file2],
+    }
+
+    res = client.post(url, data)
+
+    edited_project = Project.objects.get(id=project.id)
+
+    delete_projectfile(file1)
+    delete_projectfile(file2)
+
+    assert res.status_code == 302
+    assert res.url == reverse("project", args=[project.uuid])
+    assert edited_project.title == "Test Project (Edited)"
+    assert edited_project.description == "test description of updating a project"
+    assert len(edited_project.project_files.all()) == 2

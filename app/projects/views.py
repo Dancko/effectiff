@@ -94,7 +94,11 @@ def editProjectPage(request, pk):
         if request.method == "POST":
             form = ProjectCreationForm(request.POST, instance=project)
             if form.is_valid():
+                files = request.FILES.getlist("files")
                 form.save(commit=True)
+
+                for file in files:
+                    ProjectFile.objects.create(project=project, file=file)
                 # form.save_m2m()
                 return redirect("project", pk=pk)
     else:
