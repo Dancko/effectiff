@@ -37,19 +37,29 @@ def myProjectsPage(request):
 
 @login_required(login_url="login")
 def projectDetailPage(request, pk):
-    tasks = Task.objects.select_related("project", "assigned_to").filter(
-        project__uuid=pk
+    project = get_object_or_404(
+        Project.objects.prefetch_related(
+            "tasks",
+            "tasks__assigned_to",
+            "project_files",
+            "participants",
+        ).select_related("owner"),
+        uuid=pk,
     )
-    if tasks:
-        project = tasks.first().project
-    else:
-        project = get_object_or_404(Project, uuid=pk)
+    # tasks = Task.objects.select_related(
+    #     "project", "assigned_to", "project__owner"
+    # ).filter(project__uuid=pk)
+    # if tasks:
+    #     project = tasks.first().project
+    # else:
+    #     project = get_object_or_404(Project, uuid=pk)
 
-    attachments = project.projectfile_set.all()
-    participants = project.participants.only("uuid", "name", "profile_photo")
+    attachments = project.project_files.all()
+    participants = project.participants.all()
+
     context = {
         "project": project,
-        "tasks": tasks,
+        "tasks": project.tasks.all(),
         "participants": participants,
         "attachments": attachments,
     }

@@ -27,7 +27,9 @@ class Project(models.Model):
 
 
 class ProjectFile(models.Model):
-    project = models.ForeignKey("Project", on_delete=models.CASCADE)
+    project = models.ForeignKey(
+        "Project", on_delete=models.CASCADE, related_name="project_files"
+    )
     file = models.FileField(upload_to="project_attachments/")
 
     @property

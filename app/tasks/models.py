@@ -32,7 +32,9 @@ class Task(models.Model):
     )
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default="Awaits")
     category = models.ManyToManyField("projects.Category", blank=True)
-    project = models.ForeignKey("projects.Project", on_delete=models.CASCADE)
+    project = models.ForeignKey(
+        "projects.Project", on_delete=models.CASCADE, related_name="tasks"
+    )
     assigned_to = models.ForeignKey("users.User", on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
