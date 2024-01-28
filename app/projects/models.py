@@ -30,8 +30,17 @@ class ProjectFile(models.Model):
     project = models.ForeignKey("Project", on_delete=models.CASCADE)
     file = models.FileField(upload_to="project_attachments/")
 
+    @property
+    def short_name(self):
+        filename = str(self.file.name).split("/")[-1]
+        return filename[-20:]
+
+    @property
+    def get_ext(self):
+        return self.short_name.split(".")[-1]
+
     def __str__(self):
-        return self.project.title
+        return self.short_name
 
 
 class Category(models.Model):
