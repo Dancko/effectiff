@@ -131,6 +131,20 @@ def test_edit_project_with_files_post(client, project_factory):
     assert len(edited_project.project_files.all()) == 2
 
 
+def test_edit_project_not_by_owner_redirect(client, project_factory, user_factory):
+    """Test attempting to get an edit project page by not owner will redirect."""
+    project = project_factory()
+    user = user_factory()
+    client.force_login(user)
+
+    url = reverse("edit_project", args=[project.uuid])
+
+    res = client.get(url)
+
+    assert res.status_code == 302
+    assert res.url == reverse("my_tasks")
+
+
 def test_delete_project_post(client, project_factory):
     """Test delete peoject post is a success."""
 

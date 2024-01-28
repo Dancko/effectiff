@@ -102,7 +102,7 @@ def editProjectPage(request, pk):
                 # form.save_m2m()
                 return redirect("project", pk=pk)
     else:
-        return redirect("home")
+        return redirect("my_tasks")
     return render(request, "projects/project_create.html", {"page": page, "form": form})
 
 
