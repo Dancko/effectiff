@@ -139,9 +139,9 @@ def password_reset_activate(request, uidb64, token):
         return redirect("password_reset")
 
 
+@login_required(login_url="login")
 def password_reset_complete(request, pk):
     user = get_object_or_404(User, uuid=pk)
-    print(user)
     form = SetPasswordForm(user)
     if request.method == "POST":
         form = SetPasswordForm(user, request.POST)
@@ -159,6 +159,7 @@ def verification_sent(request):
 
 
 # @cache_page(60 * 2)
+@login_required(login_url="login")
 def profilePage(request, pk):
     """Profile page view"""
     utc_now = datetime.utcnow()
@@ -240,7 +241,7 @@ def editProfilePage(request, pk):
                 return redirect("profile", pk=pk)
         return render(request, "users/edit_profile.html", {"form": form})
     else:
-        return redirect("home")
+        return redirect("my_tasks")
 
 
 # @login_required(login_url="login")
