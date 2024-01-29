@@ -64,7 +64,7 @@ def loginPage(request):
     return render(request, "registration/login.html")
 
 
-@login_required
+@login_required(login_url="login")
 def logoutPage(request):
     """Logout page view."""
 
@@ -147,7 +147,7 @@ def password_reset_complete(request, pk):
         form = SetPasswordForm(user, request.POST)
         if form.is_valid():
             form.save()
-            print(form)
+
             messages.success(request, "Your password has been changed.")
             return redirect("login")
     return render(request, "registration/reset_anonym.html", {"form": form})
@@ -209,7 +209,7 @@ def profilePage(request, pk):
         add_to_project_form = ProjectAddParticipantForm(request.POST, projects=projects)
         if add_to_project_form.is_valid():
             project_uuid = add_to_project_form.cleaned_data["project"]
-            project = Project.objects.get(uuid=project_uuid).participants.add(user)
+            Project.objects.get(uuid=project_uuid).participants.add(user)
 
             return redirect("profile", pk=pk)
 
@@ -296,6 +296,7 @@ def setPasswordPage(request):
     return render(request, "registration/reset.html", {"form": form})
 
 
+@login_required(login_url="login")
 def myTeamPage(request):
     user = request.user
     teammates = user.teammates.all()

@@ -9,7 +9,6 @@ from projects.models import Project, ProjectFile
 from .forms import (
     ProjectCreationForm,
     ProjectAddParticipantsForm,
-    ProjectAddParticipantForm,
 )
 
 

@@ -2,34 +2,34 @@ import pytest
 
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-
-from users import views
+from unittest.mock import patch
+from .conftest import MockSocialAccountAdapter
 
 
 pytestmark = pytest.mark.django_db
 
-User = get_user_model()
+
+# ------------------------Unauthed tests-------------
 
 
-def test_creating_new_user():
-    """Test creating new users."""
-    user = User.objects.create_user(
-        email="test@example.com", password="test123", name="Test"
-    )
+def test_get_login_register_page_success(client):
+    """Test get login and register page is success."""
 
-    assert user.email == "test@example.com"
-    assert user.name == "Test"
-    assert user.is_staff == False
-    assert user.is_superuser == False
+    url = reverse("login")
+
+    res = client.get(url)
+
+    assert res.status_code == 200
 
 
-def test_create_superuser():
-    """Test creating superuser."""
-    user = User.objects.create_superuser(
-        email="test_super@example.com", password="test123", name="super"
-    )
+@pytest.mark.django_db
+@patch(
+    "allauth.socialaccount.adapter.DefaultSocialAccountAdapter",
+    MockSocialAccountAdapter,
+)
+def test_register_page_get_request(client):
+    """Test register page get request is a success."""
+    url = reverse("register")
+    response = client.get(url)
 
-    assert user.email == "test_super@example.com"
-    assert user.name == "super"
-    assert user.is_staff == True
-    assert user.is_superuser == True
+    assert response.status_code == 200
