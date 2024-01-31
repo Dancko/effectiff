@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
-    "verify_email.apps.VerifyEmailConfig",
     "debug_toolbar",
     "core.apps.CoreConfig",
     "users.apps.UsersConfig",

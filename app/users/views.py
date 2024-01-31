@@ -49,7 +49,7 @@ def loginPage(request):
     if request.method == "POST":
         email = request.POST["email"].lower()
         password = request.POST["password"]
-        user = get_object_or_404(User, email=email)
+        user = get_object_or_404(User, email__iexact=email)
 
         user = authenticate(request, email=email, password=password)
 

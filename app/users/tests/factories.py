@@ -7,7 +7,7 @@ class UserFactory(factory.django.DjangoModelFactory):
         model = get_user_model()
 
     email = factory.Sequence(lambda n: f"test{n}@example.com")
-    password = "test123"
+    password = factory.PostGenerationMethodCall("set_password", "test123")
     name = "testuseristo"
 
     is_superuser = False

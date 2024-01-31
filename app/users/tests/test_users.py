@@ -9,7 +9,7 @@ from .conftest import MockSocialAccountAdapter
 pytestmark = pytest.mark.django_db
 
 
-# ------------------------Unauthed tests-------------
+# ------------------------Unauthed tests GET-------------
 
 
 @pytest.mark.parametrize(
@@ -36,6 +36,25 @@ def test_register_page_get_request(client):
     response = client.get(url)
 
     assert response.status_code == 200
+
+
+# ----------------Unauthed tests POST------------------
+@pytest.mark.django_db
+def test_login_post_success(client, user_factory):
+    """Test login post is success."""
+
+    user_factory(email="test@example.com")
+
+    url = reverse("login")
+
+    data = {
+        "email": "test@example.com",
+        "password": "test123",
+    }
+    res = client.post(url, data)
+
+    assert res.status_code == 302
+    assert res.url == reverse("my_tasks")
 
 
 # ---------------Authed Tests Get Requests-------------------
@@ -92,3 +111,19 @@ def test_delete_teammate_get(client, user_factory):
     res = client.get(url)
 
     assert res.status_code == 200
+
+
+def test_register_page_redirect(client, user_factory):
+    """Test register page redirect if user is authenticated."""
+
+    user = user_factory()
+    client.force_login(user)
+    url = reverse("register")
+
+    res = client.get(url)
+
+    assert res.status_code == 302
+    assert res.url == reverse("my_tasks")
+
+
+# -------------------Authed post requests tests-------------
