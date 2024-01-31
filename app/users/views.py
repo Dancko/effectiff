@@ -258,7 +258,7 @@ def editProfilePage(request, pk):
 def add_to_team(request, pk):
     """View for adding a user to the team button."""
 
-    user = User.objects.get(uuid=pk)
+    user = get_object_or_404(User, uuid=pk)
     try:
         request.user.teammates.get(uuid=user.uuid)
         return redirect("profile", pk=user.uuid)
@@ -274,12 +274,15 @@ def add_to_team(request, pk):
 def delete_from_team(request, pk):
     """View for deleting a user from the team button."""
 
-    user = User.objects.get(uuid=pk)
-    if request.user.teammates.get(uuid=user.uuid):
+    user = get_object_or_404(User, uuid=pk)
+    if user in request.user.teammates.all():
         if request.method == "POST":
             request.user.teammates.remove(user)
             return redirect("profile", pk=user.uuid)
-    return render(request, "users/profile.html")
+        else:
+            return render(request, "users/profile.html")
+    else:
+        return redirect("profile", pk=user.uuid)
 
 
 @login_required(login_url="login")

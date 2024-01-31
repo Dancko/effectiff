@@ -99,6 +99,20 @@ def test_edit_profile_get(client, user_factory):
     assert res.status_code == 200
 
 
+def test_edit_profile_get_redirect(client, user_factory):
+    """Test edit profile page get request redirect for not owner of page."""
+
+    user = user_factory()
+    client.force_login(user)
+    user2 = user_factory(email="test2@example.com")
+    url = reverse("edit_profile", args=[user2.uuid])
+
+    res = client.get(url)
+
+    assert res.status_code == 302
+    assert res.url == reverse("my_tasks")
+
+
 def test_delete_teammate_get(client, user_factory):
     """Test delete from team page get request."""
 
@@ -124,6 +138,36 @@ def test_register_page_redirect(client, user_factory):
 
     assert res.status_code == 302
     assert res.url == reverse("my_tasks")
+
+
+def test_add_to_team_get_redirect(client, user_factory):
+    """Test add to team redirect when the user is already a teammate."""
+
+    user = user_factory()
+    client.force_login(user)
+    user2 = user_factory(email="test1@example.com")
+    user.teammates.add(user2)
+    url = reverse("add_teammate", args=[user2.uuid])
+
+    res = client.get(url)
+
+    assert res.status_code == 302
+    assert res.url == reverse("profile", args=[user2.uuid])
+
+
+@pytest.mark.django_db
+def test_delete_from_team_get_redirect(client, user_factory):
+    """Test delete from team get redirect when the user not in teammates."""
+
+    user = user_factory()
+    client.force_login(user)
+    user2 = user_factory(email="test1@example.com")
+    url = reverse("delete_teammate", args=[user2.uuid])
+
+    res = client.get(url)
+
+    assert res.status_code == 302
+    assert res.url == reverse("profile", args=[user2.uuid])
 
 
 # -------------------Authed post requests tests-------------
@@ -169,3 +213,36 @@ def test_edit_profile_post_success(client, user_factory):
     assert updated_user.name == "Albert"
     assert updated_user.location == "London"
     assert updated_user.bio == "Hi There"
+
+
+def test_add_to_team_post(client, user_factory):
+    """Test add to team post request is a success."""
+
+    user = user_factory()
+    client.force_login(user)
+    user2 = user_factory(email="test1@example.com")
+    url = reverse("add_teammate", args=[user2.uuid])
+    data = {}
+
+    res = client.post(url, data)
+
+    assert res.status_code == 302
+    assert res.url == reverse("profile", args=[user2.uuid])
+    assert user2 in user.teammates.all()
+
+
+def test_delete_from_team_post(client, user_factory):
+    """Test delete from team post request is a success."""
+
+    user = user_factory()
+    client.force_login(user)
+    user2 = user_factory(email="test1@example.com")
+    user.teammates.add(user2)
+    url = reverse("delete_teammate", args=[user2.uuid])
+    data = {}
+
+    res = client.post(url, data)
+
+    assert res.status_code == 302
+    assert res.url == reverse("profile", args=[user2.uuid])
+    assert len(user.teammates.filter(id=user2.id)) == 0
