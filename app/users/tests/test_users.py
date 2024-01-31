@@ -138,6 +138,34 @@ def test_logout_post_success(client, user_factory):
     data = {}
 
     res = client.post(url, data)
+    session_user = client.session.get("_auth_user_id")
 
     assert res.status_code == 302
     assert res.url == reverse("register")
+    assert session_user is None
+
+
+def test_edit_profile_post_success(client, user_factory):
+    """Test edit profile page post request is a success."""
+
+    user = user_factory(name="Bobb")
+    client.force_login(user)
+    url = reverse("edit_profile", args=[user.uuid])
+
+    data = {
+        "name": "Albert",
+        "profile_photo": "",
+        "intro": "",
+        "bio": "Hi There",
+        "location": "London",
+    }
+
+    res = client.post(url, data)
+
+    updated_user = get_user_model().objects.get(uuid=user.uuid)
+
+    assert res.status_code == 302
+    assert res.url == reverse("profile", args=[user.uuid])
+    assert updated_user.name == "Albert"
+    assert updated_user.location == "London"
+    assert updated_user.bio == "Hi There"
