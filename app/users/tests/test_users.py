@@ -294,3 +294,20 @@ def test_change_password_post(client, user_factory):
 
     assert new_res.status_code == 200
     assert "Tasks Assigned" in new_res.content.decode()
+
+
+def test_add_project_participant(client, project_factory, user_factory):
+    """Test adding a new participant into a project."""
+
+    project = project_factory()
+    user = project.owner
+    client.force_login(user)
+    user2 = user_factory(email="test1@example.com")
+    user.teammates.add(user2)
+    url = reverse("profile", args=[user2.uuid])
+    data = {"project": project.uuid}
+
+    res = client.post(url, data)
+
+    assert res.status_code == 302
+    assert res.url == reverse("profile", args=[user2.uuid])
