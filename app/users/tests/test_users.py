@@ -2,11 +2,21 @@ import pytest
 
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from unittest.mock import patch
+from django.conf import settings
+
+from captcha.client import RecaptchaResponse
+
+
+from unittest.mock import patch, MagicMock
 from .conftest import MockSocialAccountAdapter
 
 
 pytestmark = pytest.mark.django_db
+
+
+def test_testing_settings_used():
+    assert hasattr(settings, "IS_TEST")
+    assert settings.IS_TEST is True
 
 
 # ------------------------Unauthed tests GET requests-------------
@@ -25,7 +35,6 @@ def test_get_login_register_page_success(client, test_url):
     assert res.status_code == 200
 
 
-@pytest.mark.django_db
 @patch(
     "allauth.socialaccount.adapter.DefaultSocialAccountAdapter",
     MockSocialAccountAdapter,
@@ -39,22 +48,35 @@ def test_register_page_get_request(client):
 
 
 # ----------------Unauthed tests POST requests------------------
-@pytest.mark.django_db
+
+
 def test_login_post_success(client, user_factory):
     """Test login post is success."""
 
     user_factory(email="test@example.com")
-
     url = reverse("login")
-
     data = {
         "email": "test@example.com",
         "password": "test123",
     }
+
     res = client.post(url, data)
 
     assert res.status_code == 302
     assert res.url == reverse("my_tasks")
+
+
+def test_login_post_fail(client, user_factory):
+    """Test login post with invalid data fails."""
+
+    user_factory(email="bobb@example.com")
+    url = reverse("login")
+    data = {"email": "bobb@example.com", "password": "testpass143"}
+
+    res = client.post(url, data)
+
+    assert res.status_code == 302
+    assert res.url == reverse("login")
 
 
 # ---------------Authed tests GET requests-------------------
@@ -246,3 +268,29 @@ def test_delete_from_team_post(client, user_factory):
     assert res.status_code == 302
     assert res.url == reverse("profile", args=[user2.uuid])
     assert len(user.teammates.filter(id=user2.id)) == 0
+
+
+def test_change_password_post(client, user_factory):
+    """Test change password post request is a success."""
+
+    user = user_factory()
+    client.force_login(user)
+    url = reverse("change_password")
+
+    data = {
+        "new_password1": "testtest123",
+        "new_password2": "testtest123",
+        "g-recaptcha-response": "some_random_string",
+    }
+
+    res = client.post(url, data)
+
+    assert res.status_code == 302
+    assert res.url == reverse("login")
+
+    client.login(email=user.email, password="testtest123")
+
+    new_res = client.get(reverse("my_tasks"))
+
+    assert new_res.status_code == 200
+    assert "Tasks Assigned" in new_res.content.decode()

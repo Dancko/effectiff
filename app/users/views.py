@@ -59,7 +59,7 @@ def loginPage(request):
             return redirect("my_tasks")
         else:
             messages.error(request, "Email or password is incorrect.")
-            return render(request, "registration/login.html")
+            return redirect("login")
 
     return render(request, "registration/login.html")
 

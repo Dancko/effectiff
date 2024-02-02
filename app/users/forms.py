@@ -95,7 +95,7 @@ class SetPasswordForm(SetPasswordForm):
 
     class Meta:
         model = get_user_model()
-        fields = ["new_password1", "new_password2"]
+        fields = ["new_password1", "new_password2", "captcha"]
 
 
 class PasswordResetForm(PasswordResetForm):
@@ -106,4 +106,4 @@ class PasswordResetForm(PasswordResetForm):
         label="",
     )
 
-    captcha = ReCaptchaField()
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox(attrs={"data-theme": "dark"}))
