@@ -1,14 +1,16 @@
 import pytest
+import re
 
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.conf import settings
 
-from captcha.client import RecaptchaResponse
 
-
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from .conftest import MockSocialAccountAdapter
+
+
+from users.utils import email_maker
 
 
 pytestmark = pytest.mark.django_db
@@ -280,7 +282,7 @@ def test_change_password_post(client, user_factory):
     data = {
         "new_password1": "testtest123",
         "new_password2": "testtest123",
-        "g-recaptcha-response": "some_random_string",
+        "g-recaptcha-response": "passed",
     }
 
     res = client.post(url, data)
@@ -297,7 +299,7 @@ def test_change_password_post(client, user_factory):
 
 
 def test_add_project_participant(client, project_factory, user_factory):
-    """Test adding a new participant into a project."""
+    """Test adding a new participant into a project thru profile page."""
 
     project = project_factory()
     user = project.owner
@@ -311,3 +313,39 @@ def test_add_project_participant(client, project_factory, user_factory):
 
     assert res.status_code == 302
     assert res.url == reverse("profile", args=[user2.uuid])
+
+
+@patch("users.tasks.send_email.delay")
+def test_reset_password_flow(mock_send_email, client, user_factory):
+    """Test reset password workflow."""
+
+    user = user_factory(email="test@example.com")
+    data = {"email": user.email, "g-recaptcha-response": "passed"}
+    url = reverse("password_reset")
+
+    res = client.post(url, data)
+
+    assert res.status_code == 302
+    assert res.url == reverse("password_reset_sent")
+    mock_send_email.assert_called_once()
+
+    subject, message = mock_send_email.call_args[0]
+
+    url_pattern = re.compile(r"https?://\S+")
+    activation_link = re.findall(url_pattern, message)[0]
+    data = {
+        "new_password1": "testtest123",
+        "new_password2": "testtest123",
+        "g-recaptcha-response": "passed",
+    }
+
+    new_res = client.post(activation_link, data)
+
+    assert new_res.status_code == 302
+    assert new_res.url == reverse("login")
+
+    client.login(email=user.email, password="testtest123")
+
+    loggedin_res = client.get(reverse("my_tasks"))
+
+    assert loggedin_res.status_code == 200

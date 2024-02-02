@@ -133,24 +133,18 @@ def password_reset_activate(request, uidb64, token):
     except:
         user = None
     if user is not None and account_activation_token.check_token(user, token):
-        return redirect("password_reset_complete", pk=user.uuid)
+        form = SetPasswordForm(user)
+        if request.method == "POST":
+            form = SetPasswordForm(user, request.POST)
+            if form.is_valid():
+                form.save()
+
+                messages.success(request, "Your password has been changed.")
+                return redirect("login")
+        return render(request, "registration/reset_anonym.html", {"form": form})
     else:
         messages.error(request, "Verification link is invalid.")
         return redirect("password_reset")
-
-
-@login_required(login_url="login")
-def password_reset_complete(request, pk):
-    user = get_object_or_404(User, uuid=pk)
-    form = SetPasswordForm(user)
-    if request.method == "POST":
-        form = SetPasswordForm(user, request.POST)
-        if form.is_valid():
-            form.save()
-
-            messages.success(request, "Your password has been changed.")
-            return redirect("login")
-    return render(request, "registration/reset_anonym.html", {"form": form})
 
 
 def verification_sent(request):

@@ -177,6 +177,7 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SERIALIZER = "json"
 
+
 TINYMCE_DEFAULT_CONFIG = {
     "height": "320px",
     "width": "100%",
