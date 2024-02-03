@@ -81,6 +81,84 @@ def test_login_post_fail(client, user_factory):
     assert res.url == reverse("login")
 
 
+@patch("users.tasks.send_email.delay")
+def test_reset_password_flow(mock_send_email, client, user_factory):
+    """Test reset password workflow."""
+
+    user = user_factory(email="test@example.com")
+    data = {"email": user.email, "g-recaptcha-response": "passed"}
+    url = reverse("password_reset")
+
+    res = client.post(url, data)
+
+    assert res.status_code == 302
+    assert res.url == reverse("password_reset_sent")
+    mock_send_email.assert_called_once()
+
+    subject, message = mock_send_email.call_args[0]
+
+    url_pattern = re.compile(r"https?://\S+")
+    activation_link = re.findall(url_pattern, message)[0]
+    data = {
+        "new_password1": "testtest123",
+        "new_password2": "testtest123",
+        "g-recaptcha-response": "passed",
+    }
+
+    new_res = client.post(activation_link, data)
+
+    assert new_res.status_code == 302
+    assert new_res.url == reverse("login")
+
+    client.login(email=user.email, password="testtest123")
+
+    loggedin_res = client.get(reverse("my_tasks"))
+
+    assert loggedin_res.status_code == 200
+
+
+@patch(
+    "allauth.socialaccount.adapter.DefaultSocialAccountAdapter",
+    MockSocialAccountAdapter,
+)
+@patch("users.tasks.send_email.delay")
+def test_registration_flow(mock_send_email, client):
+    """Test registration workflow."""
+
+    data = {
+        "email": "test1user@example.com",
+        "name": "Bobb",
+        "password1": "test12345",
+        "password2": "test12345",
+        "g-recaptcha-response": "passed",
+    }
+    url = reverse("register")
+
+    res = client.post(url, data)
+
+    assert res.status_code == 302
+    assert res.url == reverse("verification_sent")
+    mock_send_email.assert_called_once()
+
+    user = get_user_model().objects.get(name="Bobb")
+
+    assert user.is_active == False
+
+    subject, message = mock_send_email.call_args[0]
+
+    url_pattern = re.compile(r"https?://\S+")
+    activation_link = re.findall(url_pattern, message)[0]
+    print(activation_link)
+
+    new_res = client.get(activation_link)
+
+    user = get_user_model().objects.get(name="Bobb")
+
+    assert new_res.status_code == 302
+    assert new_res.url == reverse("login")
+    assert user.is_active == True
+
+
 # ---------------Authed tests GET requests-------------------
 
 
@@ -313,39 +391,3 @@ def test_add_project_participant(client, project_factory, user_factory):
 
     assert res.status_code == 302
     assert res.url == reverse("profile", args=[user2.uuid])
-
-
-@patch("users.tasks.send_email.delay")
-def test_reset_password_flow(mock_send_email, client, user_factory):
-    """Test reset password workflow."""
-
-    user = user_factory(email="test@example.com")
-    data = {"email": user.email, "g-recaptcha-response": "passed"}
-    url = reverse("password_reset")
-
-    res = client.post(url, data)
-
-    assert res.status_code == 302
-    assert res.url == reverse("password_reset_sent")
-    mock_send_email.assert_called_once()
-
-    subject, message = mock_send_email.call_args[0]
-
-    url_pattern = re.compile(r"https?://\S+")
-    activation_link = re.findall(url_pattern, message)[0]
-    data = {
-        "new_password1": "testtest123",
-        "new_password2": "testtest123",
-        "g-recaptcha-response": "passed",
-    }
-
-    new_res = client.post(activation_link, data)
-
-    assert new_res.status_code == 302
-    assert new_res.url == reverse("login")
-
-    client.login(email=user.email, password="testtest123")
-
-    loggedin_res = client.get(reverse("my_tasks"))
-
-    assert loggedin_res.status_code == 200

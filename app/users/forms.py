@@ -44,7 +44,7 @@ class RegisterForm(UserCreationForm):
 
     class Meta:
         model = get_user_model()
-        fields = ["email", "name", "password1", "password2", "captcha"]
+        fields = ["email", "name", "password1", "password2"]
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)

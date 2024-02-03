@@ -84,6 +84,7 @@ def registerPage(request):
     form = RegisterForm()
     if request.method == "POST":
         form = RegisterForm(request.POST)
+
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
@@ -96,6 +97,8 @@ def registerPage(request):
             send_email.delay(email_subject, message, to=[user.email])
             messages.success(request, "User has been created successfully.")
             return redirect("verification_sent")
+        else:
+            messages.error(request, "form is invalid")
 
     return render(request, "core/index.html", {"form": form})
 
