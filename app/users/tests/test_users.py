@@ -117,6 +117,17 @@ def test_reset_password_flow(mock_send_email, client, user_factory):
     assert loggedin_res.status_code == 200
 
 
+def test_reset_password_thru_invalid_link(client):
+    """Test reset password thru invalid link fails."""
+
+    url = reverse("password_reset_activate", args=["asjdhaksdhj", "87y873yijh"])
+
+    res = client.get(url)
+
+    assert res.status_code == 302
+    assert res.url == reverse("password_reset")
+
+
 @patch(
     "allauth.socialaccount.adapter.DefaultSocialAccountAdapter",
     MockSocialAccountAdapter,
@@ -148,7 +159,6 @@ def test_registration_flow(mock_send_email, client):
 
     url_pattern = re.compile(r"https?://\S+")
     activation_link = re.findall(url_pattern, message)[0]
-    print(activation_link)
 
     new_res = client.get(activation_link)
 
@@ -157,6 +167,17 @@ def test_registration_flow(mock_send_email, client):
     assert new_res.status_code == 302
     assert new_res.url == reverse("login")
     assert user.is_active == True
+
+
+def test_activate_with_invalid_link_fails(client):
+    """Test activation with the invalid link fails."""
+
+    url = reverse("activate", args=["234234234", "456456sdfsdfsdf"])
+
+    res = client.get(url)
+
+    assert res.status_code == 302
+    assert res.url == reverse("register")
 
 
 # ---------------Authed tests GET requests-------------------

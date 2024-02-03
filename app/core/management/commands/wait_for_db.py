@@ -6,11 +6,18 @@ import time
 from psycopg2 import OperationalError as PsycopgError
 from django.db.utils import OperationalError
 from django.db import connection
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandParser
 
 
 class Command(BaseCommand):
     """Django command to wait for db."""
+
+    help = "Django command to wait for db."
+
+    def add_arguments(self, parser: CommandParser) -> None:
+        parser.add_argument(
+            "--sleep", type=int, default=1, help="Sleep duration for simulating delay"
+        )
 
     def handle(self, *args, **options):
         """Entrypoint for command."""
@@ -19,12 +26,14 @@ class Command(BaseCommand):
 
         while db_up is False:
             try:
-                self.check(databases=['default'])
+                self.check(databases=["default"])
                 connection.ensure_connection()
                 db_up = True
             except (PsycopgError, OperationalError):
-                self.stdout.write("Database unavailable. \
-                                  Waiting for 1 second...")
-                time.sleep(1)
+                self.stdout.write(
+                    f"Database unavailable. \
+                                  Waiting for {options['sleep']} seconds..."
+                )
+                time.sleep(options["sleep"])
 
         self.stdout.write(self.style.SUCCESS("Database available!"))
