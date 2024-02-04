@@ -15,91 +15,8 @@
     {% include 'left_section.html' %}
 
     <!-- Main Section -->
-    {% if q %}
-    <div class="col-lg-10 col-md-12 bg-dark h-100 main-section overflow-auto">
-      <div class="container mt-3 mb-6">
-        <h2 class="fw-bold py-4">Search Results For "{{ q }}".</h2>
-        <h4>Users:</h4>
-        <div class="row">
-                      
-          {% for user in users %}
-            
-          
-            
-            <div class="col-lg-4">
-                <div class="card bg-black border-1 border-primary rounded-3">
-                    <div class="d-flex flex-row">
-                        <div class="img-container">
-                            <img src="{{ user.profile_photo.url }}" 
-                                 alt=""
-                                 class="img-fluid d-flex rounded-circle img-myteam-page border border-3 border-success m-4 justify-content-center align-items-center">
-
-                        </div>
-                        <div class="card-body">
-                            <h4 class="card-text">{{ user.name }}</h4>
-                            <p class="lead">{{ user.intro }}</p>
-                            <p>{{ user.location }}</p>
-                            <p class="fst-italic">Local Time: 20:19</p>
-                            <a href="{% url 'profile' user.uuid %}" class="stretched-link"></a>
-                            <!-- <span
-                            class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
-                            >Bootstrap</span>
-                            <span
-                            class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
-                            >Bootstrap</span>
-                            <span
-                            class="badge bg-secondary fw-bold rounded-pill p-3 me-3 my-3"
-                            >Bootstrap</span> -->
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
-            {% empty %}
-            <h6>No users were found</h6>
-            {% endfor %}
-        </div>
-
-
-        <h4 class="mt-5">Projects:</h4>
-        <div class="row">
-          <ul class="list-group profiles-left mt-3 list-unstyled vstack gap-3">
-            {% for project in projects %}
-            <div
-              class="group-item d-flex gap-2 border-bottom border-primary py-2 online"
-            >
-              
-      
-              <a href="{% url 'project' project.uuid %}"><li class="text-white fs-5">{{ project.title }}</li></a>
-            </div>
-            {% empty %}
-            <h6>No projects were found</h6>
-            {% endfor %}
-          </ul>
-        </div>
-
-
-        <h4 class="mt-5">Tasks:</h4>
-        <div class="row">
-          <ul class="list-group profiles-left mt-3 list-unstyled vstack gap-3">
-            {% for task in tasks %}
-            <div
-              class="group-item d-flex gap-2 border-bottom border-primary py-2 online"
-            >
-              
-      
-              <a href="{% url 'task_detail' task.uuid %}"><li class="text-white fs-5">{{ task.title }}</li></a>
-            </div>
-            {% empty %}
-            <h6>No tasks were found</h6>
-            {% endfor %}
-          </ul>
-        </div>
-
-
-      </div>
-    </div>
-    {% else %}
+    
+    
     <div class="col-lg-10 col-md-12 bg-dark h-100 main-section overflow-auto">
       <div class="container mt-3 mb-6">
         
@@ -346,7 +263,7 @@
         </table>
       </div>
     </div>
-    {% endif %}
+    
   </div>
 </div>
 {% endblock content %}

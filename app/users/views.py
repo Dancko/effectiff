@@ -44,7 +44,7 @@ def searchPage(request):
             .distinct()
         )
         context = {"users": users, "projects": projects, "tasks": tasks, "q": q}
-        return render(request, "tasks/my_tasks.html", context)
+        return render(request, "users/search.html", context)
 
 
 def activate(request, uidb64, token):
