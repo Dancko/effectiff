@@ -196,3 +196,26 @@ def test_add_members_to_project_post(client, project_factory, user_factory):
     assert res.url == reverse("project", args=[project.uuid])
     assert user2 in new_project.participants.all()
     assert user3 in new_project.participants.all()
+
+
+def test_remove_members_from_project(client, project_factory, user_factory):
+    """Test removing users from project is a success."""
+
+    project = project_factory()
+    user = project.owner
+    user2 = user_factory()
+    user.teammates.add(user2)
+    project.participants.add(user2)
+    client.force_login(user)
+    url = reverse("remove_member", args=[project.uuid, user2.uuid])
+    data = {}
+
+    assert len(project.participants.all()) == 1
+
+    res = client.post(url, data)
+
+    new_project = Project.objects.get(uuid=project.uuid)
+
+    assert res.status_code == 302
+    assert res.url == reverse("project", args=[project.uuid])
+    assert len(new_project.participants.all()) == 0

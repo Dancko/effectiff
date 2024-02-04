@@ -23,6 +23,30 @@ from projects.forms import ProjectAddParticipantForm
 User = get_user_model()
 
 
+def searchPage(request):
+    """View for depicting search results."""
+
+    q = request.GET.get("q")
+    if q is not None:
+        users = User.objects.filter(
+            Q(email__icontains=q) | Q(name__icontains=q) | Q(location__icontains=q)
+        ).distinct()
+        projects = (
+            Project.objects.filter(Q(participants=request.user) | Q(owner=request.user))
+            .filter(Q(title__icontains=q) | Q(description__icontains=q))
+            .distinct()
+        )
+        tasks = (
+            Task.objects.filter(
+                Q(assigned_to=request.user) | Q(project__owner=request.user)
+            )
+            .filter(Q(title__icontains=q) | Q(body__icontains=q))
+            .distinct()
+        )
+        context = {"users": users, "projects": projects, "tasks": tasks, "q": q}
+        return render(request, "tasks/my_tasks.html", context)
+
+
 def activate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))

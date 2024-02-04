@@ -10,4 +10,9 @@ urlpatterns = [
     path("edit_project/<uuid:pk>/", views.editProjectPage, name="edit_project"),
     path("delete/<uuid:pk>/", views.deleteProjectPage, name="delete_project"),
     path("add/<uuid:pk>/", views.addMembers, name="add_members"),
+    path(
+        "remove/<uuid:project_uuid>/<uuid:user_uuid>/",
+        views.removeMember,
+        name="remove_member",
+    ),
 ]

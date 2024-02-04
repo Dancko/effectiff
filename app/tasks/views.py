@@ -22,26 +22,6 @@ User = get_user_model()
 def myTasksPage(request):
     """View for the page where current tasks of the user are depicted."""
 
-    q = request.GET.get("q")
-    if q is not None:
-        users = User.objects.filter(
-            Q(email__icontains=q) | Q(name__icontains=q) | Q(location__icontains=q)
-        ).distinct()
-        projects = (
-            Project.objects.filter(Q(participants=request.user) | Q(owner=request.user))
-            .filter(Q(title__icontains=q) | Q(description__icontains=q))
-            .distinct()
-        )
-        tasks = (
-            Task.objects.filter(
-                Q(assigned_to=request.user) | Q(project__owner=request.user)
-            )
-            .filter(Q(title__icontains=q) | Q(body__icontains=q))
-            .distinct()
-        )
-        context = {"users": users, "projects": projects, "tasks": tasks, "q": q}
-        return render(request, "tasks/my_tasks.html", context)
-
     user = request.user
     tasks_all = (
         Task.objects.select_related("project", "project__owner", "assigned_to")

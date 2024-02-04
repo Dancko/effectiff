@@ -138,3 +138,20 @@ def addMembers(request, pk):
             "projects/project_create.html",
             {"form": form, "page": page, "teammates": teammates},
         )
+
+
+@login_required(login_url="login")
+def removeMember(request, project_uuid, user_uuid):
+    """View for removing a participant from the project."""
+
+    project = get_object_or_404(Project, uuid=project_uuid)
+    user = get_object_or_404(User, uuid=user_uuid)
+
+    if request.user == project.owner:
+        if request.method == "POST":
+            tasks = Task.objects.filter(Q(project=project) & Q(assigned_to=user))
+            for task in tasks:
+                task.assigned_to = project.owner
+                task.save()
+            project.participants.remove(user)
+            return redirect("project", pk=project_uuid)
