@@ -183,6 +183,31 @@ def test_activate_with_invalid_link_fails(client):
 # ---------------Authed tests GET requests-------------------
 
 
+def test_search_view(client, project_factory):
+    """Test search view."""
+
+    project = project_factory(title="Hello", description="Test Project")
+    user = project.owner
+    client.force_login(user)
+    url = reverse("search") + "?q=hello"
+
+    res = client.get(url)
+    res_content = res.content.decode("utf-8")
+
+    assert res.status_code == 200
+    assert "hello" in res_content
+    assert reverse("project", args=[project.uuid]) in res_content
+
+    url = reverse("search") + "?q=test+project"
+
+    res = client.get(url)
+    res_content = res.content.decode("utf-8")
+
+    assert res.status_code == 200
+    assert "Hello" in res_content
+    assert reverse("project", args=[project.uuid]) in res_content
+
+
 @pytest.mark.parametrize("test_url", ["logout", "change_password", "my_team"])
 def test_get_requests_without_args(client, user_factory, test_url):
     """Test get requests of pages without args that require authentication is a success."""
