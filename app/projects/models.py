@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django.conf import settings
 
 from tinymce.models import HTMLField
 
@@ -10,7 +11,7 @@ class Project(models.Model):
     category = models.ManyToManyField("Category", blank=True)
     description = HTMLField(blank=True, null=True)
     owner = models.ForeignKey(
-        "users.User",
+        settings.AUTH_USER_MODEL,
         related_name="projects",
         on_delete=models.CASCADE,
     )
