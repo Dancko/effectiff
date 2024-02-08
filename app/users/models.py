@@ -52,6 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         default="profiles/default_photo.jpg",
     )
     location = models.CharField(max_length=150, blank=True)
+    timezone = models.CharField(max_length=200, default="UTC")
     teammates = models.ManyToManyField("User", related_name="teammate", blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

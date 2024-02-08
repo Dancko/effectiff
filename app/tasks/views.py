@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.db.models import Q
-from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 from .models import Task, TaskFile, Comment, CommentFile
 from projects.models import Project
@@ -112,6 +112,8 @@ def taskCreatePage(request):
         if form.is_valid():
             files = request.FILES.getlist("files")
             task = form.save(commit=True)
+            # local_deadline = form.changed_data["deadline"]
+            # utc_deadline = timezone.make_aware(local_deadline, timezone=request.user.timezone)
 
             for file in files:
                 TaskFile.objects.create(task=task, file=file)
